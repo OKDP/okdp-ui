@@ -1,0 +1,19 @@
+<div class="layout">
+  <!-- Navbar -->
+  <app-navbar />
+  <div class="page-layout">
+    <!-- Sidebar menu -->
+    <app-sidebar />
+    <!-- Page content -->
+    <div class="content-layout">
+      <!-- Page content header -->
+      <div class="content-header">
+        <app-title-bar />
+      </div>
+      <!-- Page content body -->
+      <main class="content-body mt-1">
+        <router-outlet />
+      </main>
+    </div>
+  </div>
+</div>
