@@ -1,0 +1,28 @@
+@keyframes dot {
+    0% { 
+        color: var(--text-okdp); 
+    }
+    50% { 
+        color: transparent; 
+    }
+    100% { 
+        color: transparent; 
+    }
+}
+
+.dot {
+    color: transparent;
+    animation: dot 1s infinite linear alternate
+}
+
+.dot[data-index="1"] {
+    animation-delay: 0s;
+  }
+  
+.dot[data-index="2"] {
+  animation-delay: 0.2s;
+}
+
+.dot[data-index="3"] {
+  animation-delay: 0.4s;
+}
