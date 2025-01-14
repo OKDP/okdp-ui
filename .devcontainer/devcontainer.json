@@ -1,0 +1,19 @@
+{
+    "name": "Angular dev container",
+    "dockerFile": "Dockerfile",
+    "postCreateCommand": "npm install --legacy-peer-deps",
+    "customizations": {
+		"vscode": {
+			"settings": {},
+			"extensions": [
+                "devondcarew.bazel-code",
+                "ms-vscode.vscode-typescript-tslint-plugin",
+                "esbenp.prettier-vscode",
+                "mhutchie.git-graph",
+                "bradlc.vscode-tailwindcss"
+			]
+		}
+	},
+  "forwardPorts": [4000, 4200, 4433, 5000, 8080, 9876]
+}
+
