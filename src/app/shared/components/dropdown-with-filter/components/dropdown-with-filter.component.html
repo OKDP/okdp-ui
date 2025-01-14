@@ -1,0 +1,41 @@
+<div class="dropdown-filter-container form-group position-relative">
+  <div
+    class="form-control form-select-filter d-flex align-items-center"
+    [class.open]="isDropdownOpen"
+    (click)="toggleDropdown()">
+    <span>{{ selectedOption?.value || label }}</span>
+    <i class="ms-auto dropdown-toggle-filter"></i>
+    <span
+      class="arrow-icon-filter"
+      [ngClass]="{'top': orientation === 'top', 'bottom': orientation === 'bottom'}"></span>
+  </div>
+
+  <div
+    class="form-control dropdown-menu-filter mt-0"
+    style="position: absolute; left: 0; z-index: 1050; width: 100%; max-height: 200px;"
+    [class.show]="isDropdownOpen"
+    [ngStyle]="{
+      top: orientation === 'bottom' ? '100%' : 'auto',
+      bottom: orientation === 'top' ? '100%' : 'auto',
+      overflowY: scrollable ? 'auto' : 'hidden'
+    }">
+    <div class="p-2">
+      <input
+        type="text"
+        class="form-input-filter"
+        placeholder="Filter..."
+        [(ngModel)]="filterText"
+        (input)="filterOptions()" />
+    </div>
+    <div
+      *ngFor="let option of filteredOptions"
+      class="dropdown-item-filter mb-1"
+      [class.active]="option === selectedOption"
+      (click)="selectOption(option)">
+      {{ option?.value }}
+    </div>
+    <div *ngIf="filteredOptions.length === 0" class="dropdown-item-filter mb-1">
+      {{ noItemsLabel }}
+    </div>
+  </div>
+</div>

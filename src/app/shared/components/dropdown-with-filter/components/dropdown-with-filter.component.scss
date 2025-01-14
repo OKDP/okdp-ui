@@ -1,0 +1,109 @@
+.dropdown-filter-container {
+  width: 350px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.dropdown-menu-filter {
+  min-width: 100%;
+  width: auto;
+  border: 0px;
+  display: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  max-height: 10rem;
+  overflow-y: auto;
+  overflow-x: auto;
+  flex-shrink: 0;
+  white-space: nowrap;
+  background-color: var(--bg-primary-color) !important;
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-secondary-color) var(--text-primary-color);
+  color: var(--text-secondary-color);
+  transition: all 0.3s ease-in-out;
+}
+
+.dropdown-menu-filter.show {
+  display: block;
+}
+
+.dropdown-menu-filter:not(.show) {
+  display: none;
+}
+
+.dropdown-item-filter {
+  white-space: nowrap;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.dropdown-item-filter:hover,
+.dropdown-item-filter.active {
+  background-color: var(--text-okdp);
+  color: var(--text-primary-color);
+}
+
+.dropdown-toggle-filter {
+  border: none;
+  background: none;
+}
+
+.form-select-filter {
+  cursor: pointer;
+  position: relative;
+  border: 0px;
+  border-radius: unset;
+  background-color: var(--bg-primary-color);
+  color: var(--text-primary-color) ;
+}
+
+.form-select-filter.open {
+  border: 0px !important;
+}
+
+.form-select-filter:hover, .form-select-filter:focus {
+  border-bottom: 1.5px solid var(--text-okdp);
+}
+
+.form-input-filter {
+  width: 100%;
+  border: 0px;
+  border-radius: unset;
+  background-color: var(--bg-primary-color);
+  color: var(--text-primary-color);
+  outline: none;
+  box-shadow: none;
+}
+
+.form-input-filter::placeholder {
+  color: var(--text-secondary-color);
+  opacity: 1;
+}
+
+.form-input-filter:hover, .form-input-filter:focus {
+  border-bottom: 1.5px solid var(--text-okdp);
+}
+
+.arrow-icon-filter {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 4px;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  transition: transform 0.3s ease;
+}
+
+.arrow-icon-filter.bottom {
+  border-top: 3px solid var(--text-secondary-color);
+}
+
+.arrow-icon-filter.top {
+  border-bottom: 3px solid var(--text-secondary-color);
+  border-top: none;
+}
+
+.form-input-filter:focus {
+  border-bottom: 1.5px solid var(--text-okdp);
+}
