@@ -1,0 +1,1841 @@
+{
+    "components": {
+        "schemas": {
+            "Catalog": {
+                "properties": {
+                    "components": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "templates": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "name",
+                    "components",
+                    "templates"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "catalog"
+                }
+            },
+            "Component": {
+                "properties": {
+                    "kind": {
+                        "type": "string"
+                    },
+                    "spec": {
+                        "properties": {
+                            "allowCreateNamespace": {
+                                "type": "boolean"
+                            },
+                            "allowValues": {
+                                "type": "boolean"
+                            },
+                            "catalogs": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "config": {
+                                "properties": {
+                                    "install": {
+                                        "properties": {
+                                            "createNamespace": {
+                                                "type": "boolean"
+                                            },
+                                            "remediation": {
+                                                "properties": {
+                                                    "remediateLastFailure": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "retries": {
+                                                        "type": "number"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "remediateLastFailure",
+                                                    "retries"
+                                                ],
+                                                "type": "object"
+                                            }
+                                        },
+                                        "required": [
+                                            "createNamespace",
+                                            "remediation"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "timeout": {
+                                        "type": "string"
+                                    },
+                                    "upgrade": {
+                                        "properties": {
+                                            "remediation": {
+                                                "properties": {
+                                                    "remediateLastFailure": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "retries": {
+                                                        "type": "number"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "remediateLastFailure",
+                                                    "retries"
+                                                ],
+                                                "type": "object"
+                                            }
+                                        },
+                                        "required": [
+                                            "remediation"
+                                        ],
+                                        "type": "object"
+                                    }
+                                },
+                                "required": [
+                                    "install",
+                                    "timeout",
+                                    "upgrade"
+                                ],
+                                "type": "object"
+                            },
+                            "contextSchema": {
+                                "properties": {
+                                    "File": {
+                                        "type": "string"
+                                    },
+                                    "Json": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "File",
+                                    "Json",
+                                    "Yaml"
+                                ],
+                                "type": "object"
+                            },
+                            "dependsOn": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "parameters": {
+                                "additionalProperties": true,
+                                "description": "List of paramters as key/value pairs",
+                                "type": "object"
+                            },
+                            "parametersSchema": {
+                                "properties": {
+                                    "File": {
+                                        "type": "string"
+                                    },
+                                    "Json": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "File",
+                                    "Json",
+                                    "Yaml"
+                                ],
+                                "type": "object"
+                            },
+                            "protected": {
+                                "type": "boolean"
+                            },
+                            "roles": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "source": {
+                                "properties": {
+                                    "allowedVersions": {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "type": "array"
+                                    },
+                                    "defaultVersion": {
+                                        "type": "string"
+                                    },
+                                    "gitRepository": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "namespace": {
+                                                "type": "string"
+                                            },
+                                            "path": {
+                                                "type": "string"
+                                            },
+                                            "unmanaged": {
+                                                "type": "boolean"
+                                            }
+                                        },
+                                        "required": [
+                                            "name",
+                                            "path",
+                                            "unmanaged",
+                                            "namespace"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "helmRepository": {
+                                        "properties": {
+                                            "certSecretRef": {
+                                                "type": "string"
+                                            },
+                                            "chart": {
+                                                "type": "string"
+                                            },
+                                            "interval": {
+                                                "type": "string"
+                                            },
+                                            "secretRef": {
+                                                "type": "string"
+                                            },
+                                            "url": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "url",
+                                            "chart",
+                                            "interval",
+                                            "secretRef",
+                                            "certSecretRef"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "ociRepository": {
+                                        "properties": {
+                                            "certSecretRef": {
+                                                "type": "string"
+                                            },
+                                            "insecure": {
+                                                "type": "boolean"
+                                            },
+                                            "interval": {
+                                                "type": "string"
+                                            },
+                                            "secretRef": {
+                                                "type": "string"
+                                            },
+                                            "url": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "url",
+                                            "insecure",
+                                            "interval",
+                                            "secretRef",
+                                            "certSecretRef"
+                                        ],
+                                        "type": "object"
+                                    }
+                                },
+                                "required": [
+                                    "allowedVersions",
+                                    "defaultVersion",
+                                    "gitRepository",
+                                    "ociRepository",
+                                    "helmRepository"
+                                ],
+                                "type": "object"
+                            },
+                            "suspended": {
+                                "type": "boolean"
+                            },
+                            "usage": {
+                                "oneOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "additionalProperties": true,
+                                        "type": "object"
+                                    }
+                                ]
+                            },
+                            "values": {
+                                "oneOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "additionalProperties": true,
+                                        "type": "object"
+                                    }
+                                ]
+                            },
+                            "version": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "version",
+                            "catalogs",
+                            "usage",
+                            "config",
+                            "suspended",
+                            "protected",
+                            "source",
+                            "parameters",
+                            "parametersSchema",
+                            "contextSchema",
+                            "values",
+                            "allowValues",
+                            "allowCreateNamespace",
+                            "roles",
+                            "dependsOn"
+                        ],
+                        "type": "object"
+                    },
+                    "status": {
+                        "properties": {
+                            "error": {
+                                "type": "string"
+                            },
+                            "file": {
+                                "type": "string"
+                            },
+                            "parametersSchema": {
+                                "type": "object"
+                            },
+                            "path": {
+                                "type": "string"
+                            },
+                            "releases": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "title": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "file",
+                            "path",
+                            "error",
+                            "parametersSchema",
+                            "releases",
+                            "title"
+                        ],
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "kind",
+                    "spec",
+                    "status"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "component"
+                }
+            },
+            "ComponentReleasePayload": {
+                "properties": {
+                    "component": {
+                        "properties": {
+                            "config": {
+                                "additionalProperties": true,
+                                "description": "Additional configuration",
+                                "type": "object"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "parameterFiles": {
+                                "items": {
+                                    "properties": {
+                                        "document": {
+                                            "type": "string"
+                                        },
+                                        "file": {
+                                            "type": "string"
+                                        },
+                                        "unwrap": {
+                                            "type": "string"
+                                        },
+                                        "wrap": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "type": "array"
+                            },
+                            "parameters": {
+                                "additionalProperties": true,
+                                "description": "List of paramters as key/value pairs",
+                                "type": "object"
+                            },
+                            "protected": {
+                                "type": "boolean"
+                            },
+                            "source": {
+                                "properties": {
+                                    "version": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "version"
+                                ],
+                                "type": "object"
+                            },
+                            "suspended": {
+                                "type": "boolean"
+                            },
+                            "values": {
+                                "additionalProperties": true,
+                                "description": "List of values as key/value pairs",
+                                "type": "object"
+                            },
+                            "version": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "version"
+                        ]
+                    },
+                    "dependsOn": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "namespace": {
+                        "type": "string"
+                    },
+                    "roles": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "name",
+                    "component"
+                ],
+                "type": "object"
+            },
+            "ComponentReleaseRequest": {
+                "properties": {
+                    "comment": {
+                        "type": "string"
+                    },
+                    "componentReleases": {
+                        "items": {
+                            "$ref": "#/components/schemas/ComponentReleasePayload"
+                        },
+                        "type": "array"
+                    },
+                    "gitRepoFolder": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "gitRepoFolder",
+                    "comment",
+                    "componentReleases"
+                ],
+                "type": "object"
+            },
+            "ComponentReleaseResponse": {
+                "properties": {
+                    "kind": {
+                        "type": "string"
+                    },
+                    "spec": {
+                        "properties": {
+                            "component": {
+                                "properties": {
+                                    "Ref": {
+                                        "properties": {
+                                            "Name": {
+                                                "type": "string"
+                                            },
+                                            "Version": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "Name",
+                                            "Version"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "Source": {
+                                        "properties": {
+                                            "version": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "version"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "config": {
+                                        "additionalProperties": true,
+                                        "description": "Additional configuration",
+                                        "type": "object"
+                                    },
+                                    "parameterFiles": {
+                                        "items": {
+                                            "properties": {
+                                                "Document": {
+                                                    "type": "string"
+                                                },
+                                                "File": {
+                                                    "type": "string"
+                                                },
+                                                "Unwrap": {
+                                                    "type": "string"
+                                                },
+                                                "Wrap": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "type": "array"
+                                    },
+                                    "parameters": {
+                                        "additionalProperties": true,
+                                        "description": "List of paramters as key/value pairs",
+                                        "type": "object"
+                                    },
+                                    "protected": {
+                                        "type": "boolean"
+                                    },
+                                    "suspended": {
+                                        "type": "boolean"
+                                    },
+                                    "values": {
+                                        "additionalProperties": true,
+                                        "description": "List of values as key/value pairs",
+                                        "type": "object"
+                                    }
+                                },
+                                "required": [
+                                    "Ref",
+                                    "suspended",
+                                    "protected",
+                                    "Source",
+                                    "parameters",
+                                    "parameterFiles",
+                                    "config",
+                                    "values"
+                                ],
+                                "type": "object"
+                            },
+                            "dependsOn": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "enabled": {
+                                "type": "boolean"
+                            },
+                            "helmReleaseName__": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string"
+                            },
+                            "roles": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "enabled",
+                            "component",
+                            "namespace",
+                            "helmReleaseName__",
+                            "roles",
+                            "dependsOn"
+                        ],
+                        "type": "object"
+                    },
+                    "status": {
+                        "properties": {
+                            "catalogs": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "dependencies": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "error": {
+                                "type": "string"
+                            },
+                            "file": {
+                                "type": "string"
+                            },
+                            "parameters": {
+                                "additionalProperties": true,
+                                "description": "List of values as key/value pairs",
+                                "type": "object"
+                            },
+                            "path": {
+                                "type": "string"
+                            },
+                            "usage": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "file",
+                            "path",
+                            "error",
+                            "parameters",
+                            "dependencies",
+                            "usage",
+                            "catalogs"
+                        ],
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "kind",
+                    "spec",
+                    "status"
+                ],
+                "type": "object"
+            },
+            "FlatComponent": {
+                "properties": {
+                    "catalogs": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "componentName": {
+                        "type": "string"
+                    },
+                    "componentReleaseName": {
+                        "type": "string"
+                    },
+                    "componentVersion": {
+                        "type": "string"
+                    },
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "packageName": {
+                        "type": "string"
+                    },
+                    "packageVersion": {
+                        "type": "string"
+                    },
+                    "protected": {
+                        "type": "boolean"
+                    },
+                    "suspended": {
+                        "type": "boolean"
+                    },
+                    "templateName": {
+                        "type": "string"
+                    },
+                    "templateReleaseName": {
+                        "type": "string"
+                    },
+                    "templateVersion": {
+                        "type": "string"
+                    },
+                    "usage": {
+                        "default": "",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "packageName",
+                    "packageVersion",
+                    "componentName",
+                    "componentVersion",
+                    "templateName",
+                    "templateVersion",
+                    "componentReleaseName",
+                    "templateReleaseName",
+                    "enabled",
+                    "suspended",
+                    "protected",
+                    "catalogs",
+                    "usage"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "flatComponent"
+                }
+            },
+            "GitCommit": {
+                "properties": {
+                    "commit": {
+                        "description": "The hash of the commit",
+                        "type": "string"
+                    },
+                    "commitMessage": {
+                        "description": "A commit Message",
+                        "type": "string"
+                    },
+                    "committerEmail": {
+                        "description": "Email of the committer",
+                        "type": "string"
+                    },
+                    "committerName": {
+                        "description": "Name of the committer",
+                        "type": "string"
+                    },
+                    "force": {
+                        "default": false,
+                        "description": "Whether to force commit",
+                        "type": "boolean"
+                    },
+                    "targetPath": {
+                        "description": "Target file path of the commit in the git repository",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "KadInstance": {
+                "properties": {
+                    "apiUrl": {
+                        "type": "string",
+                        "x-go-name": "APIURL"
+                    },
+                    "authBearer": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "x-go-name": "ID"
+                    },
+                    "insecureSkipVerify": {
+                        "default": true,
+                        "type": "boolean"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "apiUrl",
+                    "authBearer",
+                    "insecureSkipVerify"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "kadInstance"
+                }
+            },
+            "ServerError": {
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "message",
+                    "status",
+                    "type"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "serverError"
+                }
+            },
+            "Service": {
+                "properties": {
+                    "flatComponents": {
+                        "items": {
+                            "$ref": "#/components/schemas/FlatComponent"
+                        },
+                        "type": "array",
+                        "x-order": 4
+                    },
+                    "isComposition": {
+                        "default": false,
+                        "type": "boolean",
+                        "x-order": 3
+                    },
+                    "name": {
+                        "type": "string",
+                        "x-order": 1
+                    }
+                },
+                "required": [
+                    "name",
+                    "isComposition",
+                    "flatComponents"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "service"
+                }
+            },
+            "TemplateRelease": {
+                "properties": {
+                    "kind": {
+                        "type": "string"
+                    },
+                    "spec": {
+                        "properties": {
+                            "enabled": {
+                                "type": "boolean"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "template": {
+                                "properties": {
+                                    "Ref": {
+                                        "properties": {
+                                            "Name": {
+                                                "type": "string"
+                                            },
+                                            "Version": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "Name",
+                                            "Version"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "parameters": {
+                                        "additionalProperties": true,
+                                        "description": "List of paramters as key/value pairs",
+                                        "type": "object"
+                                    }
+                                },
+                                "required": [
+                                    "Ref",
+                                    "parameters",
+                                    "parameterFiles"
+                                ],
+                                "type": "object"
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "template",
+                            "enabled"
+                        ],
+                        "type": "object"
+                    },
+                    "status": {
+                        "properties": {
+                            "catalogs": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "children": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "error": {
+                                "type": "string"
+                            },
+                            "file": {
+                                "type": "string"
+                            },
+                            "parameters": {
+                                "additionalProperties": true,
+                                "description": "List of paramters as key/value pairs",
+                                "type": "object"
+                            },
+                            "path": {
+                                "type": "string"
+                            },
+                            "usage": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "file",
+                            "path",
+                            "error",
+                            "parameters",
+                            "children",
+                            "usage",
+                            "catalogs"
+                        ],
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "kind",
+                    "spec",
+                    "status"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "templateRelease"
+                }
+            },
+            "UserProfile": {
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "groups": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "login": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "roles": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "sub": {
+                        "type": "string",
+                        "x-go-name": "subject"
+                    }
+                },
+                "required": [
+                    "sub",
+                    "login",
+                    "name",
+                    "email",
+                    "groups",
+                    "roles"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "userProfile"
+                }
+            }
+        },
+        "securitySchemes": {
+            "access_token": {
+                "bearerFormat": "JWT",
+                "scheme": "bearer",
+                "type": "http"
+            },
+            "basicAuth": {
+                "scheme": "basic",
+                "type": "http"
+            },
+            "oauth2": {
+                "flows": {
+                    "authorizationCode": {
+                        "authorizationUrl": "http://keycloak:7080/realms/master/protocol/openid-connect/auth",
+                        "scopes": {
+                            "email": "User Email",
+                            "openid": "OpenId Authentication",
+                            "profile": "User Profile",
+                            "roles": "User Roles"
+                        },
+                        "tokenUrl": "http://keycloak:7080/realms/master/protocol/openid-connect/token"
+                    }
+                },
+                "type": "oauth2"
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "OKDP documentation",
+        "url": "https://okdp.io/"
+    },
+    "info": {
+        "contact": {
+            "email": "idir.izitounene@kubotal.io",
+            "name": "OKDP community",
+            "url": "https://okdp.io/"
+        },
+        "description": "This is a REST API reference for the OKDP Server",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "title": "OKDP Server REST Api",
+        "version": "1.0.0"
+    },
+    "openapi": "3.0.0",
+    "paths": {
+        "/kad": {
+            "get": {
+                "description": "List all KAD configured instances",
+                "operationId": "ListKadInstances",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "instances": {
+                                            "items": {
+                                                "$ref": "#/components/schemas/KadInstance"
+                                            },
+                                            "type": "array"
+                                        }
+                                    },
+                                    "required": [
+                                        "instances"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "List of KAD instances"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "List all KAD configured instances",
+                "tags": [
+                    "kad"
+                ]
+            }
+        },
+        "/kad/{kadInstanceId}": {
+            "get": {
+                "description": "Get KAD instance by name",
+                "operationId": "GetKadInstance",
+                "parameters": [
+                    {
+                        "description": "KAD instance ID",
+                        "in": "path",
+                        "name": "kadInstanceId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "instances": {
+                                            "items": {
+                                                "$ref": "#/components/schemas/KadInstance"
+                                            },
+                                            "type": "array"
+                                        }
+                                    },
+                                    "required": [
+                                        "instances"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "KAD instance configuration"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get KAD instance by name",
+                "tags": [
+                    "kad"
+                ]
+            }
+        },
+        "/kad/{kadInstanceId}/catalogs": {
+            "get": {
+                "description": "List all catalogs\n",
+                "operationId": "ListCatalogs",
+                "parameters": [
+                    {
+                        "description": "KAD instance ID",
+                        "in": "path",
+                        "name": "kadInstanceId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "catalogs": {
+                                            "items": {
+                                                "$ref": "#/components/schemas/Catalog"
+                                            },
+                                            "type": "array"
+                                        }
+                                    },
+                                    "required": [
+                                        "catalogs"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "List of the catalogs"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "List all catalogs",
+                "tags": [
+                    "catalogs"
+                ]
+            }
+        },
+        "/kad/{kadInstanceId}/catalogs/{name}": {
+            "get": {
+                "description": "Get a catalog info by name\n",
+                "operationId": "GetCatalog",
+                "parameters": [
+                    {
+                        "description": "KAD instance ID",
+                        "in": "path",
+                        "name": "kadInstanceId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Catalog name",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Catalog"
+                                }
+                            }
+                        },
+                        "description": "Catalog information"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get a catalog info by name",
+                "tags": [
+                    "catalogs"
+                ]
+            }
+        },
+        "/kad/{kadInstanceId}/componentreleases": {
+            "get": {
+                "description": "todo\n",
+                "operationId": "ListComponentReleases",
+                "parameters": [
+                    {
+                        "description": "KAD instance ID",
+                        "in": "path",
+                        "name": "kadInstanceId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter by catalogs (comma separated)",
+                        "in": "query",
+                        "name": "catalog",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "componentreleases": {
+                                            "items": {
+                                                "$ref": "#/components/schemas/ComponentReleaseResponse"
+                                            },
+                                            "type": "array"
+                                        }
+                                    },
+                                    "required": [
+                                        "componentreleases"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "List of the component releases"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "List all component releases",
+                "tags": [
+                    "componentreleases"
+                ]
+            }
+        },
+        "/kad/{kadInstanceId}/componentreleases/{name}": {
+            "get": {
+                "description": "Get a component release by name\n",
+                "operationId": "GetComponentRelease",
+                "parameters": [
+                    {
+                        "description": "KAD instance ID",
+                        "in": "path",
+                        "name": "kadInstanceId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Component release name",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter by catalogs (comma separated)",
+                        "in": "query",
+                        "name": "catalog",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ComponentReleaseResponse"
+                                }
+                            }
+                        },
+                        "description": "Component release information"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get a component release by name",
+                "tags": [
+                    "componentreleases"
+                ]
+            },
+            "put": {
+                "description": "Create or update a component release\n",
+                "operationId": "CreateOrUpdateComponentRelease",
+                "parameters": [
+                    {
+                        "description": "KAD instance ID",
+                        "in": "path",
+                        "name": "kadInstanceId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Component release name",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ComponentReleaseRequest"
+                            }
+                        }
+                    },
+                    "description": "Component release payload",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GitCommit"
+                                }
+                            }
+                        },
+                        "description": "Commit updated successfully"
+                    },
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GitCommit"
+                                }
+                            }
+                        },
+                        "description": "Commit created successfully"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Create or update a component release",
+                "tags": [
+                    "componentreleases"
+                ]
+            }
+        },
+        "/kad/{kadInstanceId}/components": {
+            "get": {
+                "description": "List all components\n",
+                "operationId": "ListComponents",
+                "parameters": [
+                    {
+                        "description": "KAD instance ID",
+                        "in": "path",
+                        "name": "kadInstanceId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter by catalogs (comma separated)",
+                        "in": "query",
+                        "name": "catalog",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "components": {
+                                            "items": {
+                                                "$ref": "#/components/schemas/Component"
+                                            },
+                                            "type": "array"
+                                        }
+                                    },
+                                    "required": [
+                                        "components"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "List of the components"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "List all components",
+                "tags": [
+                    "components"
+                ]
+            }
+        },
+        "/kad/{kadInstanceId}/components/{name}": {
+            "get": {
+                "description": "Get a component by name\n",
+                "operationId": "GetComponent",
+                "parameters": [
+                    {
+                        "description": "KAD instance ID",
+                        "in": "path",
+                        "name": "kadInstanceId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Component name",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter by catalogs (comma separated)",
+                        "in": "query",
+                        "name": "catalog",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Component"
+                                }
+                            }
+                        },
+                        "description": "Component release information"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get a component by name",
+                "tags": [
+                    "components"
+                ]
+            }
+        },
+        "/kad/{kadInstanceId}/services": {
+            "get": {
+                "description": "List all services\n",
+                "operationId": "ListServices",
+                "parameters": [
+                    {
+                        "description": "KAD instance ID",
+                        "in": "path",
+                        "name": "kadInstanceId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter by catalogs (comma separated)",
+                        "in": "query",
+                        "name": "catalog",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "services": {
+                                            "items": {
+                                                "$ref": "#/components/schemas/Service"
+                                            },
+                                            "type": "array"
+                                        }
+                                    },
+                                    "required": [
+                                        "services"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "List of the services"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "List all services",
+                "tags": [
+                    "services"
+                ]
+            }
+        },
+        "/kad/{kadInstanceId}/templatereleases": {
+            "get": {
+                "description": "List all template releases\n",
+                "operationId": "ListTemplateReleases",
+                "parameters": [
+                    {
+                        "description": "KAD instance ID",
+                        "in": "path",
+                        "name": "kadInstanceId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter by catalogs (comma separated)",
+                        "in": "query",
+                        "name": "catalog",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "templatereleases": {
+                                            "items": {
+                                                "$ref": "#/components/schemas/TemplateRelease"
+                                            },
+                                            "type": "array"
+                                        }
+                                    },
+                                    "required": [
+                                        "templatereleases"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "List of template releases"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "List all template releases",
+                "tags": [
+                    "templatereleases"
+                ]
+            }
+        },
+        "/kad/{kadInstanceId}/templatereleases/{name}": {
+            "get": {
+                "description": "Get a template release by name\n",
+                "operationId": "GetTemplateRelease",
+                "parameters": [
+                    {
+                        "description": "KAD instance ID",
+                        "in": "path",
+                        "name": "kadInstanceId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Template release name",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter by catalogs (comma separated)",
+                        "in": "query",
+                        "name": "catalog",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TemplateRelease"
+                                }
+                            }
+                        },
+                        "description": "Template release information"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get a template release by name",
+                "tags": [
+                    "templatereleases"
+                ]
+            }
+        },
+        "/users/myprofile": {
+            "get": {
+                "description": "Get my user profile\n",
+                "operationId": "GetMyProfile",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserProfile"
+                                        }
+                                    },
+                                    "required": [
+                                        "user"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "My user profile"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get my user profile",
+                "tags": [
+                    "users"
+                ]
+            }
+        }
+    },
+    "security": [
+        {
+            "basicAuth": []
+        },
+        {
+            "oauth2": [
+                "openid",
+                "email",
+                "profile",
+                "roles"
+            ]
+        }
+    ],
+    "servers": [
+        {
+            "url": "/api/v1"
+        }
+    ],
+    "tags": [
+        {
+            "description": "User profile",
+            "externalDocs": {
+                "url": "https://github.com/okdp/okdp-server"
+            },
+            "name": "users"
+        },
+        {
+            "description": "Kad instances configuration",
+            "externalDocs": {
+                "url": "https://github.com/okdp/okdp-server"
+            },
+            "name": "kad"
+        },
+        {
+            "description": "Services",
+            "externalDocs": {
+                "url": "https://github.com/okdp/okdp-server"
+            },
+            "name": "services"
+        },
+        {
+            "description": "Catalogs",
+            "externalDocs": {
+                "url": "https://github.com/okdp/okdp-server"
+            },
+            "name": "catalogs"
+        },
+        {
+            "description": "Template releases",
+            "externalDocs": {
+                "url": "https://github.com/okdp/okdp-server"
+            },
+            "name": "templatereleases"
+        },
+        {
+            "description": "Component releases",
+            "externalDocs": {
+                "url": "https://github.com/okdp/okdp-server"
+            },
+            "name": "componentreleases"
+        },
+        {
+            "description": "Components",
+            "externalDocs": {
+                "url": "https://github.com/okdp/okdp-server"
+            },
+            "name": "components"
+        }
+    ]
+}
