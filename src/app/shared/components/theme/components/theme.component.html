@@ -1,0 +1,7 @@
+<button
+  class="border-0 d-flex justify-content-start align-items-center text-primary bg-transparent"
+  style="padding-left: 0px !important; border: 0px !important;"
+  (click)="toggleTheme()">
+  <i class="okdp-icon px-2 fa-solid" [ngClass]="currentTheme === 'light' ? 'fa-moon' : 'fa-sun'"></i>
+  <span class="text-primary">{{ currentTheme === 'light' ? 'Dark Mode' : 'Light Mode' }}</span>
+</button>
