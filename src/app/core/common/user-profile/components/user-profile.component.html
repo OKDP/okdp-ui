@@ -1,0 +1,56 @@
+<!-- Overlay -->
+<div *ngIf="isToggled" class="offcanvas-backdrop fade {{ isToggled ? 'show' : '' }}" (click)="hideSidebar()"></div>
+<div class="container-fluid">
+  <!-- User profile right sidebar -->
+  <div
+    tabindex="-1"
+    class="offcanvas offcanvas-end user-profile show {{
+      isToggled ? 'slide-in' : 'slide-out'
+    }}">
+    <div class="offcanvas-header d-flex flex-column mx-1 pb-0" style="align-items: start">
+      <button
+        type="button"
+        class="position-absolute close-icon top-0 end-0 m-2 border-0 bg-transparent p-0"
+        aria-label="Close"
+        (click)="hideSidebar()">
+        <i class="material-symbols-outlined">close</i>
+      </button>
+      <div class="d-flex gap-2">
+        <div class="d-flex align-items-center flex-shrink-0">
+          <i class="fa-solid fa-user fa-2x okdp-text-primary"></i>
+        </div>
+        <div class="d-flex flex-column flex-grow-1">
+          <div class="text-primary">
+            {{ userInfo.name }}
+          </div>
+          <div class="text-primary">
+            {{ userInfo.email }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="offcanvas-body">
+      <hr />
+      <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+        <!-- The Switch Theme will be integrated later in the setting/user preference -->
+        <li class="nav-item">
+          <app-theme />
+        </li>
+        <!-- Settings -->
+        <li class="nav-item">
+          <a class="nav-link">
+            <i class="fa fa-cog okdp-icon px-2"></i>
+            <span class="text-primary">Settings</span>
+          </a>
+        </li>
+        <!-- Logout -->
+        <li class="nav-item">
+          <a class="nav-link" href="#" (click)="logout()">
+            <i class="fa fa-sign-out okdp-icon px-2"></i>
+            <span class="text-primary">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
