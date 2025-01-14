@@ -1,0 +1,12 @@
+<ul class="nav nav-tabs border-0 gap-3">
+  <li *ngFor="let item of items" class="nav-item">
+    <a
+      class="nav-link text-primary"
+      routerLinkActive="active"
+      [routerLink]="[ basePath, item | trimWhiteSpace ]"
+      [class]="display"
+      (click)="onTabChange(item)">
+      {{ item | titlecase }}
+    </a>
+  </li>
+</ul>
