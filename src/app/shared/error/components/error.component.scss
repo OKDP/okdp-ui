@@ -1,0 +1,56 @@
+@keyframes leftToRight {
+    0% {
+      width: 0%;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+
+@keyframes bounce {
+0% {
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(-10px);
+    }
+    50% {
+        transform: translateY(0);
+    }
+    75% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
+.okdp-border-bottom {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 2px solid transparent !important;
+}
+
+
+.okdp-border-bottom::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px; 
+    background-color: var(--text-okdp); 
+    animation: leftToRight 1s ease-out forwards; 
+}
+
+.animate .material-symbols-outlined {
+    animation: bounce 0.5s ease forwards;
+    animation-delay: 1s;
+}
+
+.rotate-icon {
+    display: inline-block;
+    transform: rotate(45deg);
+}
+
