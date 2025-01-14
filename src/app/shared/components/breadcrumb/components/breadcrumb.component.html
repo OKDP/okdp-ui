@@ -1,0 +1,15 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <i class="fa-solid fa-tasks breadcrumb-icon"></i>
+    </li>
+    <li class="breadcrumb-item"><a href="#">Administration</a></li>
+    <li
+      *ngFor="let breadcrumb of breadcrumbs | async; let last = last"
+      class="breadcrumb-item"
+      [ngClass]="{ active: last }"
+      [attr.aria-current]="last ? 'page' : null">
+      <a [routerLink]="breadcrumb.url">{{ breadcrumb.label }}</a>
+    </li>
+  </ol>
+</nav>
