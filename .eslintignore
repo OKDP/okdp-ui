@@ -1,0 +1,3 @@
+# Ignore all .spec.ts files
+src/app/api/**
+src/index.html

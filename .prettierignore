@@ -1,0 +1,22 @@
+# Project
+build
+dist
+public
+styles
+node_modules
+.angular
+/tsconfig.json
+*.json
+*.md
+*.yml
+
+
+# IDEs and editors
+.vscode
+.idea
+.devcontainer
+
+# Miscellaneous
+.local
+.tmp
+tmp
