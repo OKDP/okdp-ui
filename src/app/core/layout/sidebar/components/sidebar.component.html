@@ -1,0 +1,61 @@
+<nav
+  id="sidebar"
+  class="sidebar"
+  [ngClass]="{ toggled: isCollapsed }"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()">
+  <div class="sidebar-layout">
+    <div class="sidebar-content">
+      <!-- Principal services (Home, catalog, etc. )-->
+      <div class="menu">
+        <ul class="">
+          <li class="menu-item" [ngClass]="{ active: activeMenu === 'home' }">
+            <a class="px-2" routerLink="/home" ariaCurrentWhenActive="page" (click)="onClick('home')">
+              <span class="menu-icon"><i class="fa-solid fa-home"></i></span>
+              <span class="menu-title">Home</span>
+            </a>
+          </li>
+        </ul>
+        <ul>
+          <li class="menu-item" [ngClass]="{ active: activeMenu === 'catalogs' }">
+            <a class="px-2" routerLink="/catalogs" ariaCurrentWhenActive="page" (click)="onClick('catalogs')">
+              <span class="menu-icon"><i class="fa-solid fa-layer-group"></i></span>
+              <span class="menu-title">Catalog</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- OKDP services -->
+      <div class="menu">
+        <ul>
+          <li class="menu-header">
+            <span>Services</span>
+          </li>
+        </ul>
+        <ul *ngIf="!isLoaded" class="d-flex justify-content-center mt-5">
+          <li>
+            <app-loading />
+          </li>
+        </ul>
+        <ul *ngIf="isLoaded">
+          <li *ngFor="let menu of menus" class="menu-item" [ngClass]="{ active: activeMenu === menu.title }">
+            <a
+              class="px-2"
+              routerLinkActive="active"
+              ariaCurrentWhenActive="page"
+              routerLink="/services/{{ menu.title }}/details"
+              (click)="onClick(menu.title)">
+              <span class="menu-icon"><i class="{{ menu.icon }}"></i></span>
+              <span class="menu-title">{{ menu.title | titleCase }}</span>
+              <span class="menu-suffix">
+                <span *ngIf="menu.badge" class="badge rounded-pill" [ngClass]="menu.badge.class">
+                  {{ menu.badge.text }}
+                </span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
