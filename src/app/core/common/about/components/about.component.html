@@ -1,0 +1,79 @@
+<!-- Overlay -->
+<div *ngIf="isToggled" class="offcanvas-backdrop fade {{ isToggled ? 'show' : '' }}" (click)="hideSidebar()"></div>
+<div class="container-fluid">
+  <!-- About sidebar -->
+  <div
+    tabindex="-1"
+    class="offcanvas offcanvas-end about show {{
+      isToggled ? 'slide-in' : 'slide-out'
+    }}">
+    <div class="offcanvas-header d-flex flex-column mx-1 pb-0" style="align-items: start">
+      <button
+        type="button"
+        class="position-absolute close-icon top-0 end-0 m-2 border-0 bg-transparent p-0"
+        aria-label="Close"
+        (click)="hideSidebar()">
+        <i class="material-symbols-outlined">close</i>
+      </button>
+      <div class="d-flex gap-3">
+        <div class="d-flex flex-shrink-0 align-items-center">
+          <i class="fa-solid fa-circle-info fa-2x okdp-text-primary"></i>
+        </div>
+        <div class="d-flex flex-column flex-grow-1">
+          <div class="d-flex align-items-center text-primary fw-bold mb-2">About OKDP</div>
+          <div class="d-flex align-items-center text-primary mb-2">
+            <span class="pe-2">Version:</span>
+            <a class="okdp-text" href="https://github.com/OKDP/okdp-ui" target="_blank">0.1.0-snapshot</a>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 text-primary">
+          OKDP is free, open-source, and cloud-native data platform designed for Kubernetes.
+        </div>
+      </div>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+        <!-- Release Note -->
+        <li class="nav-item">
+          <a class="nav-link text-okdp" href="https://github.com/okdp">
+            <i class="fa-solid fa-file text-okdp px-1"></i> Release Note
+          </a>
+        </li>
+      </ul>
+      <hr />
+      <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+        <!-- Getting Started -->
+        <li class="nav-item">
+          <a class="nav-link text-primary" href="https://github.com/okdp">
+            <i class="fa fa-book okdp-icon px-1"></i> Getting started
+          </a>
+        </li>
+        <!-- Tutorials -->
+        <li class="nav-item">
+          <a class="nav-link text-primary" href="https://github.com/okdp">
+            <i class="fa fa-folder okdp-icon px-1"></i> Tutorials
+          </a>
+        </li>
+        <!-- Documentation -->
+        <li class="nav-item">
+          <a class="nav-link text-primary" href="https://github.com/okdp">
+            <i class="fa fa-book okdp-icon px-1"></i> Documentation
+          </a>
+        </li>
+        <!-- Contribute -->
+        <li class="nav-item">
+          <a class="nav-link text-primary" href="https://github.com/okdp">
+            <i class="fab fa-github okdp-icon px-1"></i> Contribute
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav position-absolute bottom-0 start-0 w-100 bg-light text-center p-3">
+        <li class="nav-item">
+          <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
