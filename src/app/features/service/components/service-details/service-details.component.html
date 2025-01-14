@@ -1,0 +1,52 @@
+<div class="container-fluid  align-items-center mx-0 px-0 pt-4">
+  <ul *ngIf="!isLoaded" class="d-flex justify-content-center mt-5">
+    <li>
+      <span class="menu-icon ml-4">
+        <app-loading />
+      </span>
+    </li>
+  </ul>
+  <div *ngIf="isLoaded" class="row row-cols-1 row-cols-md-4 g-2">
+    <div *ngFor="let instance of instances" class="col">
+      <div class="card h-100 rounded-3 shadow-sm mx-auto mx-1">
+        <div class="card-header d-flex align-items-center p-2">
+          <img class="me-2 card-icon" alt="Service instance" src="images/{{ instance?.icon }}" />
+          <ul class="nav w-100 d-flex flex-row justify-content-start align-items-center gap-1">
+            <li class="nav-item">
+              <span class="card-title">{{ instance.service.name }}</span>
+            </li>
+            <li class="nav-item ms-auto">
+              <span class="badge rounded-pill bg-success">Running</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-body text-primary">
+          <p class="card-text">{{ instance?.description }}</p>
+        </div>
+
+        <div class="card-footer border-0">
+          <ul class="nav d-flex flex-row justify-content-end align-items-center gap-1">
+            <li class="nav-item">
+              <a
+                class="nav-link rounded-pill nav-item-hover-danger d-visible d-flex align-items-center text-truncate px-2 py-1 w-auto"
+                href="#">
+                <i class="material-symbols-outlined text-primary">delete</i>
+                <span class="text-primary ps-1">Delete</span>
+              </a>
+            </li>
+            <li *ngIf="instance?.endpoint !== ''" class="nav-item">
+              <a
+                class="nav-link rounded-pill nav-item-hover-primary d-visible d-flex align-items-center text-truncate px-2 py-1 w-auto"
+                target="_blank"
+                href="{{ instance?.endpoint }}">
+                <i class="material-symbols-outlined text-primary border-0">open_in_new</i>
+                <span class="text-primary ps-1">{{ instance.service.name }} UI</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
