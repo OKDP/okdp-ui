@@ -1,0 +1,85 @@
+<!-- Search filter -->
+<div class="row d-flex justify-content-start align-items-center">
+  <div class="col col-12">
+    <app-search-filter
+      noItemsLabel="No service found."
+      [found]="filtredCatalogItems.length > 0 || !isLoaded"
+      (searchChanged)="onSearchChanged($event)" />
+  </div>
+</div>
+
+<!-- Navigation tabs -->
+<div class="container-fluid mx-0 px-0 pt-2">
+  <app-nav-tabs
+    basePath="/catalogs"
+    [items]="catalogNames"
+    [display]="navTabDisplayClass"
+    (tabChange)="onCatalogChange($event)" />
+</div>
+
+<div class="container-fluid mx-0 px-0 pt-4">
+  <ul *ngIf="!isLoaded" class="d-flex justify-content-center mt-5">
+    <li>
+      <span class="menu-icon ml-4">
+        <app-loading />
+      </span>
+    </li>
+  </ul>
+  <div *ngIf="isLoaded" class="row row-cols-1 row-cols-md-4 g-2">
+    <!-- Services catalog -->
+    <div *ngFor="let item of filtredCatalogItems" class="col">
+      <div class="card h-100 rounded-3 shadow-sm mx-auto mx-1">
+        <div class="card-header d-flex align-items-center p-2">
+          <img class="me-2 card-icon" alt="Catalog image" src="images/{{ item.icon }}" />
+          <ul class="nav w-100 d-flex flex-row justify-content-start align-items-center gap-1">
+            <li class="nav-item">
+              <span class="card-title" [innerHTML]="highlightMatch(item.name)"></span>
+            </li>
+            <li *ngIf="item.type === TEMPLATE" class="nav-item ms-auto">
+              <span class="badge rounded-pill bg-primary">Template</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-body">
+          <p class="card-text" [innerHTML]="highlightMatch(item.description)"></p>
+        </div>
+
+        <div class="card-footer border-0">
+          <ul
+            *ngIf="item.catalogName?.toLowerCase() !== 'system'"
+            class="nav d-flex flex-row justify-content-end align-items-center gap-1">
+            <li class="nav-item">
+              <a
+                class="nav-link rounded-pill nav-item-hover-primary d-flex align-items-center px-2 py-1 w-auto"
+                href="#">
+                <i class="material-symbols-outlined text-primary border-0">edit</i>
+                <span class="text-primary ps-1">Details</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <button
+                class="btn rounded-pill text-primary d-flex align-items-center px-2 py-1 w-auto"
+                (click)="onDeployService(item)">
+                Deploy
+              </button>
+            </li>
+          </ul>
+          <ul
+            *ngIf="item.catalogName?.toLowerCase() === 'system'"
+            class="nav d-flex flex-row justify-content-end align-items-center gap-1">
+            <li class="nav-item">
+              <a
+                class="nav-link text-primary d-flex align-items-center px-2 py-1 w-auto"
+                href="/catalogs/system"
+                (click)="onDeployService(item)">
+                <i class="material-symbols-outlined text-primary">info</i>
+                <span class="ps-1">Details</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

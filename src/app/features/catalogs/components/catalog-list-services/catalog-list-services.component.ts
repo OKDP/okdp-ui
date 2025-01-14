@@ -1,0 +1,185 @@
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
+import { NgScrollbarModule } from 'ngx-scrollbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { select, Store } from '@ngrx/store';
+import { SearchFilterComponent } from '../../../../shared/components/search-filter';
+import { NavTabsComponent } from '../../../../shared/components/nav-tabs';
+import { CatalogService } from '../..';
+import { Catalog } from '../../../../api/_model';
+import { AppState } from '../../../../core/store';
+import { getKadInstanceId } from '../../../../core/common/kad-instances';
+import { CATALOG_URI, OKDP_CATALOG_NAME } from '../../../../core/constants';
+import { toUri } from '../../../../shared/utils';
+import { CatalogItem, CatalogItemType } from '../../models/catalog-item.model';
+import { AppConfigService } from '../../../../core/config';
+import { LoadingComponent } from '../../../../shared/components/loading';
+import { TitleBarService } from '../../../../shared/components/title-bar';
+import { SidebarService } from '../../../../core/layout/sidebar';
+import { NotificationService } from '../../../../core/common/notifications';
+import { errorMessage } from '../../../../core/models';
+
+@Component({
+  selector: 'app-catalog-list-services',
+  standalone: true,
+  imports: [
+    CommonModule,
+    LoadingComponent,
+    RouterLink,
+    RouterLinkActive,
+    SearchFilterComponent,
+    NavTabsComponent,
+    NgScrollbarModule,
+    FormsModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatCardModule,
+    MatDividerModule,
+    MatButtonModule,
+  ],
+  templateUrl: './catalog-list-services.component.html',
+  styleUrls: ['./catalog-list-services.component.scss'],
+  animations: [],
+})
+export class CatalogListServicesComponent implements OnInit {
+  catalogNames: string[] = [];
+  navTabDisplayClass = '';
+
+  TEMPLATE = CatalogItemType.TEMPLATE;
+  catalogs: Catalog[] = [];
+  isLoaded = false;
+
+  catalogItems: CatalogItem[] = [];
+  filtredCatalogItems: CatalogItem[] = [];
+
+  currentCatalog = '';
+
+  search = '';
+
+  isShowSystemCatalog = false;
+
+  constructor(
+    private catalogService: CatalogService,
+    private notificationService: NotificationService,
+    private appConfigService: AppConfigService,
+    private sidebarService: SidebarService,
+    private titleBarService: TitleBarService,
+    private store: Store<AppState>,
+    private router: Router,
+    private destroyRef: DestroyRef
+  ) {}
+
+  onDeployService(item: CatalogItem): void {
+    this.router.navigate([`/services/${item.name}/deploy`], {
+      queryParams: { catalog: item.catalogName },
+    });
+  }
+
+  onSearchChanged(search: string): void {
+    this.search = search;
+    if (!search) {
+      this.navTabDisplayClass = '';
+      this.toCurrentCatalogCatalog();
+    } else {
+      this.navTabDisplayClass = 'd-none';
+      this.filtredCatalogItems = this.catalogItems.filter(
+        item =>
+          item.name.toLowerCase().includes(search.toLowerCase()) ||
+          item.description?.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+  }
+
+  ngOnInit(): void {
+    this.titleBarService.setCurrentMenu('catalogs');
+    this.sidebarService.setActiveMenu('catalogs');
+
+    this.store.pipe(select(getKadInstanceId)).subscribe(kadInstanceId => {
+      if (kadInstanceId) {
+        this.isLoaded = false;
+        this.getCatalogs(kadInstanceId);
+      }
+    });
+  }
+
+  getCatalogs(kadInstanceId: string): void {
+    this.catalogService
+      .list(kadInstanceId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (catalogs: Catalog[]) => {
+          this.catalogs = catalogs.sort((e1, e2) => {
+            if (e1.name.toLowerCase() === OKDP_CATALOG_NAME) return -1;
+            if (e2.name.toLowerCase() === OKDP_CATALOG_NAME) return 1;
+            return e1.name.toLowerCase().localeCompare(e2.name.toLowerCase());
+          });
+          this.catalogNames = this.catalogs.map(c => c.name);
+          this.catalogItems = this.catalogs.flatMap(c => this.toCatalogItems(c));
+          this.isLoaded = true;
+          this.toCurrentCatalogCatalog();
+        },
+        error: error => {
+          this.notificationService.onError(kadInstanceId, `Unable to fetch catalog, ${errorMessage(error)}`);
+        },
+      });
+  }
+
+  onCatalogChange(catalog: string): void {
+    this.filtredCatalogItems = this.getCatalogItems(catalog);
+  }
+
+  highlightMatch(item: string | undefined): string | undefined {
+    if (!this.search) return item;
+    const query = this.search;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return item?.replace(regex, '<mark class="text-okdp text-nowrap">$1</mark>');
+  }
+
+  private toCatalogItems(catalog: Catalog): CatalogItem[] {
+    let catalogItems: CatalogItem[] = [];
+
+    let components = catalog?.components.map(c => ({
+      catalogName: catalog?.name,
+      name: c,
+      type: CatalogItemType.COMPONENT,
+      icon: this.appConfigService.kadPatchItemsInfo(c).icon,
+      description: this.appConfigService.kadPatchItemsInfo(c).description,
+    })) as CatalogItem[];
+
+    let templates = catalog?.templates.map(t => ({
+      catalogName: catalog?.name,
+      name: t,
+      type: CatalogItemType.TEMPLATE,
+      icon: this.appConfigService.kadPatchItemsInfo(t).icon,
+      description: this.appConfigService.kadPatchItemsInfo(t).description,
+    })) as CatalogItem[];
+
+    catalogItems.push(...components, ...templates);
+
+    return catalogItems;
+  }
+
+  private getCatalogItems(catalog: string): CatalogItem[] {
+    return this.catalogItems.filter(c => c.catalogName === catalog);
+  }
+
+  private toCurrentCatalogCatalog(): void {
+    const currentCatalog = this.getCurrentCatalog();
+    this.filtredCatalogItems = this.toCatalogItems(this.catalogs.find(c => c.name === currentCatalog) as Catalog);
+    this.router.navigate([toUri(CATALOG_URI), currentCatalog]);
+  }
+
+  private getCurrentCatalog(): string {
+    if (this.router.url === toUri(CATALOG_URI)) {
+      return this.catalogNames[0];
+    }
+    return this.router.url.replace(toUri(CATALOG_URI) + '/', '');
+  }
+}
