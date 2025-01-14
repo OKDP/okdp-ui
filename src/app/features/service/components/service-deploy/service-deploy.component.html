@@ -1,0 +1,277 @@
+<div class="container mx-0 px-0 pt-4 position-relative">
+  <div *ngIf="!isLoaded || isSubmitting" class="loading-overlay">
+    <app-loading />
+  </div>
+  <div class="row row-cols-1 row-cols-md-1">
+    <div class="col">
+      <form [formGroup]="componentReleaseForm" (ngSubmit)="onSubmit()">
+        <div class="card rounded-3 shadow-sm mx-auto mx-1">
+          <div class="card-header d-flex align-items-center justify-content-start p-2 position-relative">
+            <img class="me-2 card-icon" alt="Service" src="images/{{ service.icon }}" />
+            <span class="card-title">{{ service.name }}</span>
+            <a
+              target="_blank"
+              class="position-absolute top-0 end-0 m-2"
+              rel="noopener noreferrer"
+              aria-label="More information about Jupyter"
+              href="{{ service.home }}">
+              <i class="material-symbols-outlined text-secondary icon-2x">info</i>
+            </a>
+          </div>
+
+          <div class="card-body">
+            <div formGroupName="componentRelease" class="row align-items-center justify-content-start gap-3">
+              <!-- Name -->
+              <div class="col-auto">
+                <div class="form-group">
+                  <label for="name">Name *</label>
+                  <input
+                    id="name"
+                    class="form-control form-field-underline border-bottom-primary px-0"
+                    formControlName="name"
+                    aria-label="Enter name"
+                    required />
+                  <small class="form-text text-muted">Enter a name for your service instance.</small>
+                </div>
+              </div>
+              <!-- Version -->
+              <div formGroupName="component" class="col-auto">
+                <div class="form-group">
+                  <label for="version">Version *</label>
+                  <select
+                    class="form-control form-select form-field-underline border-bottom-primary px-0 w-100"
+                    formControlName="version"
+                    aria-label="Choose version">
+                    <option *ngFor="let version of availableVersions" [value]="version">
+                      {{ version }}
+                    </option>
+                  </select>
+                  <small class="form-text text-muted">Choose a Kad Component Version.</small>
+                </div>
+              </div>
+
+              <div class="col d-flex justify-content-end">
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn rounded-pill text-primary px-3 py-1" (click)="goBack()">
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    class="btn rounded-pill text-okdp-primary px-3 py-1"
+                    [disabled]="isSubmitting || !isValid">
+                    Deploy
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Git -->
+            <div class="row align-items-center justify-content-between gap-3 mt-3">
+              <fieldset class="col flex-grow-1 border-primary rounded-3 p-3">
+                <legend class="float-none w-auto px-3">Git *</legend>
+                <div class="d-flex gap-3">
+                  <!-- Git Repo Folder -->
+                  <div class="col-12 col-md-6">
+                    <div class="form-group">
+                      <label for="gitRepoFolder">Repo Folder *</label>
+                      <input
+                        id="gitRepoFolder"
+                        class="form-control form-field-underline border-bottom-primary px-0"
+                        formControlName="gitRepoFolder"
+                        aria-label="Enter Git repository folder"
+                        required />
+                      <small class="form-text text-muted d-block">
+                        Push the service as
+                        <strong *ngIf="serviceFileName === ''" class="form-text text-okdp">&lt;name.yaml&gt;</strong>
+                        <strong *ngIf="serviceFileName !== ''" class="form-text text-okdp"
+                          >{{ serviceFileName }}.yaml</strong
+                        >
+                        into this git repository folder.
+                      </small>
+                    </div>
+                  </div>
+                  <!-- Git commit message -->
+                  <div class="col-12 col-md-6">
+                    <div class="form-group">
+                      <label for="comment">Commit message *</label>
+                      <input
+                        id="comment"
+                        class="form-control form-field-underline border-bottom-primary px-0"
+                        formControlName="comment"
+                        aria-label="Enter comments"
+                        required />
+                      <small class="form-text text-muted">
+                        Your git push will be committed as the user
+                        <button
+                          type="button"
+                          class="form-text text-okdp pe-auto btn-link border-0 text-decoration-none"
+                          (click)="toggleUserProfile()">
+                          {{ userInfo.name }} ({{ userInfo.email }})</button
+                        >.
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+
+        <!-- Basic configuration -->
+        <div formGroupName="componentRelease" class="card rounded-3 shadow-sm mx-auto mx-1 my-3">
+          <div class="card-body mb-3">
+            <fieldset class="border-primary rounded-3 p-3">
+              <legend class="float-none w-auto px-3">Basic configuration (Optional)</legend>
+              <div class="row align-items-center justify-content-start gap-5">
+                <div class="col-auto">
+                  <div class="form-group">
+                    <label class="me-2 my-2" for="namespace">Namespace</label>
+                    <input
+                      id="namespace"
+                      class="form-control form-field-underline border-bottom-primary px-0"
+                      formControlName="namespace"
+                      aria-label="Enter namespace" />
+                    <small class="form-text text-muted"
+                      >Enter the Kubernetes namespace for your service deployment.</small
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dependencies and roles -->
+              <div class="row align-items-center justify-content-start gap-3 my-3">
+                <div class="col d-flex gap-3">
+                  <!-- Dependencies -->
+                  <div class="flex-fill">
+                    <div class="form-group">
+                      <label class="me-2 my-4" for="dependsOn">Dependencies</label>
+                      <mat-chip-grid
+                        #dependencies
+                        class="d-flex flex-wrap gap-2 align-items-center"
+                        aria-label="Dependencies">
+                        <mat-chip-row
+                          *ngFor="let dependsOnControl of dependsOnFormArray.controls; let i = index"
+                          [editable]="false"
+                          (removed)="removeDependency(dependsOnControl.value)">
+                          {{ dependsOnControl.value }}
+                          <button
+                            matChipRemove
+                            class="d-flex align-items-center justify-content-center p-0"
+                            [attr.aria-label]="'remove ' + dependsOnControl.value">
+                            <mat-icon>cancel</mat-icon>
+                          </button>
+                        </mat-chip-row>
+
+                        <input
+                          id="dependencies"
+                          class="form-control form-field-underline border-bottom-primary px-0"
+                          [matChipInputFor]="dependencies"
+                          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                          [matChipInputAddOnBlur]="true"
+                          (matChipInputTokenEnd)="addDependency($event)" />
+                      </mat-chip-grid>
+                      <small class="form-text text-muted"
+                        >Add any dependencies required for the service deployment.</small
+                      >
+                    </div>
+                  </div>
+
+                  <!-- Roles -->
+                  <div class="flex-fill">
+                    <div class="form-group">
+                      <label class="me-2 my-4" for="roles">Roles</label>
+                      <mat-chip-grid #addroles class="d-flex flex-wrap gap-2 align-items-center" aria-label="Roles">
+                        <mat-chip-row
+                          *ngFor="let roleControl of rolesFormArray.controls; let i = index"
+                          [editable]="false"
+                          (removed)="removeRole(roleControl.value)">
+                          {{ roleControl.value }}
+                          <button
+                            matChipRemove
+                            class="d-flex align-items-center justify-content-center p-0"
+                            [attr.aria-label]="'remove ' + roleControl.value">
+                            <mat-icon>cancel</mat-icon>
+                          </button>
+                        </mat-chip-row>
+                        <input
+                          id="addroles"
+                          class="form-control form-field-underline border-bottom-primary px-0"
+                          [matChipInputFor]="addroles"
+                          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                          [matChipInputAddOnBlur]="true"
+                          (matChipInputTokenEnd)="addRole($event)" />
+                      </mat-chip-grid>
+                      <small class="form-text text-muted">
+                        Add roles for your service (Roles group related services for easier management and deployment).
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Parameters -->
+              <fieldset formGroupName="component" class="border-primary rounded-3 p-3 mt-3">
+                <legend class="float-none w-auto px-3">Parameters</legend>
+                <div formArrayName="parameters" class="row align-items-center justify-content-start gap-3 my-3">
+                  <div class="col d-flex gap-3">
+                    <div class="flex-fill">
+                      <div class="form-group">
+                        <div
+                          *ngFor="let parameter of parameters.controls; let i = index"
+                          class="row align-items-center justify-content-start gap-5 mb-2">
+                          <!-- Parameter Name -->
+                          <div class="col" [formGroupName]="i">
+                            <div class="form-group">
+                              <label class="me-2 my-2" for="parameterName-{{ i }}">Name</label>
+                              <input
+                                class="form-control form-field-underline border-bottom-primary px-0 w-100"
+                                formControlName="name"
+                                aria-label="Enter parameterName"
+                                id="parameterName-{{ i }}" />
+                              <small class="form-text text-muted">
+                                Parameter name (json dot notation ('ingress.certificateIssuer') or object notation
+                                (ingress.certificateIssuer)
+                              </small>
+                            </div>
+                          </div>
+
+                          <!-- Parameter Value -->
+                          <div class="col" [formGroupName]="i">
+                            <div class="form-group">
+                              <label class="me-2 my-2" for="parameterValue-{{ i }}">Parameter value</label>
+                              <input
+                                class="form-control form-field-underline border-bottom-primary px-0 w-100"
+                                formControlName="value"
+                                aria-label="Enter parameterValue"
+                                id="parameterValue-{{ i }}" />
+                              <small class="form-text text-muted">Parameter value</small>
+                            </div>
+                          </div>
+
+                          <!-- Add/Remove parameter -->
+                          <div class="col-auto">
+                            <div class="form-group">
+                              <button
+                                type="button"
+                                class="btn rounded-pill d-flex text-primary align-items-center scale-down w-auto"
+                                [ngClass]="i === parameters.length - 1 ? 'text-primary' : 'text-danger'"
+                                (click)="toggleParameter(i)">
+                                <i class="material-symbols-outlined text-primary lh-1">
+                                  {{ i === parameters.length - 1 ? 'add' : 'remove' }}
+                                </i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </fieldset>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
