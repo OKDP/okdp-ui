@@ -22,10 +22,8 @@ import { AuthService } from '../../../../core/auth';
 import { errorMessage, UserInfo } from '../../../../core/models';
 import { RightSidebarService, RightSidebarToggle } from '../../../../shared/services';
 import {
-  sanitizeArray,
   sortVersionsDesc,
   getLatestVersion,
-  updateFormArray,
   convertToJsonDotNotation,
   convertComponentReleaseToReleases,
   parametersArrayToObject,
@@ -90,10 +88,8 @@ export class ServiceDeployComponent implements OnInit {
         parameters: [{}],
         version: '',
       },
-      dependsOn: [],
       name: '',
       namespace: '',
-      roles: [],
     },
     allowCreateNamespace: false,
   };
@@ -126,8 +122,6 @@ export class ServiceDeployComponent implements OnInit {
       componentRelease: this.fb.group({
         name: [this.schema.componentRelease.name, Validators.required],
         namespace: [this.schema.componentRelease.namespace, Validators.required],
-        dependsOn: this.fb.array(this.schema.componentRelease.dependsOn.map(dep => this.fb.control(dep))),
-        roles: this.fb.array(this.schema.componentRelease.roles.map(role => this.fb.control(role))),
         component: this.fb.group({
           name: [this.schema.componentRelease.component.name],
           version: [this.schema.componentRelease.component.version],
@@ -228,14 +222,6 @@ export class ServiceDeployComponent implements OnInit {
     return this.componentRelease.get('name') as FormGroup;
   }
 
-  get dependsOn(): FormArray {
-    return this.componentRelease.get('dependsOn') as FormArray;
-  }
-
-  get roles(): FormArray {
-    return this.componentRelease.get('roles') as FormArray;
-  }
-
   get component(): FormGroup {
     return this.componentRelease.get('component') as FormGroup;
   }
@@ -276,32 +262,6 @@ export class ServiceDeployComponent implements OnInit {
     return this.parameters[index] as FormGroup;
   }
 
-  get rolesFormArray(): FormArray {
-    return this.roles as FormArray;
-  }
-
-  get dependsOnFormArray(): FormArray {
-    return this.dependsOn as FormArray;
-  }
-
-  // Add a role
-  addRole(event: any): void {
-    this.add(event, this.rolesFormArray);
-  }
-
-  addDependency(event: any): void {
-    this.add(event, this.dependsOnFormArray);
-  }
-
-  // Remove a role
-  removeRole(role: string): void {
-    this.remove(role, this.rolesFormArray);
-  }
-
-  removeDependency(role: string): void {
-    this.remove(role, this.dependsOnFormArray);
-  }
-
   add(event: any, formArray: FormArray): void {
     const input = event.input;
     const value = event.value;
@@ -328,8 +288,6 @@ export class ServiceDeployComponent implements OnInit {
   private updateForm(component: KadComponent) {
     this.schema.componentRelease.component.name = component.spec.name;
     this.schema.componentRelease.component.version = component.spec.version;
-    this.schema.componentRelease.dependsOn = sanitizeArray(component.spec.dependsOn);
-    this.schema.componentRelease.roles = sanitizeArray(component.spec.roles);
     this.schema.allowCreateNamespace = component.spec.allowCreateNamespace;
 
     this.componentReleaseForm.patchValue(
@@ -344,8 +302,6 @@ export class ServiceDeployComponent implements OnInit {
       { emitEvent: false }
     );
 
-    updateFormArray(this.dependsOn, this.schema.componentRelease.dependsOn, this.fb);
-    updateFormArray(this.roles, this.schema.componentRelease.roles, this.fb);
     // Update parameters
     const entries = Object.entries(convertToJsonDotNotation(component.spec.parameters));
     if (entries.length > 0) {
