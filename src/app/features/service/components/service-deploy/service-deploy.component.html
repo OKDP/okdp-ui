@@ -64,56 +64,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- Git -->
-            <div class="row align-items-center justify-content-between gap-3 mt-3">
-              <fieldset class="col flex-grow-1 border-primary rounded-3 p-3">
-                <legend class="float-none w-auto px-3">Git *</legend>
-                <div class="d-flex gap-3">
-                  <!-- Git Repo Folder -->
-                  <div class="col-12 col-md-6">
-                    <div class="form-group">
-                      <label for="gitRepoFolder">Repo Folder *</label>
-                      <input
-                        id="gitRepoFolder"
-                        class="form-control form-field-underline border-bottom-primary px-0"
-                        formControlName="gitRepoFolder"
-                        aria-label="Enter Git repository folder"
-                        required />
-                      <small class="form-text text-muted d-block">
-                        Push the service as
-                        <strong *ngIf="serviceFileName === ''" class="form-text text-okdp">&lt;name.yaml&gt;</strong>
-                        <strong *ngIf="serviceFileName !== ''" class="form-text text-okdp"
-                          >{{ serviceFileName }}.yaml</strong
-                        >
-                        into this git repository folder.
-                      </small>
-                    </div>
-                  </div>
-                  <!-- Git commit message -->
-                  <div class="col-12 col-md-6">
-                    <div class="form-group">
-                      <label for="comment">Commit message *</label>
-                      <input
-                        id="comment"
-                        class="form-control form-field-underline border-bottom-primary px-0"
-                        formControlName="comment"
-                        aria-label="Enter comments"
-                        required />
-                      <small class="form-text text-muted">
-                        Your git push will be committed as the user
-                        <button
-                          type="button"
-                          class="form-text text-okdp pe-auto btn-link border-0 text-decoration-none"
-                          (click)="toggleUserProfile()">
-                          {{ userInfo.name }} ({{ userInfo.email }})</button
-                        >.
-                      </small>
-                    </div>
-                  </div>
-                </div>
-              </fieldset>
-            </div>
           </div>
         </div>
 
