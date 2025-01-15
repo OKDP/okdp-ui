@@ -210,7 +210,10 @@
               </div>
 
               <!-- Parameters -->
-              <fieldset formGroupName="component" class="border-primary rounded-3 p-3 mt-3">
+              <fieldset
+                *ngIf="parameters.controls && parameters.controls.length > 0"
+                formGroupName="component"
+                class="border-primary rounded-3 p-3 mt-3">
                 <legend class="float-none w-auto px-3">Parameters</legend>
                 <div formArrayName="parameters" class="row align-items-center justify-content-start gap-3 my-3">
                   <div class="col d-flex gap-3">
@@ -245,21 +248,6 @@
                                 aria-label="Enter parameterValue"
                                 id="parameterValue-{{ i }}" />
                               <small class="form-text text-muted">Parameter value</small>
-                            </div>
-                          </div>
-
-                          <!-- Add/Remove parameter -->
-                          <div class="col-auto">
-                            <div class="form-group">
-                              <button
-                                type="button"
-                                class="btn rounded-pill d-flex text-primary align-items-center scale-down w-auto"
-                                [ngClass]="i === parameters.length - 1 ? 'text-primary' : 'text-danger'"
-                                (click)="toggleParameter(i)">
-                                <i class="material-symbols-outlined text-primary lh-1">
-                                  {{ i === parameters.length - 1 ? 'add' : 'remove' }}
-                                </i>
-                              </button>
                             </div>
                           </div>
                         </div>

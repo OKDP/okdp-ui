@@ -131,7 +131,7 @@ export class ServiceDeployComponent implements OnInit {
         component: this.fb.group({
           name: [this.schema.componentRelease.component.name],
           version: [this.schema.componentRelease.component.version],
-          parameters: this.fb.array([this.toFormGroupParameter('', '')]),
+          parameters: this.fb.array([]),
         }),
       }),
     });
