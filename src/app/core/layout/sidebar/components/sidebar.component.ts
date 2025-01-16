@@ -32,7 +32,7 @@ export class SidebarComponent implements OnInit {
   instances: Service[] = [];
   menus: SidebarMenuItem[];
   isLoaded = false;
-  isCollapsed = true;
+  isCollapsed = false;
 
   private hoverSubject = new Subject<boolean>();
 
@@ -51,12 +51,9 @@ export class SidebarComponent implements OnInit {
     });
   }
 
-  onMouseEnter() {
-    this.hoverSubject.next(false);
-  }
-
-  onMouseLeave() {
-    this.hoverSubject.next(true);
+  onToggle() {
+    this.isCollapsed = !this.isCollapsed;
+    this.hoverSubject.next(this.isCollapsed);
   }
 
   ngOnInit(): void {

@@ -636,6 +636,21 @@ button.close-icon{
   transform: scale(0.5);
 }
 
+.icon-07x {
+  transform: scale(0.7);
+}
+
+
+.rotate-icon-180 {
+  display: inline-block;
+  font-size: 50px;
+  cursor: pointer;
+}
+
+.rotate-icon-180.rotated {
+  transform: rotate(180deg);
+}
+
 // ==========================================
 // Angular Material - Chips =================
 // ==========================================
