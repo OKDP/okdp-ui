@@ -24,6 +24,10 @@ export class NotificationService {
     this.addMessage(service, NotificationType.Info, message);
   }
 
+  onWarning(service: string, message: string): void {
+    this.addMessage(service, NotificationType.Warning, message);
+  }
+
   private addMessage(service: string, type: NotificationType, message: string): void {
     const newMessage: Notification = { type, service, message };
     this.notifications.set(service, newMessage);

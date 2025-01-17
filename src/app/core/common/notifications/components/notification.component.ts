@@ -50,6 +50,8 @@ export class NotificationComponent implements OnInit {
         return { msg: 'text-danger', icon: 'error' };
       case NotificationType.Info:
         return { msg: 'text-info', icon: 'info' };
+      case NotificationType.Warning:
+        return { msg: 'text-warning', icon: 'warning' };
       default:
         return { msg: 'text-warning', icon: 'warning' };
     }

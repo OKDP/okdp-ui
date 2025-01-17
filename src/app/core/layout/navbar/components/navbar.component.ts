@@ -52,7 +52,7 @@ export class NavbarComponent implements OnInit {
   }
 
   get warningCount(): number {
-    return 0;
+    return this.notifications.filter(notification => notification.type === NotificationType.Warning).length;
   }
 
   get successCount(): number {

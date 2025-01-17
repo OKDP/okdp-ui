@@ -63,7 +63,7 @@ export class OKDPServices {
       }
 
       if (deletedInstances.length > 0) {
-        deletedInstances.forEach(s => this.notificationService.onInfo(s.name, 'was removed !'));
+        deletedInstances.forEach(s => this.notificationService.onWarning(s.name, 'was removed !'));
       }
     }
 
