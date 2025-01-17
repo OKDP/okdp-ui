@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SearchFilterComponent } from '../../../../shared/components/search-filter';
@@ -72,6 +72,7 @@ export class CatalogListServicesComponent implements OnInit {
     private sidebarService: SidebarService,
     private titleBarService: TitleBarService,
     private store: Store<AppState>,
+    private route: ActivatedRoute,
     private router: Router,
     private destroyRef: DestroyRef
   ) {}
@@ -106,6 +107,11 @@ export class CatalogListServicesComponent implements OnInit {
         this.isLoaded = false;
         this.getCatalogs(kadInstanceId);
       }
+    });
+
+    this.route.paramMap.subscribe(params => {
+      this.currentCatalog = params.get('catalog') || '';
+      console.log('this.currentCatalog', this.currentCatalog);
     });
   }
 
@@ -170,15 +176,10 @@ export class CatalogListServicesComponent implements OnInit {
   }
 
   private toCurrentCatalogCatalog(): void {
-    const currentCatalog = this.getCurrentCatalog();
-    this.filtredCatalogItems = this.toCatalogItems(this.catalogs.find(c => c.name === currentCatalog) as Catalog);
-    this.router.navigate([toUri(CATALOG_URI), currentCatalog]);
-  }
-
-  private getCurrentCatalog(): string {
-    if (this.router.url === toUri(CATALOG_URI)) {
-      return this.catalogNames[0];
+    if (!this.currentCatalog) {
+      this.currentCatalog = this.catalogNames[0];
+      this.router.navigate([toUri(CATALOG_URI), this.currentCatalog]);
     }
-    return this.router.url.replace(toUri(CATALOG_URI) + '/', '');
+    this.filtredCatalogItems = this.toCatalogItems(this.catalogs.find(c => c.name === this.currentCatalog) as Catalog);
   }
 }

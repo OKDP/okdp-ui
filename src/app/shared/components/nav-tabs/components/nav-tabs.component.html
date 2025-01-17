@@ -6,7 +6,7 @@
       [routerLink]="[ basePath, item | trimWhiteSpace ]"
       [class]="display"
       (click)="onTabChange(item)">
-      {{ item }}
+      {{ item | titlecase }}
     </a>
   </li>
 </ul>
