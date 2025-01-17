@@ -39,6 +39,7 @@
     flex-direction: column;
     position: relative;
     z-index: 2;
+    overflow-x: hidden;
 
     &::-webkit-scrollbar-thumb {
       border-radius: 4px;
@@ -94,7 +95,7 @@
       font-size: var(--primary-font-size) !important;
       font-weight: normal;
       line-height: 21px;
-      padding: 10px 25px;
+      padding: 10px 20px;
       letter-spacing: 2px;
       transition: opacity 0.3s;
       color: var(--text-okdp);

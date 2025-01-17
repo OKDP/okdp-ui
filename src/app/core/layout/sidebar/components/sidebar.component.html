@@ -42,15 +42,15 @@
           </li>
         </ul>
         <ul *ngIf="isLoaded">
-          <li *ngFor="let menu of menus" class="menu-item" [ngClass]="{ active: activeMenu === menu.title }">
+          <li *ngFor="let menu of catalogs" class="menu-item" [ngClass]="{ active: activeMenu === menu.name }">
             <a
               class="px-2"
               routerLinkActive="active"
               ariaCurrentWhenActive="page"
-              routerLink="/services/{{ menu.title }}/details"
-              (click)="onClick(menu.title)">
+              routerLink="/services/{{ menu.name }}/instances"
+              (click)="onClick(menu.name)">
               <span class="menu-icon"><i class="{{ menu.icon }}"></i></span>
-              <span class="menu-title">{{ menu.title | titleCase }}</span>
+              <span class="menu-title">{{ menu.name | titleCase }}</span>
               <span class="menu-suffix">
                 <span *ngIf="menu.badge" class="badge rounded-pill" [ngClass]="menu.badge.class">
                   {{ menu.badge.text }}

@@ -5,19 +5,14 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class TitleBarService {
-  private titleSubject = new BehaviorSubject<string>('home');
-
-  currentTitle = this.titleSubject.asObservable();
+  private pageContentTitle = new BehaviorSubject<string>('home');
+  public pageContentTitle$ = this.pageContentTitle.asObservable();
 
   TitleBarService() {}
 
   setCurrentMenu(menu: string) {
     sessionStorage.setItem('current-menu', menu);
-    this.titleSubject.next(menu);
-  }
-
-  getCurrentMenu(): string {
-    return sessionStorage.getItem('current-menu') || 'home';
+    this.pageContentTitle.next(menu);
   }
 
   setTitle(menu: string, title: string, icon: string) {

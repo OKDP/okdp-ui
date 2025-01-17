@@ -16,7 +16,39 @@
     "apiUrl": "http://keycloak:8090/api/v1",
     "swaggerUrl": "http://localhost:8092"
   },
-  "kadPatchItemsInfo": {
+  "kadCatalogsInfo": {
+    "dashboards": {
+      "menuIcon": "fas fa-chart-line"
+    },
+    "dataengineering": {
+      "menuIcon": "fas fa-tools"
+    },
+    "datascience": {
+      "menuIcon": "fas fa-project-diagram"
+    },
+    "databases": {
+      "menuIcon": "fas fa-database"
+    },
+    "identity": {
+      "menuIcon": "fas fa-user-shield"
+    },
+    "middleware": {
+      "menuIcon": "fas fa-network-wired"
+    },
+    "misc": {
+      "menuIcon": "fas fa-ellipsis-h"
+    },
+    "storage": {
+      "menuIcon": "fas fa-server"
+    },
+    "system": {
+      "menuIcon": "fas fa-cogs"
+    },
+    "default": {
+      "menuIcon": "fa-solid fa-cubes"
+    }
+  },
+  "kadServicesInfo": {
     "cnpg": {
       "icon": "cnpg-logo.png",
       "menuIcon": "fas fa-database",

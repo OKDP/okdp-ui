@@ -8,11 +8,11 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { select, Store } from '@ngrx/store';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SearchFilterComponent } from '../../../../shared/components/search-filter';
 import { NavTabsComponent } from '../../../../shared/components/nav-tabs';
-import { CatalogService } from '../..';
+import { CatalogService } from '../../../../core/common/catalogs';
 import { Catalog } from '../../../../api/_model';
 import { AppState } from '../../../../core/store';
 import { getKadInstanceId } from '../../../../core/common/kad-instances';
@@ -101,7 +101,7 @@ export class CatalogListServicesComponent implements OnInit {
     this.titleBarService.setCurrentMenu('catalogs');
     this.sidebarService.setActiveMenu('catalogs');
 
-    this.store.pipe(select(getKadInstanceId)).subscribe(kadInstanceId => {
+    this.store.pipe(select(getKadInstanceId), takeUntilDestroyed(this.destroyRef)).subscribe(kadInstanceId => {
       if (kadInstanceId) {
         this.isLoaded = false;
         this.getCatalogs(kadInstanceId);
@@ -110,25 +110,22 @@ export class CatalogListServicesComponent implements OnInit {
   }
 
   getCatalogs(kadInstanceId: string): void {
-    this.catalogService
-      .list(kadInstanceId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (catalogs: Catalog[]) => {
-          this.catalogs = catalogs.sort((e1, e2) => {
-            if (e1.name.toLowerCase() === OKDP_CATALOG_NAME) return -1;
-            if (e2.name.toLowerCase() === OKDP_CATALOG_NAME) return 1;
-            return e1.name.toLowerCase().localeCompare(e2.name.toLowerCase());
-          });
-          this.catalogNames = this.catalogs.map(c => c.name);
-          this.catalogItems = this.catalogs.flatMap(c => this.toCatalogItems(c));
-          this.isLoaded = true;
-          this.toCurrentCatalogCatalog();
-        },
-        error: error => {
-          this.notificationService.onError(kadInstanceId, `Unable to fetch catalog, ${errorMessage(error)}`);
-        },
-      });
+    this.catalogService.catalogs$.subscribe({
+      next: (catalogs: Catalog[]) => {
+        this.catalogs = catalogs.sort((e1, e2) => {
+          if (e1.name.toLowerCase() === OKDP_CATALOG_NAME) return -1;
+          if (e2.name.toLowerCase() === OKDP_CATALOG_NAME) return 1;
+          return e1.name.toLowerCase().localeCompare(e2.name.toLowerCase());
+        });
+        this.catalogNames = this.catalogs.map(c => c.name);
+        this.catalogItems = this.catalogs.flatMap(c => this.toCatalogItems(c));
+        this.isLoaded = true;
+        this.toCurrentCatalogCatalog();
+      },
+      error: error => {
+        this.notificationService.onError(kadInstanceId, `Unable to fetch catalog, ${errorMessage(error)}`);
+      },
+    });
   }
 
   onCatalogChange(catalog: string): void {
@@ -145,21 +142,23 @@ export class CatalogListServicesComponent implements OnInit {
   private toCatalogItems(catalog: Catalog): CatalogItem[] {
     let catalogItems: CatalogItem[] = [];
 
-    let components = catalog?.components.map(c => ({
-      catalogName: catalog?.name,
-      name: c,
-      type: CatalogItemType.COMPONENT,
-      icon: this.appConfigService.kadPatchItemsInfo(c).icon,
-      description: this.appConfigService.kadPatchItemsInfo(c).description,
-    })) as CatalogItem[];
+    let components =
+      (catalog?.components.map(c => ({
+        catalogName: catalog?.name,
+        name: c,
+        type: CatalogItemType.COMPONENT,
+        icon: this.appConfigService.kadServicesInfo(c).icon,
+        description: this.appConfigService.kadServicesInfo(c).description,
+      })) as CatalogItem[]) ?? [];
 
-    let templates = catalog?.templates.map(t => ({
-      catalogName: catalog?.name,
-      name: t,
-      type: CatalogItemType.TEMPLATE,
-      icon: this.appConfigService.kadPatchItemsInfo(t).icon,
-      description: this.appConfigService.kadPatchItemsInfo(t).description,
-    })) as CatalogItem[];
+    let templates =
+      (catalog?.templates.map(t => ({
+        catalogName: catalog?.name,
+        name: t,
+        type: CatalogItemType.TEMPLATE,
+        icon: this.appConfigService.kadServicesInfo(t).icon,
+        description: this.appConfigService.kadServicesInfo(t).description,
+      })) as CatalogItem[]) ?? [];
 
     catalogItems.push(...components, ...templates);
 

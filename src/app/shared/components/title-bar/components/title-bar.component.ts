@@ -15,7 +15,7 @@ export class TitleBarComponent implements OnInit {
   constructor(private titleBarService: TitleBarService) {}
 
   ngOnInit() {
-    this.titleBarService.currentTitle.subscribe(menu => {
+    this.titleBarService.pageContentTitle$.subscribe(menu => {
       const titleItem = this.titleBarService.getTitle(menu);
       this.title = titleItem.title;
       this.icon = titleItem.icon;

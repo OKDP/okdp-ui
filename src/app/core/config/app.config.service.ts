@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppConfig, KadPatchItemInfo } from './app.config';
+import { AppConfig, KadServicesInfo } from './app.config';
 import { APP_CONFIG_FILE_PATH } from '../constants';
 @Injectable({
   providedIn: 'root',
@@ -25,8 +25,18 @@ export class AppConfigService {
     return AppConfigService.config;
   }
 
-  kadPatchItemsInfo(item: string): KadPatchItemInfo {
-    let itemsInfo = this.getConfig().kadPatchItemsInfo;
+  kadServicesInfo(item: string): KadServicesInfo {
+    let itemsInfo = this.getConfig().kadServicesInfo;
+    for (const key of Object.keys(itemsInfo)) {
+      if (item.toLowerCase().includes(key.toLowerCase())) {
+        return itemsInfo[key];
+      }
+    }
+    return itemsInfo['default'];
+  }
+
+  kadCatalogsInfo(item: string): KadServicesInfo {
+    let itemsInfo = this.getConfig().kadCatalogsInfo;
     for (const key of Object.keys(itemsInfo)) {
       if (item.toLowerCase().includes(key.toLowerCase())) {
         return itemsInfo[key];

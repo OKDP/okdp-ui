@@ -6,7 +6,7 @@ import { LoginComponent } from './core/common/login';
 import { AuthGuard } from './core/guards';
 import { PageLayoutComponent } from './core/layout/page-layout';
 import { CATALOG_URI } from './core/constants';
-import { ServiceDetailsComponent } from './features/service';
+import { ServiceInstancesComponent } from './features/service';
 import { ServiceDeployComponent } from './features/service/components/service-deploy/service-deploy.component';
 export const APP_ROUTES: Routes = [
   { path: 'login', component: LoginComponent },
@@ -29,7 +29,7 @@ export const APP_ROUTES: Routes = [
       {
         path: 'services',
         children: [
-          { path: ':service/details', component: ServiceDetailsComponent },
+          { path: ':service/instances', component: ServiceInstancesComponent },
           { path: ':service/deploy', component: ServiceDeployComponent },
         ],
         // loadChildren: () =>

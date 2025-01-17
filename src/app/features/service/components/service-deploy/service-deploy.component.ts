@@ -113,8 +113,8 @@ export class ServiceDeployComponent implements OnInit {
   ngOnInit(): void {
     this.service.name = this.route.snapshot.paramMap.get('service') as string;
     this.service.catalogName = this.route.snapshot.queryParamMap.get('catalog') as string;
-    this.service.icon = this.appConfigService.kadPatchItemsInfo(this.service.name).icon as string;
-    this.service.home = this.appConfigService.kadPatchItemsInfo(this.service.name).home as string;
+    this.service.icon = this.appConfigService.kadServicesInfo(this.service.name).icon as string;
+    this.service.home = this.appConfigService.kadServicesInfo(this.service.name).home as string;
 
     this.componentReleaseForm = this.fb.group({
       comment: [this.schema.comment, Validators.required],

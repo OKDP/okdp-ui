@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { OKDPServices } from '../../../common/okdp-services/services/okdp-services.service';
 import { UserProfileComponent } from '../../../common/user-profile';
 import { RightSidebarService, RightSidebarToggle } from '../../../../shared/services';
 import { NotificationComponent, NotificationService } from '../../../common/notifications';
@@ -35,7 +34,6 @@ export class NavbarComponent implements OnInit {
   notifications: Notification[] = [];
 
   constructor(
-    private okdpServices: OKDPServices,
     private rightSidebarService: RightSidebarService,
     private notificationService: NotificationService,
     private appConfigService: AppConfigService,
