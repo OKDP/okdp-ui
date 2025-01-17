@@ -1,5 +1,6 @@
 export interface SidebarMenuItem {
   name: string;
+  displayName: string;
   icon: string;
   badge?: SidebarMenuBadge;
 }

@@ -22,7 +22,6 @@ import { CatalogService } from '../../../common/catalogs';
   selector: 'app-sidebar',
   standalone: true,
   imports: [CommonModule, LoadingComponent, TitleCasePipe, MatIconModule, RouterLink, RouterLinkActive],
-  providers: [TitleCasePipe],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
   animations: [],
@@ -41,7 +40,6 @@ export class SidebarComponent implements OnInit {
     private appConfigService: AppConfigService,
     private sidebarService: SidebarService,
     private titleBarService: TitleBarService,
-    private titleCasePipe: TitleCasePipe,
     private store: Store<AppState>,
     private destroyRef: DestroyRef
   ) {
@@ -77,7 +75,11 @@ export class SidebarComponent implements OnInit {
           this.catalogs = catalogs.map(c => this.toMenuCatalog(c.name)).sort((a, b) => a.name.localeCompare(b.name));
 
           this.catalogs.forEach(c => {
-            this.titleBarService.setTitle(c.name, this.titleCasePipe.transform(c.name), c.icon);
+            this.titleBarService.setTitle(
+              c.name,
+              this.appConfigService.kadCatalogsInfo(c.name).getDisplayName(),
+              c.icon
+            );
           });
         },
         error: error => {
@@ -89,6 +91,7 @@ export class SidebarComponent implements OnInit {
   toMenuCatalog(catalog: string): SidebarMenuItem {
     return {
       name: catalog,
+      displayName: this.appConfigService.kadCatalogsInfo(catalog).getDisplayName(),
       icon: this.appConfigService.kadCatalogsInfo(catalog).menuIcon,
     } as SidebarMenuItem;
   }

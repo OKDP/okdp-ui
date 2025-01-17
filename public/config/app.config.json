@@ -18,12 +18,15 @@
   },
   "kadCatalogsInfo": {
     "dashboards": {
+      "displayName": "Dashboards",
       "menuIcon": "fas fa-chart-line"
     },
     "dataengineering": {
+      "displayName": "Data Engineering",
       "menuIcon": "fas fa-tools"
     },
     "datascience": {
+      "displayName": "Data Science",
       "menuIcon": "fas fa-project-diagram"
     },
     "databases": {
@@ -49,6 +52,24 @@
     }
   },
   "kadServicesInfo": {
+    "spark-history": {
+      "icon": "spark-logo-hd.png",
+      "menuIcon": "fa-regular fa-star",
+      "description": "A web UI to displays both completed and incomplete Spark jobs.",
+      "home": "https://spark.apache.org/history.html"
+    },
+    "superset": {
+      "icon": "superset.png",
+      "menuIcon": "fa fa-chart-pie",
+      "description": "Apache Superset™ is an open-source modern data exploration and visualization platform.",
+      "home": "https://cloudnative-pg.io/"
+    },
+    "jupyterhub": {
+      "icon": "jupyter.png",
+      "menuIcon": "fa-regular fa-circle",
+      "description": "A multi-user version of the notebook designed for companies, classrooms and research labs.",
+      "home": "https://cloudnative-pg.io/"
+    },
     "cnpg": {
       "icon": "cnpg-logo.png",
       "menuIcon": "fas fa-database",
