@@ -27,6 +27,9 @@
     "notebooks": {
       "menuIcon": "fa-solid fa-code"
     },
+    "spark": {
+      "menuIcon": "fa-regular fa-star"
+    },
     "dataengineering": {
       "displayName": "Data Engineering",
       "menuIcon": "fa-solid fa-cogs"
