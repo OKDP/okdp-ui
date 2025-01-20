@@ -13,26 +13,36 @@ import { LoadingComponent } from '../../../../shared/components/loading';
 import { SidebarService } from '../../../../core/layout/sidebar';
 import { AppState } from '../../../../core/store';
 import { getKadInstanceId } from '../../../../core/common/kad-instances';
+import { KebabMenuComponent } from '../../../../shared/components/kebab-menu';
+import { SearchFilterService } from '../../../../shared/components/search-filter';
+import { NotificationService } from '../../../../core/common/notifications';
+import { errorMessage } from '../../../../core/models';
 
 @Component({
   selector: 'app-service-instances',
   standalone: true,
-  imports: [CommonModule, LoadingComponent],
+  imports: [CommonModule, LoadingComponent, KebabMenuComponent],
   providers: [EndpointsFromUsagePipe],
   templateUrl: './service-instances.component.html',
   styleUrls: ['./service-instances.component.scss'],
   animations: [],
 })
 export class ServiceInstancesComponent implements OnInit {
-  instances: ServiceInstance[] = [];
   isLoaded = false;
 
   private services: Service[] = [];
   private catalog: string = '';
 
+  instances: ServiceInstance[] = [];
+  filtredInstances: ServiceInstance[] = [];
+
+  search = '';
+
   constructor(
     private okdpServices: OKDPServices,
     private appConfigService: AppConfigService,
+    private notificationService: NotificationService,
+    private searchFilterService: SearchFilterService,
     private store: Store<AppState>,
     private endpointsFromUsagePipe: EndpointsFromUsagePipe,
     private sidebarService: SidebarService,
@@ -61,6 +71,15 @@ export class ServiceInstancesComponent implements OnInit {
       this.toInstances();
       this.isLoaded = services.length > 0;
     });
+
+    this.searchFilterService.globalSearchFilter$.subscribe({
+      next: (search: string) => {
+        this.searchChanged(search);
+      },
+      error: error => {
+        this.notificationService.onError('search', `Search error, ${errorMessage(error)}`);
+      },
+    });
   }
 
   toInstances() {
@@ -79,5 +98,26 @@ export class ServiceInstancesComponent implements OnInit {
           }) as ServiceInstance
       )
       .sort((a, b) => a.service.name.localeCompare(b.service.name));
+    this.searchChanged(this.search);
+  }
+
+  searchChanged(search: string): void {
+    this.search = search;
+    if (!search) {
+      this.filtredInstances = this.instances;
+    } else {
+      this.filtredInstances = this.instances.filter(
+        instance =>
+          instance.service.name.toLowerCase().includes(search.toLowerCase()) ||
+          instance.description?.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+  }
+
+  highlightMatch(item: string | undefined): string | undefined {
+    if (!this.search) return item;
+    const query = this.search;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return item?.replace(regex, '<mark class="text-okdp text-nowrap">$1</mark>');
   }
 }

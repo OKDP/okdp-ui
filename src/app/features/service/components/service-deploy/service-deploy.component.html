@@ -7,20 +7,21 @@
       <form [formGroup]="componentReleaseForm" (ngSubmit)="onSubmit()">
         <div class="card rounded-3 shadow-sm mx-auto mx-1">
           <div class="card-header d-flex align-items-center justify-content-start p-2 position-relative">
-            <img class="me-2 card-icon" alt="Service" src="images/{{ service.icon }}" />
-            <span class="card-title">{{ service.name }}</span>
-            <a
-              target="_blank"
-              class="position-absolute top-0 end-0 m-2"
-              rel="noopener noreferrer"
-              aria-label="More information about Jupyter"
-              href="{{ service.home }}">
-              <i class="material-symbols-outlined text-secondary icon-2x">info</i>
-            </a>
+            <ul class="nav w-100 d-flex flex-row justify-content-start align-items-center gap-1">
+              <li class="nav-item d-flex align-items-center">
+                <span class="card-title">{{ service.name }}</span>
+                <a class="nav-link px-1" target="_blank" href="{{ service.home }}">
+                  <i class="material-symbols-outlined text-primary">info</i>
+                </a>
+              </li>
+              <li class="nav-item ms-auto">
+                <span class="badge rounded-pill bg-primary">Component</span>
+              </li>
+            </ul>
           </div>
 
-          <div class="card-body">
-            <div formGroupName="componentRelease" class="row align-items-center justify-content-start gap-3">
+          <div formGroupName="componentRelease" class="card-body">
+            <div class="row align-items-center justify-content-start gap-5">
               <!-- Name -->
               <div class="col-auto">
                 <div class="form-group">
@@ -49,46 +50,33 @@
                   <small class="form-text text-muted">Choose a Kad Component Version.</small>
                 </div>
               </div>
-
+              <!-- Namespace -->
+              <div class="col-auto">
+                <div class="form-group">
+                  <label for="namespace">Namespace</label>
+                  <input
+                    id="namespace"
+                    class="form-control form-field-underline border-bottom-primary px-0"
+                    formControlName="namespace"
+                    aria-label="Enter namespace" />
+                  <small class="form-text text-muted"
+                    >Enter the Kubernetes namespace for your service deployment.</small
+                  >
+                </div>
+              </div>
+              <!-- Submit -->
               <div class="col d-flex justify-content-end">
                 <div class="d-flex gap-2">
-                  <button type="button" class="btn rounded-pill text-primary px-3 py-1" (click)="goBack()">
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    class="btn rounded-pill text-okdp-primary px-3 py-1"
-                    [disabled]="isSubmitting || !isValid">
+                  <button type="button" class="btn text-primary px-3 py-1" (click)="goBack()">Cancel</button>
+                  <button type="submit" class="btn text-okdp-primary px-3 py-1" [disabled]="isSubmitting || !isValid">
                     Deploy
                   </button>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Basic configuration -->
-        <div formGroupName="componentRelease" class="card rounded-3 shadow-sm mx-auto mx-1 my-3">
-          <div class="card-body mb-3">
-            <fieldset class="border-primary rounded-3 p-3">
-              <legend class="float-none w-auto px-3">Basic configuration</legend>
-              <div class="row align-items-center justify-content-start gap-5">
-                <div class="col-auto">
-                  <div class="form-group">
-                    <label class="me-2 my-2" for="namespace">Namespace</label>
-                    <input
-                      id="namespace"
-                      class="form-control form-field-underline border-bottom-primary px-0"
-                      formControlName="namespace"
-                      aria-label="Enter namespace" />
-                    <small class="form-text text-muted"
-                      >Enter the Kubernetes namespace for your service deployment.</small
-                    >
-                  </div>
-                </div>
-              </div>
-
-              <!-- Parameters -->
+            <!-- Parameters -->
+            <div class="row align-items-center justify-content-start gap-5 mt-2">
               <fieldset
                 *ngIf="parameters.controls && parameters.controls.length > 0"
                 formGroupName="component"
@@ -135,7 +123,7 @@
                   </div>
                 </div>
               </fieldset>
-            </fieldset>
+            </div>
           </div>
         </div>
       </form>

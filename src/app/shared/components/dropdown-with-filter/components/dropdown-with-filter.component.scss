@@ -17,7 +17,7 @@
   overflow-x: auto;
   flex-shrink: 0;
   white-space: nowrap;
-  background-color: var(--bg-primary-color) !important;
+  background-color: var(--bg-secondary-color) !important;
   scrollbar-width: thin;
   scrollbar-color: var(--text-secondary-color) var(--text-primary-color);
   color: var(--text-secondary-color);
@@ -64,6 +64,7 @@
 
 .form-select-filter:hover, .form-select-filter:focus {
   border-bottom: 1.5px solid var(--text-okdp);
+  background-color: var(--bg-secondary-color);
 }
 
 .form-input-filter {

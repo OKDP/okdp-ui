@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TitleCasePipe } from '@angular/common';
-import { AppConfig, KadCatalogInfo, KadServiceInfo } from './app.config';
+import { AppConfig, DisplayCatalog, KadCatalogInfo, KadServiceInfo } from './app.config';
 import { APP_CONFIG_FILE_PATH } from '../constants';
 @Injectable({
   providedIn: 'root',
@@ -44,6 +44,10 @@ export class AppConfigService {
       }
     }
     return new CatalogInfo(item, itemsInfo['default']);
+  }
+
+  catalogs(): DisplayCatalog {
+    return this.getConfig().catalogs;
   }
 }
 

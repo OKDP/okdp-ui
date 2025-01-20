@@ -11,7 +11,7 @@
   </div>
 
   <div
-    class="form-control dropdown-menu-filter mt-0"
+    class="form-control dropdown-menu-filter"
     style="position: absolute; left: 0; z-index: 1050; width: 100%; max-height: 200px;"
     [class.show]="isDropdownOpen"
     [ngStyle]="{
@@ -23,18 +23,18 @@
       <input
         type="text"
         class="form-input-filter"
-        placeholder="Filter..."
+        placeholder="{{ label }}"
         [(ngModel)]="filterText"
         (input)="filterOptions()" />
     </div>
     <div
       *ngFor="let option of filteredOptions"
-      class="dropdown-item-filter mb-1"
+      class="dropdown-item-filter"
       [class.active]="option === selectedOption"
       (click)="selectOption(option)">
       {{ option?.value }}
     </div>
-    <div *ngIf="filteredOptions.length === 0" class="dropdown-item-filter mb-1">
+    <div *ngIf="filteredOptions.length === 0" class="dropdown-item-filter">
       {{ noItemsLabel }}
     </div>
   </div>

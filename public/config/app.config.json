@@ -16,18 +16,20 @@
     "apiUrl": "http://keycloak:8090/api/v1",
     "swaggerUrl": "http://localhost:8092"
   },
+  "catalogs": {
+    "services": ["all"],
+    "kad": ["all"]
+  },
   "kadCatalogsInfo": {
-    "dashboards": {
-      "displayName": "Dashboards",
+    "dataviz": {
       "menuIcon": "fas fa-chart-line"
+    },
+    "notebooks": {
+      "menuIcon": "fa-solid fa-code"
     },
     "dataengineering": {
       "displayName": "Data Engineering",
-      "menuIcon": "fas fa-tools"
-    },
-    "datascience": {
-      "displayName": "Data Science",
-      "menuIcon": "fas fa-project-diagram"
+      "menuIcon": "fa-solid fa-cogs"
     },
     "databases": {
       "menuIcon": "fas fa-database"

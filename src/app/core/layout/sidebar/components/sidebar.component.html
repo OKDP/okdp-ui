@@ -20,7 +20,7 @@
             </a>
           </li>
         </ul>
-        <ul>
+        <ul *ngIf="filterKadCatalogs.length > 0">
           <li class="menu-item" [ngClass]="{ active: activeMenu === 'catalogs' }">
             <a class="px-2" routerLink="/catalogs" ariaCurrentWhenActive="page" (click)="onClick('catalogs')">
               <span class="menu-icon"><i class="fa-solid fa-layer-group"></i></span>

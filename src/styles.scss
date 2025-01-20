@@ -11,8 +11,9 @@
   --text-okdp: rgb(65, 146, 143);
 
   --body-bg-color: var(--theme-bg-secondary);
-  --navbar-bg-color: var(--theme-bg-secondary);
+  --page-layout-bg-color: var(--theme-bg-primary);
   --content-layout-bg-color: var(--theme-bg-secondary);
+  --navbar-bg-color: var(--theme-bg-primary);
   --card-bg-color: var(--theme-bg-primary);
   --card-text-color: var(--theme-text-secondary);
   --card-title-color: var(--theme-text-primary);
@@ -50,7 +51,8 @@
 
 html, body {
   height: 100%;
-  margin: 0;
+  margin: 0px;
+  overflow: hidden;
 }
 
 body {
@@ -91,32 +93,35 @@ hr {
 // ==========================================
 .layout {
   z-index: 1;
-  height: calc(100% - 20px);
-  max-height: calc(100% - 20px);
-  min-height: calc(100% - 20px);
+  height: 100%;
+  max-height: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
   flex-grow: 1;
-  background-color: var(--content-layout-bg-color);
+  background-color: var(--page-layout-bg-color);
+  padding-bottom: 10px;
 
   .navbar {
     display: flex;
+    flex-direction: row;
     position: relative;
     z-index: 999;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding: 0;
     transition: all 0.3s ease-in-out;
     background-color: var(--navbar-bg-color);
   }
 
   .page-layout {
-    height: 100%;
+    height: 80%;
+    min-height: 80%;
     max-height: 100%;
     display: flex;
     flex-direction: row;
     position: relative;
     flex-grow: 1;
+    background-color: var(--page-layout-bg-color);
 
     .sidebar {
       display: flex;
@@ -135,19 +140,22 @@ hr {
       top: 0;
       z-index: 899;
       background-color: var(--sidebar-bg-color);
-      margin-top: 5px;
-      margin-left: 10px;
-      border-radius: var(--sidebar-border-radius);
+      //margin-top: 5px;
+      //margin-left: 10px;
+      //border-radius: var(--sidebar-border-radius);
     }
 
     .content-layout {
-      height: 100%;
       display: flex;
       position: relative;
       flex-direction: column;
       padding-left: 25px;
       padding-right: 25px;
       flex-grow: 1;
+      background-color: var(--content-layout-bg-color);
+      border: 1px solid var(--border-color-translucent);
+      border-radius: var(--sidebar-border-radius);
+      margin-right: 10px;
 
       .content-header {
         margin-top: 0px;
@@ -157,13 +165,13 @@ hr {
         height: 100%;
         display: block;
         position: relative;
-        overflow-y: hidden;
+        overflow-y: auto;
         overflow-x: hidden;
+        padding-bottom: 10px;
       }
     }
   }
 }
-
 // ==========================================
 // Forms ====================================
 // ==========================================
@@ -184,8 +192,11 @@ input.form-control, select.form-control {
   overflow: hidden;
 }
 
-input.form-control:focus, select.form-control:focus {
-  background-color: var(--bg-primary-color);
+input.form-control:focus, 
+select.form-control:focus,
+input.form-control:hover, 
+select.form-control:hover {
+  background-color: var(--bg-secondary-color);
   color: var(--text-primary-color);
   outline: none;
   box-shadow: none;
@@ -195,6 +206,10 @@ input.form-control:focus, select.form-control:focus {
 input.form-control::placeholder, select.form-control::placeholder {
   color: var(--text-primary-color);
   opacity: 1;
+}
+
+.form-control.lh-1 {
+  line-height: 1 !important;
 }
 
 .form-field-underline {
@@ -286,15 +301,10 @@ button.close-icon{
 // ==========================================
 // Navs =====================================
 // ==========================================
-.nav-item-hover-primary {
-  visibility: hidden;
-}
 
-.nav-item-hover-primary:hover {
-  color: var(--text-primary-color) !important;
-  background-color: var(--text-okdp) !important;
-  border-color: var(--text-okdp) !important;
-  visibility: visible;
+.nav-item-primary:hover .okdp-text-outlined,
+.nav-item-primary:focus .okdp-text-outlined  {
+  color: var(--text-okdp) !important;
 }
 
 .nav-item-hover-danger {
@@ -308,14 +318,10 @@ button.close-icon{
   visibility: visible;
 }
 
-.col:hover .nav-item-hover-primary, .col:hover .nav-item-hover-danger {
-  visibility: visible;
-}
-
 .nav-tabs .nav-link.active {
   border-bottom: 1px solid !important;
   border-bottom-color: var(--text-okdp) !important;
-  color: var(--text-primary-color) !important;
+  color: var(--text-okdp) !important;
 }
 
 .nav-tabs .nav-link {
@@ -373,13 +379,15 @@ button.close-icon{
   background-color: inherit;
 }
 
+.card-text {
+  text-align: justify;
+}
 
 .breadcrumb >.active a {
   color: var(--sidebar-bg-color);
   text-decoration: none;
   font-weight: bold;
 }
-
 
 .btn-no-arriow:after {
   display: none;
@@ -413,8 +421,8 @@ button.close-icon{
 }
 
 .user-profile {
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
+  //border-top-left-radius: 10px;
+  //border-bottom-left-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: auto !important;
@@ -423,8 +431,8 @@ button.close-icon{
 }
 
 .about {
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
+  //border-top-left-radius: 10px;
+  //border-bottom-left-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: auto !important;
@@ -437,8 +445,8 @@ button.close-icon{
 }
 
 .notifications {
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
+  //border-top-left-radius: 10px;
+  //border-bottom-left-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: auto !important;
@@ -459,6 +467,10 @@ button.close-icon{
   //font-weight: 500 !important;
   font-weight: bold !important;
   letter-spacing: 0.5px !important;
+}
+
+.text-okdp-color {
+  color: var(--text-okdp) !important;
 }
 
 .text-okdp-primary {
@@ -528,6 +540,18 @@ button.close-icon{
   word-wrap: break-word !important;
 }
 
+.text-success.fw-bold {
+  font-weight: bold !important;
+}
+
+.text-warning.fw-bold {
+  font-weight: bold !important;
+}
+
+.text-error.fw-bold {
+  font-weight: bold !important;
+}
+
 .form-text.border-0 {
   border: 0 !important;
   background-color: transparent !important;
@@ -589,11 +613,12 @@ button.close-icon{
 }
 
 .okdp-logo {
-  width: 25px;
-  height: 25px;
+  width: 18px;
+  height: 18px;
   fill: var(--text-okdp);
   display: inline-block;
   vertical-align: -0.125em;
+  
   path {
     fill: var(--text-okdp);
     stroke: var(--text-okdp);
@@ -650,8 +675,14 @@ button.close-icon{
   transform: rotate(180deg);
 }
 
+button:hover .icon-outlined, 
+button:focus .icon-outlined,
+button:active .icon-outlined {
+  color: var(--text-okdp) !important;
+}
+
 // ==========================================
-// Angular Material - Chips =================
+// Angular Material  ========================
 // ==========================================
 .mat-mdc-chip.mat-mdc-standard-chip {
   --mdc-chip-container-height: unset !important;
@@ -672,7 +703,7 @@ button.close-icon{
   color: var(--text-primary-color) !important;
 }
 
-.mdc-evolution-chip__text-label {
+.mdc-evolution-chip__text-label, .mat-mdc-menu-item-text, .mat-mdc-menu-content {
   font-size: var(--primary-font-size) !important;
   color: var(--text-primary-color) !important;
   font-weight: normal !important;
@@ -689,6 +720,26 @@ button.close-icon{
 .mdc-evolution-chip__action--primary {
   padding-left: 5px !important;
   padding-right: 0 !important;
+}
+
+.mat-mdc-menu-panel {
+  background-color: var(--bg-primary-color) !important;
+  border-radius: 0px !important;
+}
+
+.mat-mdc-menu-item {
+   min-height: 38px !important;
+   min-width: 220px !important;
+}
+
+.mat-mdc-menu-item:not(:first-child) {
+  border-top: 1px solid var(--border-color-translucent) !important;
+}
+
+.mat-mdc-menu-item:hover,
+.mat-mdc-menu-item.active {
+  background-color: var(--text-okdp) !important;
+  color: var(--text-primary-color) !important;
 }
 
 // ==========================================

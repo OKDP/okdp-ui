@@ -1,7 +1,7 @@
 <!-- Navbar -->
-<nav class="navbar navbar-expand-sm flex-row">
-  <div class="container-fluid">
-    <ul class="navbar-nav d-flex flex-row align-items-center gap-1">
+<nav class="navbar navbar-expand d-flex flex-row gap-3">
+  <div class="container-fluid text-nowrap w-auto">
+    <ul class="navbar-nav d-flex flex-row align-items-start gap-1 ps-1">
       <li class="nav-item">
         <svg class="okdp-logo" viewBox="0 0 80 69" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -52,35 +52,42 @@
         </svg>
       </li>
       <li class="nav-item">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <h6>OKDP</h6>
-          </li>
-          <li class="nav-item">
-            <h6>-</h6>
-          </li>
-          <li class="nav-item">
-            <h6>Open Kubernetes Data Platform</h6>
-          </li>
-        </ul>
+        <h6>OKDP</h6>
+      </li>
+      <li *ngIf="!isSidebarCollapsed" class="nav-item">
+        <h6>Open Kubernetes Data Platform</h6>
       </li>
     </ul>
   </div>
-  <div class="container-fluid">
-    <ul class="navbar-nav d-flex flex-row align-items-center">
+
+  <div class="container-fluid w-auto">
+    <ul class="navbar-nav d-flex flex-row w-100">
       <!-- kad instances -->
       <li class="nav-item">
-        <i class="fas fa-cube okdp-icon"></i>
-        <!-- <mat-icon>view_in_ar</mat-icon> -->
+        <i class="material-symbols-outlined text-primary">deployed_code</i>
       </li>
       <li class="nav-item ps-2">
         <app-kad-instances />
       </li>
     </ul>
-    <ul class="navbar-nav ms-auto d-flex flex-row align-items-center">
+  </div>
+
+  <div class="container-fluid">
+    <ul class="navbar-nav d-flex flex-row w-100 my-1 flex-grow-1">
+      <li class="nav-item flex-grow-1">
+        <app-search-filter
+          noItemsLabel="No search result."
+          [found]="filtredItems.length > 0"
+          (searchChanged)="onSearchChanged($event)" />
+      </li>
+    </ul>
+  </div>
+
+  <div class="container-fluid">
+    <ul class="navbar-nav d-flex flex-row align-items-center ms-auto">
       <!-- Notifications -->
       <li class="nav-item" (click)="toggleNotifications()">
-        <a class="nav-link">
+        <button type="button" class="nav-link">
           <i class="fas fa-bell okdp-icon"></i>
           <!-- <mat-icon>notifications</mat-icon> -->
           <span
@@ -103,7 +110,7 @@
             class="badge rounded-pill badge-notification bg-primary text-white mx-0"
             >{{ infoCount }}</span
           >
-        </a>
+        </button>
       </li>
       <!-- API -->
       <li class="nav-item">
@@ -114,10 +121,10 @@
       </li>
       <!-- About -->
       <li class="nav-item">
-        <a class="nav-link" (click)="toggleAbout()">
+        <button type="button" class="nav-link" (click)="toggleAbout()">
           <i class="fa-solid fa-circle-question okdp-icon"></i>
           <!-- <mat-icon>help</mat-icon> -->
-        </a>
+        </button>
       </li>
       <!-- Github -->
       <li class="nav-item">
@@ -128,10 +135,10 @@
       </li>
       <!-- Profile -->
       <li class="nav-item">
-        <a class="nav-link" (click)="toggleUserProfile()">
+        <button type="button" class="nav-link" (click)="toggleUserProfile()">
           <i class="fa-solid fa-user okdp-icon px-1"></i>
           <!-- <mat-icon>account_circle</mat-icon> -->
-        </a>
+        </button>
       </li>
     </ul>
   </div>

@@ -3,8 +3,9 @@ import { AuthConfig } from 'angular-oauth2-oidc';
 export interface AppConfig {
   auth: Auth;
   okdpApi: OkdpApi;
-  kadServicesInfo: Map<string, KadServiceInfo>;
   kadCatalogsInfo: Map<string, KadCatalogInfo>;
+  kadServicesInfo: Map<string, KadServiceInfo>;
+  catalogs: DisplayCatalog;
 }
 
 export interface Auth {
@@ -22,6 +23,11 @@ export interface KadServiceInfo {
   menuIcon?: string;
   description?: string;
   home?: string;
+}
+
+export interface DisplayCatalog {
+  services: string[];
+  kad: string[];
 }
 
 export interface KadCatalogInfo {

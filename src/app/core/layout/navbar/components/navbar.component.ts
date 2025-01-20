@@ -4,12 +4,13 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserProfileComponent } from '../../../common/user-profile';
-import { RightSidebarService, RightSidebarToggle } from '../../../../shared/services';
+import { LayoutService, RightSidebarService, RightSidebarToggle } from '../../../../shared/services';
 import { NotificationComponent, NotificationService } from '../../../common/notifications';
 import { AboutComponent } from '../../../common/about/components/about.component';
 import { KadInstanceComponent } from '../../../common/kad-instances/components/kad-instances.component';
 import { AppConfigService } from '../../../config';
 import { Notification, NotificationType } from '../../../models';
+import { SearchFilterComponent, SearchFilterService } from '../../../../shared/components/search-filter';
 
 @Component({
   selector: 'app-navbar',
@@ -20,6 +21,7 @@ import { Notification, NotificationType } from '../../../models';
     UserProfileComponent,
     NotificationComponent,
     KadInstanceComponent,
+    SearchFilterComponent,
     AboutComponent,
     RouterOutlet,
     RouterLink,
@@ -32,11 +34,14 @@ import { Notification, NotificationType } from '../../../models';
 export class NavbarComponent implements OnInit {
   swaggerUrl: string = '';
   notifications: Notification[] = [];
+  filtredItems: string[] = [];
 
   constructor(
     private rightSidebarService: RightSidebarService,
     private notificationService: NotificationService,
     private appConfigService: AppConfigService,
+    private layoutService: LayoutService,
+    private searchFilterService: SearchFilterService,
     private destroyRef: DestroyRef
   ) {}
 
@@ -73,5 +78,13 @@ export class NavbarComponent implements OnInit {
 
   toggleAbout() {
     this.rightSidebarService.toggle(RightSidebarToggle.ABOUT);
+  }
+
+  get isSidebarCollapsed() {
+    return this.layoutService.isSidebarCollapsed();
+  }
+
+  onSearchChanged(search: string): void {
+    this.searchFilterService.searchChanged(search);
   }
 }

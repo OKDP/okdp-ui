@@ -1,0 +1,10 @@
+<button mat-icon-button aria-label="kebab menu items" [matMenuTriggerFor]="menu">
+  <i class="material-symbols-outlined text-primary icon-2x icon-outlined">more_vert</i>
+</button>
+
+<mat-menu #menu="matMenu">
+  <button *ngFor="let option of options" mat-menu-item>
+    <i class="material-symbols-outlined text-primary">{{ option.icon }}</i>
+    <span class="ps-2">{{ option.value }}</span>
+  </button>
+</mat-menu>
