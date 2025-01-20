@@ -51,11 +51,9 @@
             d="M79.534 43.9959C79.7499 46.4821 79.8586 49.0245 79.8586 51.6237C79.831 54.1663 79.8051 56.7088 79.7775 59.2515C79.3896 60.1808 78.7664 60.9111 77.9111 61.4424C73.745 63.5251 69.5806 65.608 65.4145 67.6907C65.2246 62.3899 65.1987 57.0884 65.3334 51.786C70.0934 49.2113 74.8275 46.6147 79.534 43.9959Z" />
         </svg>
       </li>
-      <li class="nav-item">
+      <li class="nav-item d-flex align-items-center gap-0">
         <h6>OKDP</h6>
-      </li>
-      <li *ngIf="!isSidebarCollapsed" class="nav-item">
-        <h6>Open Kubernetes Data Platform</h6>
+        <h6 *ngIf="!isSidebarCollapsed">- Open Kubernetes Data Platform</h6>
       </li>
     </ul>
   </div>

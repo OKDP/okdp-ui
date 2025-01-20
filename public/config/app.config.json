@@ -90,8 +90,8 @@
     "minio": {
       "icon": "minio.svg",
       "menuIcon": "fa-solid fa-warehouse",
-      "description": "MinIO AIStor is designed to allow enterprises to consolidate all of their data on a single, private cloud namespace.",
-      "home": "https://min.io/"
+      "description": "MinIO is a High Performance Object Storage released under GNU Affero General Public License v3.0.",
+      "home": "https://github.com/minio/minio"
     },
     "openldap": {
       "icon": "openldap-logo.png",
