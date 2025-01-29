@@ -6,12 +6,13 @@
     "generate-okdp-api-models": "npx sta -r --no-client -p src/app/api/okdp-api-swagger.json -o src/app/api/_model -n okdp-api.model.ts",
     "clean-models": "sed -i 's/definition_//g' src/app/api/okdp-api-swagger.json",
     "format": "prettier --write \"src/**/*.{ts,html,css}\"",
-    "postinstall": "npm run clean-models && npm run generate-okdp-api-models",
-    "start": "ng serve",
+    "postinstall": "npm run clean-models && npm run generate-okdp-api-models && npm run prebuild",
+    "prebuild": "find src/environments -name 'environment*.ts' -exec sed -i 's/version: .*/version: \"'$(node -p \"require('./package.json').version\")'\",/' {} +",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "start": "ng serve"
   },
   "private": true,
   "dependencies": {

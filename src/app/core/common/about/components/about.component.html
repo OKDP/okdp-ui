@@ -23,7 +23,20 @@
           <div class="d-flex align-items-center text-primary fw-bold mb-2">About OKDP</div>
           <div class="d-flex align-items-center text-primary mb-2">
             <span class="pe-2">Version:</span>
-            <a class="okdp-text" href="https://github.com/OKDP/okdp-ui" target="_blank">0.1.0-snapshot</a>
+            <a
+              *ngIf="env.isSnaphsot"
+              class="okdp-text"
+              href="https://github.com/OKDP/okdp-ui"
+              target="_blank"
+              >{{ env.version }}</a
+            >
+            <a
+              *ngIf="!env.isSnaphsot"
+              class="okdp-text"
+              target="_blank"
+              href="https://github.com/OKDP/okdp-ui/releases/tag/v{{ env.version }}"
+              >{{ env.version }}</a
+            >
           </div>
         </div>
       </div>
@@ -36,7 +49,7 @@
     <div class="offcanvas-body">
       <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
         <!-- Release Note -->
-        <li class="nav-item">
+        <li *ngIf="!env.isSnaphsot" class="nav-item">
           <a class="nav-link text-okdp" href="https://github.com/okdp">
             <i class="fa-solid fa-file text-okdp px-1"></i> Release Note
           </a>

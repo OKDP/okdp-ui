@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { RightSidebarToggle, RightSidebarService } from '../../../../shared/services';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-about',
@@ -24,5 +25,12 @@ export class AboutComponent implements OnInit {
 
   hideSidebar() {
     this.rightSidebarService.toggle(RightSidebarToggle.ABOUT);
+  }
+
+  get env() {
+    return {
+      version: environment.version,
+      isSnaphsot: environment.version.toLowerCase().includes('-snapshot'.toLowerCase()),
+    };
   }
 }
