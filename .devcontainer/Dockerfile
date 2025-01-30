@@ -5,7 +5,7 @@ LABEL name="Angular dev environment" \
       vendor="angular" \
       version="1.0"
 
-EXPOSE 4000 4200 4433 5000 8080 9876
+EXPOSE 4200
 
 USER root
 
