@@ -6,4 +6,8 @@ export const environment = {
     logLevel: 'info',
   },
   debug: false,
+  appConfig: {
+    filePath: '/config/app.config.json',
+    overridesFilePath: '/config/config.overrides.json',
+  },
 };
