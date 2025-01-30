@@ -1,4 +1,3 @@
-export const APP_CONFIG_FILE_PATH = '/config/app.config.json';
 //export const HOME_PAGE_URI = '/home';
 export const HOME_PAGE_URI = '/catalogs'; // Temporally point to catalogs
 export const ERROR_PAGE_URI = '/error';

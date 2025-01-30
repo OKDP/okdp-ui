@@ -330,3 +330,36 @@ export function sanitizeEmptyValues<T>(obj: T): T {
 
   return cleaned as T;
 }
+
+/**
+ * Utility function to fetch a JSON file from the provided URL.
+ *
+ * @param url The URL of the JSON file to fetch.
+ * @returns {Promise<any>} A Promise that resolves to the parsed JSON object.
+ * @throws {Error} If fetching the file fails.
+ */
+export async function fetchConfigFile(url: string): Promise<any> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to load application configuration from file ${url}; details: ${response.statusText}`);
+  }
+  return response.json();
+}
+
+/**
+ * Deeply merges two objects by applying the source overrides to the target object.
+ *
+ * @param {Record<string, any>} target The base object.
+ * @param {Record<string, any>} source The overriding object.
+ * @returns {Promise<Record<string, any>>} The deeply merged object wrapped in a Promise.
+ */
+export async function deepMerge(target: Record<string, any>, source: Record<string, any>): Promise<any> {
+  for (const key of Object.keys(source)) {
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      target[key] = await deepMerge(target[key] || {}, source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return Promise.resolve(target);
+}

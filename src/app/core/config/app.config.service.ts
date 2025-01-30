@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { TitleCasePipe } from '@angular/common';
 import { AppConfig, DisplayCatalog, KadCatalogInfo, KadServiceInfo } from './app.config';
-import { APP_CONFIG_FILE_PATH } from '../constants';
+import { environment } from '../../../environments/environment';
+import { deepMerge, fetchConfigFile } from '../../shared/utils';
 @Injectable({
   providedIn: 'root',
 })
@@ -12,14 +13,10 @@ export class AppConfigService {
   // NgRx effects uses APP_INITIALIZER and may load before the application configuration
   // c.f. issue: https://github.com/ngrx/platform/issues/931
   static async loadConfig(): Promise<void> {
-    AppConfigService.config = await fetch(APP_CONFIG_FILE_PATH).then(response => {
-      if (!response.ok) {
-        throw new Error(
-          'Failed to load application configuration from file:' + APP_CONFIG_FILE_PATH + '; details: ' + response
-        );
-      }
-      return response.json();
-    });
+    const appConfig: AppConfig = await fetchConfigFile(environment.appConfig.filePath);
+    const overridesConfig: AppConfig = await fetchConfigFile(environment.appConfig.overridesFilePath);
+
+    AppConfigService.config = await deepMerge(appConfig, overridesConfig);
   }
 
   getConfig(): AppConfig {
