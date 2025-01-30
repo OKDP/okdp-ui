@@ -1,0 +1,6 @@
+apiVersion: v2
+name: okdp-ui
+description: OKDP UI Helm chart
+type: application
+version: 0.1.0-snapshot
+appVersion: "0.1.0-snapshot"

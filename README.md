@@ -24,3 +24,13 @@ ng serve --port=4200 --host=127.0.0.1
 ```
 docker-compose up --build
 ```
+
+## Helm
+```
+docker build -t quay.io/okdp/okdp-ui:0.1.0-snapshot .
+docker push quay.io/okdp/okdp-ui:0.1.0-snapshot
+helm upgrade --install okdp-ui \
+     --namespace okdp-ui \
+     --create-namespace helm/okdp-ui \
+     --values helm/okdp-ui/values.keycloak.yaml
+```

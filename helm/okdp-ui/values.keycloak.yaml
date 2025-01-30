@@ -1,0 +1,32 @@
+# For more properties: https://github.com/OKDP/okdp-ui/blob/main/public/config/app.config.json
+ui:
+  auth:
+    provider: oauth2
+    oauth2:
+      issuer: http://keycloak:7080/realms/master
+      redirectUri: http://okdp-ui.ingress.kind.local/index.html
+      silentRefreshRedirectUri: http://okdp-ui.ingress.kind.local/silent-refresh.html
+      clientId: public-oidc-client
+      responseType: code
+      scope: openid profile email offline_access roles
+      showDebugInformation: true
+      requireHttps: false
+  okdpApi:
+    apiUrl: http://keycloak:8090/api/v1
+    swaggerUrl: http://localhost:8092
+  catalogs:
+    services:
+    - all
+    kad:
+    - all
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: okdp-ui.ingress.kind.local
+      paths:
+        - path: /
+          pathType: Prefix
+
