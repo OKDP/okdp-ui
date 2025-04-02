@@ -4,7 +4,7 @@ ARG NGINX_IMAGE=nginx:1.27.3-alpine
 FROM ${NODE_IMAGE} AS build
 
 ARG ANGULAR_VERSION=18
-ARG OKDP_UI_VERSION=0.1.0-snapshot
+ARG OKDP_UI_VERSION=0.1.0
 
 LABEL name="OKDP UI" \
       description="OKDP UI" \
