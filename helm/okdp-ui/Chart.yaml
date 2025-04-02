@@ -2,5 +2,12 @@ apiVersion: v2
 name: okdp-ui
 description: OKDP UI Helm chart
 type: application
-version: 0.1.0-snapshot
-appVersion: "0.1.0-snapshot"
+version: 0.1.0
+appVersion: "0.1.0"
+home: https://okdp.io
+maintainers:
+  - email: idir.izitounene@kubotal.io
+    name: idirze
+    url: https://github.com/idirze
+sources:
+  - https://github.com/OKDP/okdp-ui
