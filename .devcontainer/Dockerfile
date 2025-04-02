@@ -1,9 +1,9 @@
 FROM cimg/node:22.0.0
 
 LABEL name="Angular dev environment" \
-      description="This image can be used to create a dev environment for building Angular." \
+      description="Dev environment for building Angular application." \
       vendor="angular" \
-      version="1.0"
+      version="18"
 
 EXPOSE 4200
 
