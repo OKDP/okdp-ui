@@ -81,7 +81,7 @@
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.1",
-    "prettier":"^3.4.2",
+    "prettier": "^3.4.2",
     "jasmine-core": "^5.1.2",
     "jasmine-spec-reporter": "^7.0.0",
     "karma": "^6.4.3",
