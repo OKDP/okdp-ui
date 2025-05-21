@@ -1,0 +1,5 @@
+<app-dropdown-with-filter
+  [noItemsLabel]="'No kubernetes cluster found.'"
+  [label]="'Filter kubernetes clusters ...'"
+  [options]="clusters"
+  (selectionChange)="onItemSelected($event)" />

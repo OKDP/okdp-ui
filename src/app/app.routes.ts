@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
-import { CatalogListServicesComponent } from './features/catalogs';
+import { CatalogListPackagesComponent } from './features/catalogs';
 import { HomeComponent } from './features/home';
 import { ErrorComponent } from './shared/error';
 import { LoginComponent } from './core/common/login';
 import { AuthGuard } from './core/guards';
 import { PageLayoutComponent } from './core/layout/page-layout';
 import { CATALOG_URI } from './core/constants';
-import { ServiceInstancesComponent } from './features/service';
-import { ServiceDeployComponent } from './features/service/components/service-deploy/service-deploy.component';
+import { ReleaseInstancesComponent } from './features/releases';
+import { ReleaseDeployComponent } from './features/releases/components/release-deploy/release-deploy.component';
 export const APP_ROUTES: Routes = [
   { path: 'login', component: LoginComponent },
   {
@@ -20,8 +20,8 @@ export const APP_ROUTES: Routes = [
       {
         path: CATALOG_URI,
         children: [
-          { path: '', component: CatalogListServicesComponent },
-          { path: ':catalog', component: CatalogListServicesComponent },
+          { path: '', component: CatalogListPackagesComponent },
+          { path: ':catalog', component: CatalogListPackagesComponent },
         ],
         // loadChildren: () =>
         //   import('./features/catalogs').then((m) => m.ROUTES_CATALOG),
@@ -29,8 +29,8 @@ export const APP_ROUTES: Routes = [
       {
         path: 'services',
         children: [
-          { path: ':service/instances', component: ServiceInstancesComponent },
-          { path: ':service/deploy', component: ServiceDeployComponent },
+          { path: ':service/instances', component: ReleaseInstancesComponent },
+          { path: ':service/deploy', component: ReleaseDeployComponent },
         ],
         // loadChildren: () =>
         //   import('./features/catalogs').then((m) => m.ROUTES_CATALOG),

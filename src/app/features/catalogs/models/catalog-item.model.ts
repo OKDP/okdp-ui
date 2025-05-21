@@ -1,12 +1,7 @@
-export enum CatalogItemType {
-  COMPONENT = 'Component',
-  TEMPLATE = 'Template',
-}
-
 export interface CatalogItem {
+  catalogId?: string;
   catalogName?: string;
   name: string;
-  type: CatalogItemType;
   icon: string;
   description?: string;
   home?: string;
