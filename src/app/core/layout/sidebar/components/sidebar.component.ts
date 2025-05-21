@@ -5,7 +5,7 @@ import { select, Store } from '@ngrx/store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { AppState } from '../../../store';
-import { getKadInstanceId } from '../../../common/kad-instances';
+import { getClusterId } from '../../../common/clusters';
 import { SidebarMenuItem } from '../model/sidebar-menu-item.model';
 import { TitleBarService } from '../../../../shared/components/title-bar';
 import { LoadingComponent } from '../../../../shared/components/loading';
@@ -52,24 +52,24 @@ export class SidebarComponent implements OnInit {
     this.filterKadCatalogs = this.appConfigService.catalogs().kad;
     this.filterServicesCatalogs = this.appConfigService.catalogs().services;
 
-    this.store.pipe(select(getKadInstanceId), takeUntilDestroyed(this.destroyRef)).subscribe(kadInstanceId => {
-      if (kadInstanceId) {
+    this.store.pipe(select(getClusterId), takeUntilDestroyed(this.destroyRef)).subscribe(clusterId => {
+      if (clusterId) {
         this.isLoaded = false;
-        this.getCatalogs(kadInstanceId);
+        this.getCatalogs();
         this.isLoaded = true;
       }
     });
   }
 
-  getCatalogs(kadInstanceId: string): void {
+  getCatalogs(): void {
     this.catalogService
-      .list(kadInstanceId)
+      .list()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (catalogs: Catalog[]) => {
           this.catalogs = catalogs
-            .filter(c => this.filterServicesCatalogs.includes(c.name) || this.filterServicesCatalogs.includes('all'))
-            .map(c => this.toMenuCatalog(c.name))
+            .filter(c => this.filterServicesCatalogs.includes(c.id) || this.filterServicesCatalogs.includes('all'))
+            .map(c => this.toMenuCatalog(c.id))
             .sort((a, b) => a.name.localeCompare(b.name));
 
           this.catalogs.forEach(c => {
@@ -81,16 +81,16 @@ export class SidebarComponent implements OnInit {
           });
         },
         error: error => {
-          this.notificationService.onError(kadInstanceId, `Unable to fetch catalog, ${errorMessage(error)}`);
+          this.notificationService.onError("cluster", `Unable to fetch catalog, ${errorMessage(error)}`);
         },
       });
   }
 
-  toMenuCatalog(catalog: string): SidebarMenuItem {
+  toMenuCatalog(catalogId: string): SidebarMenuItem {
     return {
-      name: catalog,
-      displayName: this.appConfigService.kadCatalogsInfo(catalog).getDisplayName(),
-      icon: this.appConfigService.kadCatalogsInfo(catalog).menuIcon,
+      name: catalogId,
+      displayName: this.appConfigService.kadCatalogsInfo(catalogId).getDisplayName(),
+      icon: this.appConfigService.kadCatalogsInfo(catalogId).menuIcon,
     } as SidebarMenuItem;
   }
 

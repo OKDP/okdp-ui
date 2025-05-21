@@ -12,9 +12,13 @@ export class CatalogService {
 
   constructor(private readonly http: HttpClient) {}
 
-  list(kadInstanceId: string): Observable<Catalog[]> {
+  list(): Observable<Catalog[]> {
     return this.http
-      .get<Catalog[]>(`/kad/${kadInstanceId}/catalogs`)
+      .get<Catalog[]>(`/catalogs`)
       .pipe(tap(catalogs => this.catalogs.next(catalogs)));
+  }
+
+  get(catalogId: string): Observable<Catalog> {
+    return this.http.get<Catalog>(`/catalogs/${catalogId}`);
   }
 }

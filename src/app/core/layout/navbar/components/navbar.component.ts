@@ -7,7 +7,7 @@ import { UserProfileComponent } from '../../../common/user-profile';
 import { LayoutService, RightSidebarService, RightSidebarToggle } from '../../../../shared/services';
 import { NotificationComponent, NotificationService } from '../../../common/notifications';
 import { AboutComponent } from '../../../common/about/components/about.component';
-import { KadInstanceComponent } from '../../../common/kad-instances/components/kad-instances.component';
+import { ClusterComponent } from '../../../common/clusters/components/cluster.component';
 import { AppConfigService } from '../../../config';
 import { Notification, NotificationType } from '../../../models';
 import { SearchFilterComponent, SearchFilterService } from '../../../../shared/components/search-filter';
@@ -20,7 +20,7 @@ import { SearchFilterComponent, SearchFilterService } from '../../../../shared/c
     MatIconModule,
     UserProfileComponent,
     NotificationComponent,
-    KadInstanceComponent,
+    ClusterComponent,
     SearchFilterComponent,
     AboutComponent,
     RouterOutlet,

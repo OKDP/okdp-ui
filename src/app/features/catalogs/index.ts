@@ -1,1 +1,1 @@
-export * from './components/catalog-list-services/catalog-list-services.component';
+export * from './components/catalog-list-packages/catalog-list-packages.component';

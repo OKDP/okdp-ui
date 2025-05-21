@@ -3,767 +3,160 @@
         "schemas": {
             "Catalog": {
                 "properties": {
-                    "components": {
-                        "items": {
-                            "type": "string"
-                        },
-                        "type": "array"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "templates": {
-                        "items": {
-                            "type": "string"
-                        },
-                        "type": "array"
-                    }
-                },
-                "required": [
-                    "name",
-                    "components",
-                    "templates"
-                ],
-                "type": "object",
-                "xml": {
-                    "name": "catalog"
-                }
-            },
-            "Component": {
-                "properties": {
-                    "kind": {
-                        "type": "string"
-                    },
-                    "spec": {
+                    "credentials": {
                         "properties": {
-                            "allowCreateNamespace": {
-                                "type": "boolean"
-                            },
-                            "allowValues": {
-                                "type": "boolean"
-                            },
-                            "catalogs": {
-                                "items": {
-                                    "type": "string"
-                                },
-                                "type": "array"
-                            },
-                            "config": {
-                                "properties": {
-                                    "install": {
-                                        "properties": {
-                                            "createNamespace": {
-                                                "type": "boolean"
-                                            },
-                                            "remediation": {
-                                                "properties": {
-                                                    "remediateLastFailure": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "retries": {
-                                                        "type": "number"
-                                                    }
-                                                },
-                                                "required": [
-                                                    "remediateLastFailure",
-                                                    "retries"
-                                                ],
-                                                "type": "object"
-                                            }
-                                        },
-                                        "required": [
-                                            "createNamespace",
-                                            "remediation"
-                                        ],
-                                        "type": "object"
-                                    },
-                                    "timeout": {
-                                        "type": "string"
-                                    },
-                                    "upgrade": {
-                                        "properties": {
-                                            "remediation": {
-                                                "properties": {
-                                                    "remediateLastFailure": {
-                                                        "type": "boolean"
-                                                    },
-                                                    "retries": {
-                                                        "type": "number"
-                                                    }
-                                                },
-                                                "required": [
-                                                    "remediateLastFailure",
-                                                    "retries"
-                                                ],
-                                                "type": "object"
-                                            }
-                                        },
-                                        "required": [
-                                            "remediation"
-                                        ],
-                                        "type": "object"
-                                    }
-                                },
-                                "required": [
-                                    "install",
-                                    "timeout",
-                                    "upgrade"
-                                ],
-                                "type": "object"
-                            },
-                            "contextSchema": {
-                                "properties": {
-                                    "File": {
-                                        "type": "string"
-                                    },
-                                    "Json": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "File",
-                                    "Json",
-                                    "Yaml"
-                                ],
-                                "type": "object"
-                            },
-                            "dependsOn": {
-                                "items": {
-                                    "type": "string"
-                                },
-                                "type": "array"
-                            },
-                            "name": {
+                            "dockerconfigjson": {
                                 "type": "string"
                             },
-                            "parameters": {
-                                "additionalProperties": true,
-                                "description": "List of paramters as key/value pairs",
-                                "type": "object"
+                            "robotAccountName": {
+                                "type": "string"
                             },
-                            "parametersSchema": {
-                                "properties": {
-                                    "File": {
-                                        "type": "string"
-                                    },
-                                    "Json": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "File",
-                                    "Json",
-                                    "Yaml"
-                                ],
-                                "type": "object"
-                            },
-                            "protected": {
-                                "type": "boolean"
-                            },
-                            "roles": {
-                                "items": {
-                                    "type": "string"
-                                },
-                                "type": "array"
-                            },
-                            "source": {
-                                "properties": {
-                                    "allowedVersions": {
-                                        "items": {
-                                            "type": "string"
-                                        },
-                                        "type": "array"
-                                    },
-                                    "defaultVersion": {
-                                        "type": "string"
-                                    },
-                                    "gitRepository": {
-                                        "properties": {
-                                            "name": {
-                                                "type": "string"
-                                            },
-                                            "namespace": {
-                                                "type": "string"
-                                            },
-                                            "path": {
-                                                "type": "string"
-                                            },
-                                            "unmanaged": {
-                                                "type": "boolean"
-                                            }
-                                        },
-                                        "required": [
-                                            "name",
-                                            "path",
-                                            "unmanaged",
-                                            "namespace"
-                                        ],
-                                        "type": "object"
-                                    },
-                                    "helmRepository": {
-                                        "properties": {
-                                            "certSecretRef": {
-                                                "type": "string"
-                                            },
-                                            "chart": {
-                                                "type": "string"
-                                            },
-                                            "interval": {
-                                                "type": "string"
-                                            },
-                                            "secretRef": {
-                                                "type": "string"
-                                            },
-                                            "url": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "required": [
-                                            "url",
-                                            "chart",
-                                            "interval",
-                                            "secretRef",
-                                            "certSecretRef"
-                                        ],
-                                        "type": "object"
-                                    },
-                                    "ociRepository": {
-                                        "properties": {
-                                            "certSecretRef": {
-                                                "type": "string"
-                                            },
-                                            "insecure": {
-                                                "type": "boolean"
-                                            },
-                                            "interval": {
-                                                "type": "string"
-                                            },
-                                            "secretRef": {
-                                                "type": "string"
-                                            },
-                                            "url": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "required": [
-                                            "url",
-                                            "insecure",
-                                            "interval",
-                                            "secretRef",
-                                            "certSecretRef"
-                                        ],
-                                        "type": "object"
-                                    }
-                                },
-                                "required": [
-                                    "allowedVersions",
-                                    "defaultVersion",
-                                    "gitRepository",
-                                    "ociRepository",
-                                    "helmRepository"
-                                ],
-                                "type": "object"
-                            },
-                            "suspended": {
-                                "type": "boolean"
-                            },
-                            "usage": {
-                                "oneOf": [
-                                    {
-                                        "type": "string"
-                                    },
-                                    {
-                                        "additionalProperties": true,
-                                        "type": "object"
-                                    }
-                                ]
-                            },
-                            "values": {
-                                "oneOf": [
-                                    {
-                                        "type": "string"
-                                    },
-                                    {
-                                        "additionalProperties": true,
-                                        "type": "object"
-                                    }
-                                ]
-                            },
-                            "version": {
+                            "robotAccountToken": {
                                 "type": "string"
                             }
                         },
-                        "required": [
-                            "name",
-                            "version",
-                            "catalogs",
-                            "usage",
-                            "config",
-                            "suspended",
-                            "protected",
-                            "source",
-                            "parameters",
-                            "parametersSchema",
-                            "contextSchema",
-                            "values",
-                            "allowValues",
-                            "allowCreateNamespace",
-                            "roles",
-                            "dependsOn"
-                        ],
                         "type": "object"
                     },
-                    "status": {
-                        "properties": {
-                            "error": {
-                                "type": "string"
-                            },
-                            "file": {
-                                "type": "string"
-                            },
-                            "parametersSchema": {
-                                "type": "object"
-                            },
-                            "path": {
-                                "type": "string"
-                            },
-                            "releases": {
-                                "items": {
-                                    "type": "string"
-                                },
-                                "type": "array"
-                            },
-                            "title": {
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "file",
-                            "path",
-                            "error",
-                            "parametersSchema",
-                            "releases",
-                            "title"
-                        ],
-                        "type": "object"
-                    }
-                },
-                "required": [
-                    "kind",
-                    "spec",
-                    "status"
-                ],
-                "type": "object",
-                "xml": {
-                    "name": "component"
-                }
-            },
-            "ComponentReleasePayload": {
-                "properties": {
-                    "component": {
-                        "properties": {
-                            "config": {
-                                "additionalProperties": true,
-                                "description": "Additional configuration",
-                                "type": "object"
-                            },
-                            "name": {
-                                "type": "string"
-                            },
-                            "parameterFiles": {
-                                "items": {
-                                    "properties": {
-                                        "document": {
-                                            "type": "string"
-                                        },
-                                        "file": {
-                                            "type": "string"
-                                        },
-                                        "unwrap": {
-                                            "type": "string"
-                                        },
-                                        "wrap": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                },
-                                "type": "array"
-                            },
-                            "parameters": {
-                                "additionalProperties": true,
-                                "description": "List of paramters as key/value pairs",
-                                "type": "object"
-                            },
-                            "protected": {
-                                "type": "boolean"
-                            },
-                            "source": {
-                                "properties": {
-                                    "version": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "version"
-                                ],
-                                "type": "object"
-                            },
-                            "suspended": {
-                                "type": "boolean"
-                            },
-                            "values": {
-                                "additionalProperties": true,
-                                "description": "List of values as key/value pairs",
-                                "type": "object"
-                            },
-                            "version": {
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "version"
-                        ]
-                    },
-                    "dependsOn": {
-                        "items": {
-                            "type": "string"
-                        },
-                        "type": "array"
-                    },
-                    "enabled": {
-                        "type": "boolean"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "namespace": {
-                        "type": "string"
-                    },
-                    "roles": {
-                        "items": {
-                            "type": "string"
-                        },
-                        "type": "array"
-                    }
-                },
-                "required": [
-                    "name",
-                    "component"
-                ],
-                "type": "object"
-            },
-            "ComponentReleaseRequest": {
-                "properties": {
-                    "comment": {
-                        "type": "string"
-                    },
-                    "componentReleases": {
-                        "items": {
-                            "$ref": "#/components/schemas/ComponentReleasePayload"
-                        },
-                        "type": "array"
-                    },
-                    "gitRepoFolder": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "gitRepoFolder",
-                    "comment",
-                    "componentReleases"
-                ],
-                "type": "object"
-            },
-            "ComponentReleaseResponse": {
-                "properties": {
-                    "kind": {
-                        "type": "string"
-                    },
-                    "spec": {
-                        "properties": {
-                            "component": {
-                                "properties": {
-                                    "Ref": {
-                                        "properties": {
-                                            "Name": {
-                                                "type": "string"
-                                            },
-                                            "Version": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "required": [
-                                            "Name",
-                                            "Version"
-                                        ],
-                                        "type": "object"
-                                    },
-                                    "Source": {
-                                        "properties": {
-                                            "version": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "required": [
-                                            "version"
-                                        ],
-                                        "type": "object"
-                                    },
-                                    "config": {
-                                        "additionalProperties": true,
-                                        "description": "Additional configuration",
-                                        "type": "object"
-                                    },
-                                    "parameterFiles": {
-                                        "items": {
-                                            "properties": {
-                                                "Document": {
-                                                    "type": "string"
-                                                },
-                                                "File": {
-                                                    "type": "string"
-                                                },
-                                                "Unwrap": {
-                                                    "type": "string"
-                                                },
-                                                "Wrap": {
-                                                    "type": "string"
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "type": "array"
-                                    },
-                                    "parameters": {
-                                        "additionalProperties": true,
-                                        "description": "List of paramters as key/value pairs",
-                                        "type": "object"
-                                    },
-                                    "protected": {
-                                        "type": "boolean"
-                                    },
-                                    "suspended": {
-                                        "type": "boolean"
-                                    },
-                                    "values": {
-                                        "additionalProperties": true,
-                                        "description": "List of values as key/value pairs",
-                                        "type": "object"
-                                    }
-                                },
-                                "required": [
-                                    "Ref",
-                                    "suspended",
-                                    "protected",
-                                    "Source",
-                                    "parameters",
-                                    "parameterFiles",
-                                    "config",
-                                    "values"
-                                ],
-                                "type": "object"
-                            },
-                            "dependsOn": {
-                                "items": {
-                                    "type": "string"
-                                },
-                                "type": "array"
-                            },
-                            "enabled": {
-                                "type": "boolean"
-                            },
-                            "helmReleaseName__": {
-                                "type": "string"
-                            },
-                            "name": {
-                                "type": "string"
-                            },
-                            "namespace": {
-                                "type": "string"
-                            },
-                            "roles": {
-                                "items": {
-                                    "type": "string"
-                                },
-                                "type": "array"
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "enabled",
-                            "component",
-                            "namespace",
-                            "helmReleaseName__",
-                            "roles",
-                            "dependsOn"
-                        ],
-                        "type": "object"
-                    },
-                    "status": {
-                        "properties": {
-                            "catalogs": {
-                                "items": {
-                                    "type": "string"
-                                },
-                                "type": "array"
-                            },
-                            "dependencies": {
-                                "items": {
-                                    "type": "string"
-                                },
-                                "type": "array"
-                            },
-                            "error": {
-                                "type": "string"
-                            },
-                            "file": {
-                                "type": "string"
-                            },
-                            "parameters": {
-                                "additionalProperties": true,
-                                "description": "List of values as key/value pairs",
-                                "type": "object"
-                            },
-                            "path": {
-                                "type": "string"
-                            },
-                            "usage": {
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "file",
-                            "path",
-                            "error",
-                            "parameters",
-                            "dependencies",
-                            "usage",
-                            "catalogs"
-                        ],
-                        "type": "object"
-                    }
-                },
-                "required": [
-                    "kind",
-                    "spec",
-                    "status"
-                ],
-                "type": "object"
-            },
-            "FlatComponent": {
-                "properties": {
-                    "catalogs": {
-                        "items": {
-                            "type": "string"
-                        },
-                        "type": "array"
-                    },
-                    "componentName": {
-                        "type": "string"
-                    },
-                    "componentReleaseName": {
-                        "type": "string"
-                    },
-                    "componentVersion": {
-                        "type": "string"
-                    },
-                    "enabled": {
-                        "type": "boolean"
-                    },
-                    "packageName": {
-                        "type": "string"
-                    },
-                    "packageVersion": {
-                        "type": "string"
-                    },
-                    "protected": {
-                        "type": "boolean"
-                    },
-                    "suspended": {
-                        "type": "boolean"
-                    },
-                    "templateName": {
-                        "type": "string"
-                    },
-                    "templateReleaseName": {
-                        "type": "string"
-                    },
-                    "templateVersion": {
-                        "type": "string"
-                    },
-                    "usage": {
-                        "default": "",
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "packageName",
-                    "packageVersion",
-                    "componentName",
-                    "componentVersion",
-                    "templateName",
-                    "templateVersion",
-                    "componentReleaseName",
-                    "templateReleaseName",
-                    "enabled",
-                    "suspended",
-                    "protected",
-                    "catalogs",
-                    "usage"
-                ],
-                "type": "object",
-                "xml": {
-                    "name": "flatComponent"
-                }
-            },
-            "GitCommit": {
-                "properties": {
-                    "commit": {
-                        "description": "The hash of the commit",
-                        "type": "string"
-                    },
-                    "commitMessage": {
-                        "description": "A commit Message",
-                        "type": "string"
-                    },
-                    "committerEmail": {
-                        "description": "Email of the committer",
-                        "type": "string"
-                    },
-                    "committerName": {
-                        "description": "Name of the committer",
-                        "type": "string"
-                    },
-                    "force": {
-                        "default": false,
-                        "description": "Whether to force commit",
-                        "type": "boolean"
-                    },
-                    "targetPath": {
-                        "description": "Target file path of the commit in the git repository",
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "KadInstance": {
-                "properties": {
-                    "apiUrl": {
-                        "type": "string",
-                        "x-go-name": "APIURL"
-                    },
-                    "authBearer": {
+                    "description": {
                         "type": "string"
                     },
                     "id": {
                         "type": "string",
                         "x-go-name": "ID"
                     },
-                    "insecureSkipVerify": {
-                        "default": true,
-                        "type": "boolean"
+                    "name": {
+                        "type": "string"
+                    },
+                    "packages": {
+                        "items": {
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name"
+                            ],
+                            "type": "object"
+                        },
+                        "type": "array"
+                    },
+                    "repoUrl": {
+                        "format": "uri",
+                        "type": "string",
+                        "x-go-name": "repoURL"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "description",
+                    "repoUrl",
+                    "packages"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "Catalog"
+                }
+            },
+            "Cluster": {
+                "properties": {
+                    "auth": {
+                        "oneOf": [
+                            {
+                                "required": [
+                                    "kubeconfig"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "certificate"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "bearer"
+                                ]
+                            }
+                        ],
+                        "properties": {
+                            "bearer": {
+                                "properties": {
+                                    "apiServer": {
+                                        "format": "uri",
+                                        "type": "string",
+                                        "x-go-name": "APIServer"
+                                    },
+                                    "bearerToken": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "apiServer",
+                                    "bearerToken"
+                                ],
+                                "type": "object"
+                            },
+                            "certificate": {
+                                "properties": {
+                                    "apiServer": {
+                                        "format": "uri",
+                                        "type": "string",
+                                        "x-go-name": "APIServer"
+                                    },
+                                    "caCert": {
+                                        "type": "string",
+                                        "x-go-name": "CACert"
+                                    },
+                                    "clientCert": {
+                                        "type": "string"
+                                    },
+                                    "clientKey": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "apiServer",
+                                    "clientKey",
+                                    "clientCert",
+                                    "caCert"
+                                ],
+                                "type": "object"
+                            },
+                            "kubeconfig": {
+                                "properties": {
+                                    "apiServer": {
+                                        "format": "uri",
+                                        "type": "string",
+                                        "x-go-name": "APIServer"
+                                    },
+                                    "context": {
+                                        "type": "string"
+                                    },
+                                    "insecureSkipTlsVerify": {
+                                        "type": "boolean"
+                                    },
+                                    "path": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "apiServer",
+                                    "path",
+                                    "context",
+                                    "insecureSkipTlsVerify"
+                                ],
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "env": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "x-go-name": "ID"
                     },
                     "name": {
                         "type": "string"
@@ -772,24 +165,618 @@
                 "required": [
                     "id",
                     "name",
-                    "apiUrl",
-                    "authBearer",
-                    "insecureSkipVerify"
+                    "env",
+                    "k8s"
                 ],
                 "type": "object",
                 "xml": {
-                    "name": "kadInstance"
+                    "name": "Cluster"
                 }
             },
-            "ServerError": {
+            "GitRepository": {
+                "properties": {
+                    "credentials": {
+                        "properties": {
+                            "secretRef": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "secretRef"
+                        ],
+                        "type": "object"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "namespace": {
+                        "type": "string"
+                    },
+                    "path": {
+                        "type": "string"
+                    },
+                    "ref": {
+                        "type": "string"
+                    },
+                    "repoUrl": {
+                        "format": "uri",
+                        "type": "string",
+                        "x-go-name": "repoURL"
+                    }
+                },
+                "required": [
+                    "repoUrl",
+                    "ref",
+                    "name",
+                    "namespace",
+                    "path",
+                    "credentials"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "GitRepository"
+                }
+            },
+            "Package": {
+                "properties": {
+                    "name": {
+                        "description": "The name of the package",
+                        "type": "string"
+                    },
+                    "versions": {
+                        "description": "A list of versions for the package",
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "name",
+                    "versions"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "Package"
+                }
+            },
+            "Release": {
+                "description": "Release is the Schema for the releases API.",
+                "properties": {
+                    "apiVersion": {
+                        "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+                        "type": "string"
+                    },
+                    "kind": {
+                        "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+                        "type": "string"
+                    },
+                    "metadata": {
+                        "description": "Standard object metadata.",
+                        "properties": {
+                            "annotations": {
+                                "additionalProperties": {
+                                    "type": "string"
+                                },
+                                "description": "Arbitrary metadata.",
+                                "type": "object"
+                            },
+                            "creationTimestamp": {
+                                "description": "Creation timestamp.",
+                                "format": "date-time",
+                                "type": "string"
+                            },
+                            "deletionGracePeriodSeconds": {
+                                "description": "Seconds allowed for graceful termination.",
+                                "format": "int64",
+                                "type": "integer"
+                            },
+                            "deletionTimestamp": {
+                                "description": "Deletion timestamp.",
+                                "format": "date-time",
+                                "type": "string"
+                            },
+                            "finalizers": {
+                                "description": "List of finalizers.",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "generateName": {
+                                "description": "Prefix for generating a unique name.",
+                                "type": "string"
+                            },
+                            "generation": {
+                                "description": "Sequence number representing generation of desired state.",
+                                "format": "int64",
+                                "type": "integer"
+                            },
+                            "labels": {
+                                "additionalProperties": {
+                                    "type": "string"
+                                },
+                                "description": "Key-value pairs to categorize resources.",
+                                "type": "object"
+                            },
+                            "managedFields": {
+                                "description": "Managed fields tracking info (complex object).",
+                                "type": "object"
+                            },
+                            "name": {
+                                "description": "Name of the resource.",
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "description": "Namespace of the resource.",
+                                "type": "string"
+                            },
+                            "ownerReferences": {
+                                "description": "References to owning resources.",
+                                "items": {
+                                    "properties": {
+                                        "apiVersion": {
+                                            "type": "string"
+                                        },
+                                        "kind": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "uid": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "type": "array"
+                            },
+                            "resourceVersion": {
+                                "description": "Resource version for concurrency control.",
+                                "type": "string"
+                            },
+                            "selfLink": {
+                                "description": "Deprecated self-link URL.",
+                                "type": "string"
+                            },
+                            "uid": {
+                                "description": "Unique ID assigned by Kubernetes.",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "spec": {
+                        "description": "ReleaseSpec defines the desired state of Release.",
+                        "properties": {
+                            "contexts": {
+                                "description": "To provide contextual variables\nRefer to Context resource description for some explanation\nContexts are merged in the following order:\n- The global default one (defined in Config)\n- The namespace context (A context with a specific name, defined in config, present in the release namespace)\n- This ordered list\nDefault: []",
+                                "items": {
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "namespace": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "name"
+                                    ],
+                                    "type": "object"
+                                },
+                                "type": "array"
+                            },
+                            "createNamespace": {
+                                "description": "If true, add  { install: { createNamespace: true } } to config map.\nMust be set, as used in module.Render()\nDefault: false",
+                                "type": "boolean"
+                            },
+                            "debug": {
+                                "description": "Group a set of parameters useful for debugging Release and Package",
+                                "properties": {
+                                    "dumpContext": {
+                                        "description": "DumpContext instruct to save a representation of the context\nin the Status. This for user debugging?",
+                                        "type": "boolean"
+                                    },
+                                    "dumpParameters": {
+                                        "description": "DumpParameters instruct to save a representation of the parameters\nin the Status. This for user debugging?",
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "dependencies": {
+                                "description": "The roles we depend on. (appended to the one of the underlying package)\nDefault: []",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "description": {
+                                "description": "Short description of this release. Single line only",
+                                "type": "string"
+                            },
+                            "package": {
+                                "description": "The package to deploy",
+                                "properties": {
+                                    "certSecretRef": {
+                                        "description": "CertSecretRef can be given the name of a Secret containing\neither or both of\n\n- a PEM-encoded client certificate (`tls.crt`) and private\nkey (`tls.key`);\n- a PEM-encoded CA certificate (`ca.crt`)\n\nand whichever are supplied, will be used for connecting to the\nregistry. The client cert and key are useful if you are\nauthenticating with a certificate; the CA cert is useful if\nyou are using a self-signed server certificate. The Secret must\nbe of type `Opaque` or `kubernetes.io/tls`.\n\nNote: Support for the `caFile`, `certFile` and `keyFile` keys have\nbeen deprecated.",
+                                        "properties": {
+                                            "name": {
+                                                "description": "Name of the referent.",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "name"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "ignore": {
+                                        "description": "Ignore overrides the set of excluded patterns in the .sourceignore format\n(which is the same as .gitignore). If not provided, a default will be used,\nconsult the documentation for your version to find out what those are.",
+                                        "type": "string"
+                                    },
+                                    "insecure": {
+                                        "description": "Insecure allows connecting to a non-TLS HTTP container registry.",
+                                        "type": "boolean"
+                                    },
+                                    "interval": {
+                                        "default": "5m",
+                                        "description": "Interval at which the OCIRepository URL is checked for updates.\nThis interval is approximate and may be subject to jitter to ensure\nefficient use of resources.",
+                                        "pattern": "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$",
+                                        "type": "string"
+                                    },
+                                    "provider": {
+                                        "description": "The source will be handled by a child fluxCD OciRepository resource, which will be created by this operator\nAll following fields will be replicated in this object\nThe provider used for authentication, can be 'aws', 'azure', 'gcp' or 'generic'.\nWhen not specified, defaults to 'generic'.\n-kubebuilder:default:=generic",
+                                        "enum": [
+                                            "generic",
+                                            "aws",
+                                            "azure",
+                                            "gcp"
+                                        ],
+                                        "type": "string"
+                                    },
+                                    "proxySecretRef": {
+                                        "description": "ProxySecretRef specifies the Secret containing the proxy configuration\nto use while communicating with the container registry.",
+                                        "properties": {
+                                            "name": {
+                                                "description": "Name of the referent.",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "name"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "repository": {
+                                        "description": "Part of OCI url oci://\u003crepository\u003e:\u003ctag\u003e",
+                                        "type": "string"
+                                    },
+                                    "secretRef": {
+                                        "description": "SecretRef contains the secret name containing the registry login\ncredentials to resolve image metadata.\nThe secret must be of type kubernetes.io/dockerconfigjson.",
+                                        "properties": {
+                                            "name": {
+                                                "description": "Name of the referent.",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "name"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    "serviceAccountName": {
+                                        "description": "ServiceAccountName is the name of the Kubernetes ServiceAccount used to authenticate\nthe image pull if the service account has attached pull secrets. For more information:\nhttps://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account",
+                                        "type": "string"
+                                    },
+                                    "suspend": {
+                                        "description": "This flag tells the controller to suspend the reconciliation of this source.",
+                                        "type": "boolean"
+                                    },
+                                    "tag": {
+                                        "description": "Part of OCI url oci://\u003crepository\u003e:\u003ctag\u003e",
+                                        "type": "string"
+                                    },
+                                    "timeout": {
+                                        "default": "60s",
+                                        "description": "The timeout for remote OCI Repository operations like pulling, defaults to 60s.",
+                                        "pattern": "^([0-9]+(\\.[0-9]+)?(ms|s|m))+$",
+                                        "type": "string"
+                                    },
+                                    "verify": {
+                                        "description": "Verify contains the secret name containing the trusted public keys\nused to verify the signature and specifies which provider to use to check\nwhether OCI image is authentic.",
+                                        "properties": {
+                                            "matchOIDCIdentity": {
+                                                "description": "MatchOIDCIdentity specifies the identity matching criteria to use\nwhile verifying an OCI artifact which was signed using Cosign keyless\nsigning. The artifact's identity is deemed to be verified if any of the\nspecified matchers match against the identity.",
+                                                "items": {
+                                                    "description": "OIDCIdentityMatch specifies options for verifying the certificate identity,\ni.e. the issuer and the subject of the certificate.",
+                                                    "properties": {
+                                                        "issuer": {
+                                                            "description": "Issuer specifies the regex pattern to match against to verify\nthe OIDC issuer in the Fulcio certificate. The pattern must be a\nvalid Go regular expression.",
+                                                            "type": "string"
+                                                        },
+                                                        "subject": {
+                                                            "description": "Subject specifies the regex pattern to match against to verify\nthe identity subject in the Fulcio certificate. The pattern must\nbe a valid Go regular expression.",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "issuer",
+                                                        "subject"
+                                                    ],
+                                                    "type": "object"
+                                                },
+                                                "type": "array"
+                                            },
+                                            "provider": {
+                                                "default": "cosign",
+                                                "description": "Provider specifies the technology used to sign the OCI Artifact.",
+                                                "enum": [
+                                                    "cosign",
+                                                    "notation"
+                                                ],
+                                                "type": "string"
+                                            },
+                                            "secretRef": {
+                                                "description": "SecretRef specifies the Kubernetes Secret containing the\ntrusted public keys.",
+                                                "properties": {
+                                                    "name": {
+                                                        "description": "Name of the referent.",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "name"
+                                                ],
+                                                "type": "object"
+                                            }
+                                        },
+                                        "required": [
+                                            "provider"
+                                        ],
+                                        "type": "object"
+                                    }
+                                },
+                                "required": [
+                                    "interval",
+                                    "repository",
+                                    "tag"
+                                ],
+                                "type": "object"
+                            },
+                            "parameters": {
+                                "description": "The Release configuration variables",
+                                "x-kubernetes-preserve-unknown-fields": true
+                            },
+                            "protected": {
+                                "description": "If true, the webhook will prevent deletion\nDefault: false",
+                                "type": "boolean"
+                            },
+                            "roles": {
+                                "description": "List of roles fulfilled by this release. (appended to the one of the underlying package)\nDefault: []",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "skipDefaultContext": {
+                                "description": "If yes, the default context(s) of the configs are not taken in account\n,Default: false",
+                                "type": "boolean"
+                            },
+                            "specPatchByModule": {
+                                "additionalProperties": {
+                                    "x-kubernetes-preserve-unknown-fields": true
+                                },
+                                "description": "Allow to patch the HelmRelease.spec for each module",
+                                "type": "object"
+                            },
+                            "suspended": {
+                                "description": "If true, HelmRelease update is suspended at KuboCD level\n(This is NOT the helmRelease.spec.suspend flag, which may be set by Config part)\nDefault: false",
+                                "type": "boolean"
+                            },
+                            "targetNamespace": {
+                                "description": "The namespace to deploy in. (May also be a partial name for a multi-namespaces package)\nNot required, as it can be setup another way, depending on the package\n(i.e. the package has a fixed namespace, or several ones).\nDefault: Release.metadata.namespace",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "package"
+                        ],
+                        "type": "object"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/ReleaseStatus"
+                    }
+                },
+                "required": [
+                    "apiVersion",
+                    "kind",
+                    "metadata",
+                    "spec"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "Release"
+                }
+            },
+            "ReleaseInfo": {
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "git": {
+                        "properties": {
+                            "path": {
+                                "type": "string"
+                            },
+                            "url": {
+                                "type": "string",
+                                "x-go-name": "URL"
+                            }
+                        },
+                        "required": [
+                            "path",
+                            "url"
+                        ],
+                        "type": "object"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "namespace": {
+                        "type": "string"
+                    },
+                    "package": {
+                        "properties": {
+                            "repository": {
+                                "type": "string"
+                            },
+                            "tag": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "repository",
+                            "tag"
+                        ],
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "name",
+                    "package",
+                    "git"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "ReleaseInfo"
+                }
+            },
+            "ReleaseStatus": {
+                "description": "Release is the Schema for the releases API.",
+                "properties": {
+                    "status": {
+                        "description": "ReleaseStatus defines the observed state of Release.\nAs we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.\n(Except for 'context', as controlled by a debug flag)",
+                        "properties": {
+                            "context": {
+                                "description": "Context is the resulting context, if requested in debug options",
+                                "x-kubernetes-preserve-unknown-fields": true
+                            },
+                            "dependencies": {
+                                "description": "The result of the package template and release value",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "helmReleaseStates": {
+                                "additionalProperties": {
+                                    "description": "HelmReleaseState describe the observed state of a child HelmRelease",
+                                    "properties": {
+                                        "ready": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "ready"
+                                    ],
+                                    "type": "object"
+                                },
+                                "description": "HelmReleaseState describe the observed state of child HelmReleases by name",
+                                "type": "object"
+                            },
+                            "missingDependency": {
+                                "type": "string"
+                            },
+                            "parameters": {
+                                "description": "Parameters is the resulting parameters set, if requested in debug options",
+                                "x-kubernetes-preserve-unknown-fields": true
+                            },
+                            "phase": {
+                                "type": "string"
+                            },
+                            "printContexts": {
+                                "description": "PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed\nas printcolumn",
+                                "type": "string"
+                            },
+                            "printDescription": {
+                                "description": "PrintDescription\nCopy of the release description, or, if empty the (templated) package one",
+                                "type": "string"
+                            },
+                            "printProtected": {
+                                "description": "PrintProtected is a copy of Protected, with a Y/n flag. To be used in display",
+                                "type": "string"
+                            },
+                            "protected": {
+                                "description": "Protected result of Release.spec.protected defaulted to package.spec.protected\nIt is the value checked by the webhook",
+                                "type": "boolean"
+                            },
+                            "readyReleases": {
+                                "description": "ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed\nas printcolumn",
+                                "type": "string"
+                            },
+                            "roles": {
+                                "description": "The result of the package template and release value",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "usage": {
+                                "additionalProperties": {
+                                    "type": "string"
+                                },
+                                "description": "Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.\nKey could 'html', 'text', some language id, etc...",
+                                "type": "object"
+                            }
+                        },
+                        "required": [
+                            "dependencies",
+                            "missingDependency",
+                            "phase",
+                            "printProtected",
+                            "protected",
+                            "readyReleases",
+                            "roles"
+                        ],
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ServerResponse": {
+                "ServerResponseType": {
+                    "description": "An enum representing different server response types",
+                    "enum": [
+                        "okdp_server",
+                        "registry",
+                        "git_repo",
+                        "k8s_cluster"
+                    ],
+                    "type": "string"
+                },
                 "properties": {
                     "message": {
+                        "description": "The response message from the server",
                         "type": "string"
                     },
                     "status": {
+                        "description": "The HTTP status code",
                         "type": "integer"
                     },
                     "type": {
+                        "description": "The type of the server response",
+                        "enum": [
+                            "okdp_server",
+                            "registry",
+                            "git_repo",
+                            "k8s_cluster"
+                        ],
                         "type": "string"
                     }
                 },
@@ -800,141 +787,7 @@
                 ],
                 "type": "object",
                 "xml": {
-                    "name": "serverError"
-                }
-            },
-            "Service": {
-                "properties": {
-                    "flatComponents": {
-                        "items": {
-                            "$ref": "#/components/schemas/FlatComponent"
-                        },
-                        "type": "array",
-                        "x-order": 4
-                    },
-                    "isComposition": {
-                        "default": false,
-                        "type": "boolean",
-                        "x-order": 3
-                    },
-                    "name": {
-                        "type": "string",
-                        "x-order": 1
-                    }
-                },
-                "required": [
-                    "name",
-                    "isComposition",
-                    "flatComponents"
-                ],
-                "type": "object",
-                "xml": {
-                    "name": "service"
-                }
-            },
-            "TemplateRelease": {
-                "properties": {
-                    "kind": {
-                        "type": "string"
-                    },
-                    "spec": {
-                        "properties": {
-                            "enabled": {
-                                "type": "boolean"
-                            },
-                            "name": {
-                                "type": "string"
-                            },
-                            "template": {
-                                "properties": {
-                                    "Ref": {
-                                        "properties": {
-                                            "Name": {
-                                                "type": "string"
-                                            },
-                                            "Version": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "required": [
-                                            "Name",
-                                            "Version"
-                                        ],
-                                        "type": "object"
-                                    },
-                                    "parameters": {
-                                        "additionalProperties": true,
-                                        "description": "List of paramters as key/value pairs",
-                                        "type": "object"
-                                    }
-                                },
-                                "required": [
-                                    "Ref",
-                                    "parameters",
-                                    "parameterFiles"
-                                ],
-                                "type": "object"
-                            }
-                        },
-                        "required": [
-                            "name",
-                            "template",
-                            "enabled"
-                        ],
-                        "type": "object"
-                    },
-                    "status": {
-                        "properties": {
-                            "catalogs": {
-                                "items": {
-                                    "type": "string"
-                                },
-                                "type": "array"
-                            },
-                            "children": {
-                                "items": {
-                                    "type": "string"
-                                },
-                                "type": "array"
-                            },
-                            "error": {
-                                "type": "string"
-                            },
-                            "file": {
-                                "type": "string"
-                            },
-                            "parameters": {
-                                "additionalProperties": true,
-                                "description": "List of paramters as key/value pairs",
-                                "type": "object"
-                            },
-                            "path": {
-                                "type": "string"
-                            },
-                            "usage": {
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "file",
-                            "path",
-                            "error",
-                            "parameters",
-                            "children",
-                            "usage",
-                            "catalogs"
-                        ],
-                        "type": "object"
-                    }
-                },
-                "required": [
-                    "kind",
-                    "spec",
-                    "status"
-                ],
-                "type": "object",
-                "xml": {
-                    "name": "templateRelease"
+                    "name": "ServerResponse"
                 }
             },
             "UserProfile": {
@@ -975,20 +828,11 @@
                 ],
                 "type": "object",
                 "xml": {
-                    "name": "userProfile"
+                    "name": "UserProfile"
                 }
             }
         },
         "securitySchemes": {
-            "access_token": {
-                "bearerFormat": "JWT",
-                "scheme": "bearer",
-                "type": "http"
-            },
-            "basicAuth": {
-                "scheme": "basic",
-                "type": "http"
-            },
             "oauth2": {
                 "flows": {
                     "authorizationCode": {
@@ -1026,135 +870,19 @@
     },
     "openapi": "3.0.0",
     "paths": {
-        "/kad": {
-            "get": {
-                "description": "List all KAD configured instances",
-                "operationId": "ListKadInstances",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "instances": {
-                                            "items": {
-                                                "$ref": "#/components/schemas/KadInstance"
-                                            },
-                                            "type": "array"
-                                        }
-                                    },
-                                    "required": [
-                                        "instances"
-                                    ],
-                                    "type": "object"
-                                }
-                            }
-                        },
-                        "description": "List of KAD instances"
-                    },
-                    "default": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
-                                }
-                            }
-                        },
-                        "description": "Server error"
-                    }
-                },
-                "summary": "List all KAD configured instances",
-                "tags": [
-                    "kad"
-                ]
-            }
-        },
-        "/kad/{kadInstanceId}": {
-            "get": {
-                "description": "Get KAD instance by name",
-                "operationId": "GetKadInstance",
-                "parameters": [
-                    {
-                        "description": "KAD instance ID",
-                        "in": "path",
-                        "name": "kadInstanceId",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "instances": {
-                                            "items": {
-                                                "$ref": "#/components/schemas/KadInstance"
-                                            },
-                                            "type": "array"
-                                        }
-                                    },
-                                    "required": [
-                                        "instances"
-                                    ],
-                                    "type": "object"
-                                }
-                            }
-                        },
-                        "description": "KAD instance configuration"
-                    },
-                    "default": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
-                                }
-                            }
-                        },
-                        "description": "Server error"
-                    }
-                },
-                "summary": "Get KAD instance by name",
-                "tags": [
-                    "kad"
-                ]
-            }
-        },
-        "/kad/{kadInstanceId}/catalogs": {
+        "/catalogs": {
             "get": {
                 "description": "List all catalogs\n",
                 "operationId": "ListCatalogs",
-                "parameters": [
-                    {
-                        "description": "KAD instance ID",
-                        "in": "path",
-                        "name": "kadInstanceId",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "catalogs": {
-                                            "items": {
-                                                "$ref": "#/components/schemas/Catalog"
-                                            },
-                                            "type": "array"
-                                        }
+                                    "items": {
+                                        "$ref": "#/components/schemas/Catalog"
                                     },
-                                    "required": [
-                                        "catalogs"
-                                    ],
-                                    "type": "object"
+                                    "type": "array"
                                 }
                             }
                         },
@@ -1164,7 +892,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
+                                    "$ref": "#/components/schemas/ServerResponse"
                                 }
                             }
                         },
@@ -1177,24 +905,15 @@
                 ]
             }
         },
-        "/kad/{kadInstanceId}/catalogs/{name}": {
+        "/catalogs/{catalogId}": {
             "get": {
-                "description": "Get a catalog info by name\n",
+                "description": "Get a catalog by id\n",
                 "operationId": "GetCatalog",
                 "parameters": [
                     {
-                        "description": "KAD instance ID",
+                        "description": "Catalog ID",
                         "in": "path",
-                        "name": "kadInstanceId",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Catalog name",
-                        "in": "path",
-                        "name": "name",
+                        "name": "catalogId",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1216,37 +935,29 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
+                                    "$ref": "#/components/schemas/ServerResponse"
                                 }
                             }
                         },
                         "description": "Server error"
                     }
                 },
-                "summary": "Get a catalog info by name",
+                "summary": "Get a catalog by id",
                 "tags": [
                     "catalogs"
                 ]
             }
         },
-        "/kad/{kadInstanceId}/componentreleases": {
+        "/catalogs/{catalogId}/packages": {
             "get": {
-                "description": "todo\n",
-                "operationId": "ListComponentReleases",
+                "description": "List of packages by catalog id\n",
+                "operationId": "ListPackages",
                 "parameters": [
                     {
-                        "description": "KAD instance ID",
+                        "description": "Catalog ID",
                         "in": "path",
-                        "name": "kadInstanceId",
+                        "name": "catalogId",
                         "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter by catalogs (comma separated)",
-                        "in": "query",
-                        "name": "catalog",
                         "schema": {
                             "type": "string"
                         }
@@ -1257,56 +968,214 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "componentreleases": {
-                                            "items": {
-                                                "$ref": "#/components/schemas/ComponentReleaseResponse"
-                                            },
-                                            "type": "array"
-                                        }
+                                    "items": {
+                                        "$ref": "#/components/schemas/Package"
                                     },
-                                    "required": [
-                                        "componentreleases"
-                                    ],
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "Packages information"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get a list of packages by catalog id",
+                "tags": [
+                    "catalogs"
+                ]
+            }
+        },
+        "/catalogs/{catalogId}/packages/{name}": {
+            "get": {
+                "description": "Get package by catalog id and package name\n",
+                "operationId": "GetPackage",
+                "parameters": [
+                    {
+                        "description": "Catalog ID",
+                        "in": "path",
+                        "name": "catalogId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Package name",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Package"
+                                }
+                            }
+                        },
+                        "description": "Packages information"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get package by catalog id and package name",
+                "tags": [
+                    "catalogs"
+                ]
+            }
+        },
+        "/catalogs/{catalogId}/packages/{name}/versions": {
+            "get": {
+                "description": "List versions for a specific package\n",
+                "operationId": "GetPackageVersions",
+                "parameters": [
+                    {
+                        "description": "Catalog ID",
+                        "in": "path",
+                        "name": "catalogId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Package name",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Package"
+                                }
+                            }
+                        },
+                        "description": "Package versions"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "List versions for a specific package",
+                "tags": [
+                    "catalogs"
+                ]
+            }
+        },
+        "/catalogs/{catalogId}/packages/{name}/versions/{version}": {
+            "get": {
+                "description": "Get package definition\n",
+                "operationId": "GetPackageDefinition",
+                "parameters": [
+                    {
+                        "description": "Catalog ID",
+                        "in": "path",
+                        "name": "catalogId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Package name",
+                        "in": "path",
+                        "name": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Package version",
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": true,
                                     "type": "object"
                                 }
                             }
                         },
-                        "description": "List of the component releases"
+                        "description": "Package definition"
                     },
                     "default": {
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
+                                    "$ref": "#/components/schemas/ServerResponse"
                                 }
                             }
                         },
                         "description": "Server error"
                     }
                 },
-                "summary": "List all component releases",
+                "summary": "Get package definition",
                 "tags": [
-                    "componentreleases"
+                    "catalogs"
                 ]
             }
         },
-        "/kad/{kadInstanceId}/componentreleases/{name}": {
+        "/catalogs/{catalogId}/packages/{name}/versions/{version}/schema": {
             "get": {
-                "description": "Get a component release by name\n",
-                "operationId": "GetComponentRelease",
+                "description": "Get package schema (parameters, context, etc)\n",
+                "operationId": "GetPackageSchema",
                 "parameters": [
                     {
-                        "description": "KAD instance ID",
+                        "description": "Catalog ID",
                         "in": "path",
-                        "name": "kadInstanceId",
+                        "name": "catalogId",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "Component release name",
+                        "description": "Package name",
                         "in": "path",
                         "name": "name",
                         "required": true,
@@ -1315,9 +1184,10 @@
                         }
                     },
                     {
-                        "description": "Filter by catalogs (comma separated)",
-                        "in": "query",
-                        "name": "catalog",
+                        "description": "Package version",
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1328,45 +1198,418 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ComponentReleaseResponse"
+                                    "additionalProperties": true,
+                                    "type": "object"
                                 }
                             }
                         },
-                        "description": "Component release information"
+                        "description": "Package schema"
                     },
                     "default": {
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
+                                    "$ref": "#/components/schemas/ServerResponse"
                                 }
                             }
                         },
                         "description": "Server error"
                     }
                 },
-                "summary": "Get a component release by name",
+                "summary": "Get package schema (parameters, context, etc)",
                 "tags": [
-                    "componentreleases"
+                    "catalogs"
                 ]
-            },
-            "put": {
-                "description": "Create or update a component release\n",
-                "operationId": "CreateOrUpdateComponentRelease",
+            }
+        },
+        "/clusters": {
+            "get": {
+                "description": "List all kubernetes clusters\n",
+                "operationId": "ListClusters",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/Cluster"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of the clusters"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "List all kubernetes clusters",
+                "tags": [
+                    "clusters"
+                ]
+            }
+        },
+        "/clusters/{clusterId}": {
+            "get": {
+                "description": "Get a kubernetes cluster by id\n",
+                "operationId": "GetCluster",
                 "parameters": [
                     {
-                        "description": "KAD instance ID",
+                        "description": "Cluster ID",
                         "in": "path",
-                        "name": "kadInstanceId",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Cluster"
+                                }
+                            }
+                        },
+                        "description": "Cluster information"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get a kubernetes cluster by id",
+                "tags": [
+                    "clusters"
+                ]
+            }
+        },
+        "/clusters/{clusterId}/namespaces": {
+            "get": {
+                "description": "List all kubernetes namespaces\n",
+                "operationId": "ListNamespaces",
+                "parameters": [
+                    {
+                        "description": "Cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of the namespaces"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "List all kubernetes namespaces",
+                "tags": [
+                    "clusters"
+                ]
+            }
+        },
+        "/clusters/{clusterId}/namespaces/{namespace}": {
+            "get": {
+                "description": "Get a kubernetes namespace by name\n",
+                "operationId": "GetNamespace",
+                "parameters": [
+                    {
+                        "description": "Cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "Component release name",
+                        "description": "Kubernetes namespace",
                         "in": "path",
-                        "name": "name",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "description": "Namespace information"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get a kubernetes namespace by name",
+                "tags": [
+                    "clusters"
+                ]
+            }
+        },
+        "/clusters/{clusterId}/namespaces/{namespace}/gitkustomizations": {
+            "get": {
+                "description": "List all configured git repositories\n",
+                "operationId": "ListGitRepos",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo namespace",
+                        "example": "flux-system",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/GitRepository"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of the git repositories"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "List all configured git repositories",
+                "tags": [
+                    "repositories"
+                ]
+            }
+        },
+        "/clusters/{clusterId}/namespaces/{namespace}/gitkustomizations/{kustomizationName}": {
+            "get": {
+                "description": "Return a git repo details\n",
+                "operationId": "GetGitRepo",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo namespace",
+                        "example": "flux-system",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo name",
+                        "example": "podinfo",
+                        "in": "path",
+                        "name": "kustomizationName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GitRepository"
+                                }
+                            }
+                        },
+                        "description": "Git repo information"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Return a git repo details",
+                "tags": [
+                    "repositories"
+                ]
+            }
+        },
+        "/clusters/{clusterId}/namespaces/{namespace}/gitkustomizations/{kustomizationName}/releases": {
+            "get": {
+                "description": "Return list of releases in the git repo\n",
+                "operationId": "ListGitReleases",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo namespace",
+                        "example": "flux-system",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo name",
+                        "example": "releases-system",
+                        "in": "path",
+                        "name": "kustomizationName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ReleaseInfo"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "Release list"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Return list of releases in the git repo",
+                "tags": [
+                    "repositories"
+                ]
+            },
+            "post": {
+                "description": "Create a new KuboCD release in the git repo\n",
+                "operationId": "CreateGitRelease",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo namespace",
+                        "example": "flux-system",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo name",
+                        "example": "releases-system",
+                        "in": "path",
+                        "name": "kustomizationName",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1377,11 +1620,86 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ComponentReleaseRequest"
+                                "$ref": "#/components/schemas/Release"
                             }
                         }
                     },
-                    "description": "Component release payload",
+                    "description": "Release object to be created",
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ServerResponse"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "Release created successfully"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Create a new KuboCD release in the git repo",
+                "tags": [
+                    "repositories"
+                ]
+            },
+            "put": {
+                "description": "Update an existing KuboCD release in the git repo\n",
+                "operationId": "UpdateGitRelease",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo namespace",
+                        "example": "flux-system",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo name",
+                        "example": "releases-system",
+                        "in": "path",
+                        "name": "kustomizationName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Release"
+                            }
+                        }
+                    },
+                    "description": "Release object to be updated",
                     "required": true
                 },
                 "responses": {
@@ -1389,241 +1707,403 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/GitCommit"
+                                    "items": {
+                                        "$ref": "#/components/schemas/ServerResponse"
+                                    },
+                                    "type": "array"
                                 }
                             }
                         },
-                        "description": "Commit updated successfully"
+                        "description": "Release updated successfully"
                     },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Update an existing KuboCD release in the git repo",
+                "tags": [
+                    "repositories"
+                ]
+            }
+        },
+        "/clusters/{clusterId}/namespaces/{namespace}/gitkustomizations/{kustomizationName}/releases/{releaseName}": {
+            "delete": {
+                "description": "Delete KuboCD release by name in the git repo\n",
+                "operationId": "DeleteGitRelease",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo namespace",
+                        "example": "flux-system",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo name",
+                        "example": "releases-system",
+                        "in": "path",
+                        "name": "kustomizationName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "KuboCD release name",
+                        "example": "podinfo",
+                        "in": "path",
+                        "name": "releaseName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "KuboCD Release deleted successfully"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Delete KuboCD release by name in the git repo",
+                "tags": [
+                    "repositories"
+                ]
+            },
+            "get": {
+                "description": "Return KuboCD release by name in the git repo\n",
+                "operationId": "GetGitRelease",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo namespace",
+                        "example": "flux-system",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes fluxcd git repo name",
+                        "example": "releases-system",
+                        "in": "path",
+                        "name": "kustomizationName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "KuboCD release name",
+                        "example": "podinfo",
+                        "in": "path",
+                        "name": "releaseName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Release"
+                                }
+                            }
+                        },
+                        "description": "KuboCD Release info"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Return KuboCD release by name in the git repo",
+                "tags": [
+                    "repositories"
+                ]
+            }
+        },
+        "/clusters/{clusterId}/namespaces/{namespace}/releases": {
+            "get": {
+                "description": "Get the list of the deployed releases\n",
+                "operationId": "ListK8sReleases",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes namespace",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ReleaseInfo"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "Release list"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get the list of the deployed releases",
+                "tags": [
+                    "k8s"
+                ]
+            },
+            "post": {
+                "description": "Create KuboCD release in Kubernetes\n",
+                "operationId": "CreateK8sRelease",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes namespace",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "If true, performs a server-side dry run without persisting the resource",
+                        "in": "query",
+                        "name": "dryRun",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Release"
+                            }
+                        }
+                    },
+                    "description": "Release object to be created",
+                    "required": true
+                },
+                "responses": {
                     "201": {
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/GitCommit"
-                                }
-                            }
-                        },
-                        "description": "Commit created successfully"
-                    },
-                    "default": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
-                                }
-                            }
-                        },
-                        "description": "Server error"
-                    }
-                },
-                "summary": "Create or update a component release",
-                "tags": [
-                    "componentreleases"
-                ]
-            }
-        },
-        "/kad/{kadInstanceId}/components": {
-            "get": {
-                "description": "List all components\n",
-                "operationId": "ListComponents",
-                "parameters": [
-                    {
-                        "description": "KAD instance ID",
-                        "in": "path",
-                        "name": "kadInstanceId",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter by catalogs (comma separated)",
-                        "in": "query",
-                        "name": "catalog",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "components": {
-                                            "items": {
-                                                "$ref": "#/components/schemas/Component"
-                                            },
-                                            "type": "array"
-                                        }
+                                    "items": {
+                                        "$ref": "#/components/schemas/ServerResponse"
                                     },
-                                    "required": [
-                                        "components"
-                                    ],
-                                    "type": "object"
+                                    "type": "array"
                                 }
                             }
                         },
-                        "description": "List of the components"
+                        "description": "Release created successfully"
                     },
                     "default": {
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
+                                    "$ref": "#/components/schemas/ServerResponse"
                                 }
                             }
                         },
                         "description": "Server error"
                     }
                 },
-                "summary": "List all components",
+                "summary": "Create KuboCD release in Kubernetes",
                 "tags": [
-                    "components"
+                    "k8s"
                 ]
-            }
-        },
-        "/kad/{kadInstanceId}/components/{name}": {
-            "get": {
-                "description": "Get a component by name\n",
-                "operationId": "GetComponent",
+            },
+            "put": {
+                "description": "Update KuboCD release in Kubernetes\n",
+                "operationId": "UpdateK8sRelease",
                 "parameters": [
                     {
-                        "description": "KAD instance ID",
+                        "description": "Kubernetes cluster ID",
                         "in": "path",
-                        "name": "kadInstanceId",
+                        "name": "clusterId",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "Component name",
+                        "description": "Kubernetes namespace",
                         "in": "path",
-                        "name": "name",
+                        "name": "namespace",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "Filter by catalogs (comma separated)",
+                        "description": "If true, performs a server-side dry run without persisting the resource",
                         "in": "query",
-                        "name": "catalog",
+                        "name": "dryRun",
                         "schema": {
-                            "type": "string"
+                            "type": "boolean"
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Component"
-                                }
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Release"
                             }
-                        },
-                        "description": "Component release information"
+                        }
                     },
-                    "default": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
-                                }
-                            }
-                        },
-                        "description": "Server error"
-                    }
+                    "description": "Release object to be updated",
+                    "required": true
                 },
-                "summary": "Get a component by name",
-                "tags": [
-                    "components"
-                ]
-            }
-        },
-        "/kad/{kadInstanceId}/services": {
-            "get": {
-                "description": "List all services\n",
-                "operationId": "ListServices",
-                "parameters": [
-                    {
-                        "description": "KAD instance ID",
-                        "in": "path",
-                        "name": "kadInstanceId",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Filter by catalogs (comma separated)",
-                        "in": "query",
-                        "name": "catalog",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "services": {
-                                            "items": {
-                                                "$ref": "#/components/schemas/Service"
-                                            },
-                                            "type": "array"
-                                        }
+                                    "items": {
+                                        "$ref": "#/components/schemas/ServerResponse"
                                     },
-                                    "required": [
-                                        "services"
-                                    ],
-                                    "type": "object"
+                                    "type": "array"
                                 }
                             }
                         },
-                        "description": "List of the services"
+                        "description": "Release updated successfully"
                     },
                     "default": {
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
+                                    "$ref": "#/components/schemas/ServerResponse"
                                 }
                             }
                         },
                         "description": "Server error"
                     }
                 },
-                "summary": "List all services",
+                "summary": "Update KuboCD release in Kubernetes",
                 "tags": [
-                    "services"
+                    "k8s"
                 ]
             }
         },
-        "/kad/{kadInstanceId}/templatereleases": {
-            "get": {
-                "description": "List all template releases\n",
-                "operationId": "ListTemplateReleases",
+        "/clusters/{clusterId}/namespaces/{namespace}/releases/{releaseName}": {
+            "delete": {
+                "description": "Delete the KuboCD release in kubernetes\n",
+                "operationId": "DeleteK8sRelease",
                 "parameters": [
                     {
-                        "description": "KAD instance ID",
+                        "description": "Kubernetes cluster ID",
                         "in": "path",
-                        "name": "kadInstanceId",
+                        "name": "clusterId",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "Filter by catalogs (comma separated)",
-                        "in": "query",
-                        "name": "catalog",
+                        "description": "Kubernetes namespace",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "KuboCD release name",
+                        "in": "path",
+                        "name": "releaseName",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1634,67 +2114,55 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "templatereleases": {
-                                            "items": {
-                                                "$ref": "#/components/schemas/TemplateRelease"
-                                            },
-                                            "type": "array"
-                                        }
-                                    },
-                                    "required": [
-                                        "templatereleases"
-                                    ],
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ServerResponse"
                                 }
                             }
                         },
-                        "description": "List of template releases"
+                        "description": "KuboCD Release deleted successfully"
                     },
                     "default": {
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
+                                    "$ref": "#/components/schemas/ServerResponse"
                                 }
                             }
                         },
                         "description": "Server error"
                     }
                 },
-                "summary": "List all template releases",
+                "summary": "Delete the KuboCD release in kubernetes",
                 "tags": [
-                    "templatereleases"
+                    "k8s"
                 ]
-            }
-        },
-        "/kad/{kadInstanceId}/templatereleases/{name}": {
+            },
             "get": {
-                "description": "Get a template release by name\n",
-                "operationId": "GetTemplateRelease",
+                "description": "Get the deployed release by name\n",
+                "operationId": "GetK8sRelease",
                 "parameters": [
                     {
-                        "description": "KAD instance ID",
+                        "description": "Kubernetes cluster ID",
                         "in": "path",
-                        "name": "kadInstanceId",
+                        "name": "clusterId",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "Template release name",
+                        "description": "Kubernetes namespace",
                         "in": "path",
-                        "name": "name",
+                        "name": "namespace",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "Filter by catalogs (comma separated)",
-                        "in": "query",
-                        "name": "catalog",
+                        "description": "KuboCD release name",
+                        "in": "path",
+                        "name": "releaseName",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1705,26 +2173,87 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/TemplateRelease"
+                                    "$ref": "#/components/schemas/Release"
                                 }
                             }
                         },
-                        "description": "Template release information"
+                        "description": "KuboCD Release info"
                     },
                     "default": {
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
+                                    "$ref": "#/components/schemas/ServerResponse"
                                 }
                             }
                         },
                         "description": "Server error"
                     }
                 },
-                "summary": "Get a template release by name",
+                "summary": "Get the deployed release by name",
                 "tags": [
-                    "templatereleases"
+                    "k8s"
+                ]
+            }
+        },
+        "/clusters/{clusterId}/namespaces/{namespace}/releases/{releaseName}/status": {
+            "get": {
+                "description": "Get the release status\n",
+                "operationId": "GetK8sReleaseStatus",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes namespace",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "KuboCD release name",
+                        "in": "path",
+                        "name": "releaseName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReleaseStatus"
+                                }
+                            }
+                        },
+                        "description": "KuboCD Release info"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get the release status",
+                "tags": [
+                    "k8s"
                 ]
             }
         },
@@ -1755,7 +2284,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ServerError"
+                                    "$ref": "#/components/schemas/ServerResponse"
                                 }
                             }
                         },
@@ -1770,9 +2299,6 @@
         }
     },
     "security": [
-        {
-            "basicAuth": []
-        },
         {
             "oauth2": [
                 "openid",
@@ -1796,20 +2322,6 @@
             "name": "users"
         },
         {
-            "description": "Kad instances configuration",
-            "externalDocs": {
-                "url": "https://github.com/okdp/okdp-server"
-            },
-            "name": "kad"
-        },
-        {
-            "description": "Services",
-            "externalDocs": {
-                "url": "https://github.com/okdp/okdp-server"
-            },
-            "name": "services"
-        },
-        {
             "description": "Catalogs",
             "externalDocs": {
                 "url": "https://github.com/okdp/okdp-server"
@@ -1817,25 +2329,25 @@
             "name": "catalogs"
         },
         {
-            "description": "Template releases",
+            "description": "Kubernetes Clusters",
             "externalDocs": {
                 "url": "https://github.com/okdp/okdp-server"
             },
-            "name": "templatereleases"
+            "name": "clusters"
         },
         {
-            "description": "Component releases",
+            "description": "KuboCD Git Releases",
             "externalDocs": {
                 "url": "https://github.com/okdp/okdp-server"
             },
-            "name": "componentreleases"
+            "name": "repositories"
         },
         {
-            "description": "Components",
+            "description": "KuboCD K8S Releases",
             "externalDocs": {
                 "url": "https://github.com/okdp/okdp-server"
             },
-            "name": "components"
+            "name": "k8s"
         }
     ]
 }
