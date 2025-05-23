@@ -4,60 +4,64 @@
   </div>
   <div class="row row-cols-1 row-cols-md-1">
     <div class="col">
-      <form [formGroup]="componentReleaseForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="releaseForm" (ngSubmit)="onSubmit()">
         <div class="card rounded-3 shadow-sm mx-auto mx-1">
           <div class="card-header d-flex align-items-center justify-content-start p-2 position-relative">
             <ul class="nav w-100 d-flex flex-row justify-content-start align-items-center gap-1">
               <li class="nav-item d-flex align-items-center">
-                <span class="card-title">{{ release.name }}</span>
-                <a class="nav-link px-1" target="_blank" href="{{ release.home }}">
+                <span class="card-title">{{ catalogItem.name }}</span>
+                <a class="nav-link px-1" target="_blank" href="{{ catalogItem.home }}">
                   <i class="material-symbols-outlined text-primary">info</i>
                 </a>
               </li>
             </ul>
           </div>
 
-          <div formGroupName="componentRelease" class="card-body">
+          <div class="card-body">
             <div class="row align-items-center justify-content-start gap-5">
               <!-- Name -->
-              <div class="col-auto">
+              <div formGroupName="metadata" class="col-auto">
                 <div class="form-group">
-                  <label for="name">Name *</label>
+                  <label for="name">Name</label>
                   <input
                     id="name"
                     class="form-control form-field-underline border-bottom-primary px-0"
+                    [ngClass]="{'form-field-required-underline': !isNameValid}"
                     formControlName="name"
                     aria-label="Enter name"
                     required />
-                  <small class="form-text text-muted">Enter a name for your service instance.</small>
+                  <small class="form-text text-muted">Enter a name for your KuboCD release.</small>
                 </div>
               </div>
-              <!-- Version -->
-              <div formGroupName="component" class="col-auto">
-                <div class="form-group">
-                  <label for="version">Version *</label>
-                  <select
-                    class="form-control form-select form-field-underline border-bottom-primary px-0 w-100"
-                    formControlName="version"
-                    aria-label="Choose version">
-                    <option *ngFor="let version of availableVersions" [value]="version">
-                      {{ version }}
-                    </option>
-                  </select>
-                  <small class="form-text text-muted">Choose a Kad Component Version.</small>
+              <!-- Tag -->
+              <div formGroupName="spec" class="col-auto">
+                <div formGroupName="package" class="col-auto">
+                  <div class="form-group">
+                    <label for="tag">Tag</label>
+                    <select
+                      class="form-control form-select form-field-underline border-bottom-primary px-0 w-100"
+                      formControlName="tag"
+                      aria-label="Choose tag">
+                      <option *ngFor="let tag of availableTags" [value]="tag">
+                        {{ tag }}
+                      </option>
+                    </select>
+                    <small class="form-text text-muted">Choose KuboCD package Version.</small>
+                  </div>
                 </div>
               </div>
               <!-- Namespace -->
-              <div class="col-auto">
+              <div formGroupName="metadata" class="col-auto">
                 <div class="form-group">
                   <label for="namespace">Namespace</label>
                   <input
                     id="namespace"
                     class="form-control form-field-underline border-bottom-primary px-0"
+                    [ngClass]="{'form-field-required-underline': !isNamespaceValid}"
                     formControlName="namespace"
                     aria-label="Enter namespace" />
                   <small class="form-text text-muted"
-                    >Enter the Kubernetes namespace for your service deployment.</small
+                    >Enter the Kubernetes namespace for your KuboCD release deployment.</small
                   >
                 </div>
               </div>
@@ -71,44 +75,111 @@
                 </div>
               </div>
             </div>
-
             <!-- Parameters -->
             <div class="row align-items-center justify-content-start gap-5 mt-2">
               <fieldset
                 *ngIf="parameters.controls && parameters.controls.length > 0"
-                formGroupName="component"
+                formGroupName="spec"
                 class="border-primary rounded-3 p-3 mt-3">
                 <legend class="float-none w-auto px-3">Parameters</legend>
-                <div formArrayName="parameters" class="row align-items-center justify-content-start gap-3 my-3">
+                <div formGroupName="parameters" class="row align-items-center justify-content-start gap-3 my-0">
                   <div class="col d-flex gap-3">
                     <div class="flex-fill">
                       <div class="form-group">
                         <div
                           *ngFor="let parameter of parameters.controls; let i = index"
                           class="row align-items-center justify-content-start gap-5 mb-2">
-                          <!-- Parameter Name -->
+                          <!--  Parameter Name -->
                           <div class="col" [formGroupName]="i">
-                            <div class="form-group">
-                              <label class="me-2 my-2" for="parameterName-{{ i }}">Name</label>
+                            <div class="form-group d-flex align-items-center gap-1">
                               <input
-                                class="form-control form-field-underline border-bottom-primary px-0 w-100"
+                                class="form-control form-field-underline border-bottom-primary px-0"
                                 formControlName="name"
                                 aria-label="Enter parameterName"
-                                id="parameterName-{{ i }}" />
+                                id="parameterName-{{ i }}"
+                                [readonly]="true"
+                                style="flex-grow: 1;"
+                              />
                             </div>
                           </div>
 
                           <!-- Parameter Value -->
                           <div class="col" [formGroupName]="i">
-                            <div class="form-group">
-                              <label class="me-2 my-2" for="parameterValue-{{ i }}">Parameter value</label>
-                              <input
-                                class="form-control form-field-underline border-bottom-primary px-0 w-100"
-                                formControlName="value"
-                                aria-label="Enter parameterValue"
-                                id="parameterValue-{{ i }}" />
+                            <div class="form-group" [ngSwitch]="parameterProperties[i].enum?.length ? 'enum' : parameterProperties[i].type">
+                              <!-- Enum Type (Select Input) -->
+                              <ng-container *ngSwitchCase="'enum'">
+                                <select
+                                  class="form-control form-select form-field-underline border-bottom-primary px-0 w-100"
+                                  formControlName="value">
+                                  <option *ngFor="let opt of parameterProperties[i].enum" [value]="opt">
+                                    {{ opt }}
+                                  </option>
+                                </select>
+                              </ng-container>
+                              <!-- Boolean Type (Checkbox Input) -->
+                              <ng-container *ngSwitchCase="'boolean'">
+                                <input
+                                  type="checkbox"
+                                  class="form-check-input"
+                                  formControlName="value"
+                                  id="parameterValue-{{ i }}" />
+                              </ng-container>
+                              <!-- Integer Type (Number Input) -->
+                              <ng-container *ngSwitchCase="'integer'">
+                                <input
+                                  type="number"
+                                  class="form-control form-field-underline border-bottom-primary px-0 w-100"
+                                  formControlName="value"
+                                  aria-label="Enter number value"
+                                  id="parameterValue-{{ i }}"
+                                  [attr.min]="parameterProperties[i].minimum"
+                                  [attr.max]="parameterProperties[i].maximum"
+                                  [attr.step]="parameterProperties[i].multipleOf || 1" />
+                              </ng-container>
+                              <!-- Number Type (Floating Point Input) -->
+                              <ng-container *ngSwitchCase="'number'">
+                                <input
+                                  type="number"
+                                  class="form-control form-field-underline border-bottom-primary px-0 w-100"
+                                  formControlName="value"
+                                  aria-label="Enter number value"
+                                  id="parameterValue-{{ i }}"
+                                  [attr.min]="parameterProperties[i].minimum"
+                                  [attr.max]="parameterProperties[i].maximum"
+                                  [attr.step]="parameterProperties[i].multipleOf || 'any'" />
+                              </ng-container>
+                              <!-- String Type (Text Input) -->
+                              <ng-container *ngSwitchCase="'string'">
+                                <input
+                                  type="text"
+                                  class="form-control form-field-underline border-bottom-primary px-0 w-100"
+                                  [ngClass]="{
+                                    'form-field-required-underline':
+                                      parameterProperties[i].isRequired &&
+                                      parameters.at(i).get('value')?.invalid &&
+                                      (
+                                        parameters.at(i).get('value')?.touched ||
+                                        parameters.at(i).get('value')?.dirty ||
+                                        !parameters.at(i).get('value')?.value
+                                      )
+                                  }"
+                                  formControlName="value"
+                                  aria-label="Enter text value"
+                                  id="parameterValue-{{ i }}" 
+                                  [attr.pattern]="parameterProperties[i].pattern || null" 
+                                  [attr.placeholder]="parameterProperties[i].pattern ? parameterProperties[i].pattern : null" />
+                              </ng-container>
+                              <!-- Fallback for Unknown Types -->
+                              <ng-container *ngSwitchDefault>
+                                <input
+                                  type="text"
+                                  class="form-control form-field-underline border-bottom-primary px-0 w-100"
+                                  formControlName="value"
+                                  aria-label="Enter value"
+                                  id="parameterValue-{{ i }}" />
+                              </ng-container>
                             </div>
-                          </div>
+                          </div>                          
                         </div>
                       </div>
                     </div>

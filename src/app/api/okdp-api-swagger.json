@@ -223,6 +223,11 @@
                         "description": "The name of the package",
                         "type": "string"
                     },
+                    "repoUrl": {
+                        "description": "The URL of OCR registry",
+                        "type": "string",
+                        "x-go-name": "repoURL"
+                    },
                     "versions": {
                         "description": "A list of versions for the package",
                         "items": {
@@ -233,7 +238,8 @@
                 },
                 "required": [
                     "name",
-                    "versions"
+                    "versions",
+                    "repoUrl"
                 ],
                 "type": "object",
                 "xml": {
@@ -655,99 +661,87 @@
                 }
             },
             "ReleaseStatus": {
-                "description": "Release is the Schema for the releases API.",
+                "description": "ReleaseStatus defines the observed state of Release.\nAs we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.\n(Except for 'context', as controlled by a debug flag)",
                 "properties": {
-                    "status": {
-                        "description": "ReleaseStatus defines the observed state of Release.\nAs we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.\n(Except for 'context', as controlled by a debug flag)",
-                        "properties": {
-                            "context": {
-                                "description": "Context is the resulting context, if requested in debug options",
-                                "x-kubernetes-preserve-unknown-fields": true
-                            },
-                            "dependencies": {
-                                "description": "The result of the package template and release value",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "type": "array"
-                            },
-                            "helmReleaseStates": {
-                                "additionalProperties": {
-                                    "description": "HelmReleaseState describe the observed state of a child HelmRelease",
-                                    "properties": {
-                                        "ready": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "required": [
-                                        "ready"
-                                    ],
-                                    "type": "object"
-                                },
-                                "description": "HelmReleaseState describe the observed state of child HelmReleases by name",
-                                "type": "object"
-                            },
-                            "missingDependency": {
-                                "type": "string"
-                            },
-                            "parameters": {
-                                "description": "Parameters is the resulting parameters set, if requested in debug options",
-                                "x-kubernetes-preserve-unknown-fields": true
-                            },
-                            "phase": {
-                                "type": "string"
-                            },
-                            "printContexts": {
-                                "description": "PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed\nas printcolumn",
-                                "type": "string"
-                            },
-                            "printDescription": {
-                                "description": "PrintDescription\nCopy of the release description, or, if empty the (templated) package one",
-                                "type": "string"
-                            },
-                            "printProtected": {
-                                "description": "PrintProtected is a copy of Protected, with a Y/n flag. To be used in display",
-                                "type": "string"
-                            },
-                            "protected": {
-                                "description": "Protected result of Release.spec.protected defaulted to package.spec.protected\nIt is the value checked by the webhook",
-                                "type": "boolean"
-                            },
-                            "readyReleases": {
-                                "description": "ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed\nas printcolumn",
-                                "type": "string"
-                            },
-                            "roles": {
-                                "description": "The result of the package template and release value",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "type": "array"
-                            },
-                            "usage": {
-                                "additionalProperties": {
-                                    "type": "string"
-                                },
-                                "description": "Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.\nKey could 'html', 'text', some language id, etc...",
-                                "type": "object"
-                            }
+                    "context": {
+                        "description": "Context is the resulting context, if requested in debug options",
+                        "x-kubernetes-preserve-unknown-fields": true
+                    },
+                    "dependencies": {
+                        "description": "The result of the package template and release value",
+                        "items": {
+                            "type": "string"
                         },
-                        "required": [
-                            "dependencies",
-                            "missingDependency",
-                            "phase",
-                            "printProtected",
-                            "protected",
-                            "readyReleases",
-                            "roles"
-                        ],
+                        "type": "array"
+                    },
+                    "helmReleaseStates": {
+                        "additionalProperties": {
+                            "description": "HelmReleaseState describe the observed state of a child HelmRelease",
+                            "properties": {
+                                "ready": {
+                                    "type": "string"
+                                },
+                                "status": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "ready"
+                            ],
+                            "type": "object"
+                        },
+                        "description": "HelmReleaseState describe the observed state of child HelmReleases by name",
+                        "type": "object"
+                    },
+                    "missingDependency": {
+                        "type": "string"
+                    },
+                    "parameters": {
+                        "description": "Parameters is the resulting parameters set, if requested in debug options",
+                        "x-kubernetes-preserve-unknown-fields": true
+                    },
+                    "phase": {
+                        "type": "string"
+                    },
+                    "printContexts": {
+                        "description": "PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed\nas printcolumn",
+                        "type": "string"
+                    },
+                    "printDescription": {
+                        "description": "PrintDescription\nCopy of the release description, or, if empty the (templated) package one",
+                        "type": "string"
+                    },
+                    "printProtected": {
+                        "description": "PrintProtected is a copy of Protected, with a Y/n flag. To be used in display",
+                        "type": "string"
+                    },
+                    "protected": {
+                        "description": "Protected result of Release.spec.protected defaulted to package.spec.protected\nIt is the value checked by the webhook",
+                        "type": "boolean"
+                    },
+                    "readyReleases": {
+                        "description": "ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed\nas printcolumn",
+                        "type": "string"
+                    },
+                    "roles": {
+                        "description": "The result of the package template and release value",
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "usage": {
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.\nKey could 'html', 'text', some language id, etc...",
                         "type": "object"
                     }
                 },
-                "type": "object"
+                "type": "object",
+                "xml": {
+                    "name": "ReleaseStatus"
+                }
             },
             "ServerResponse": {
                 "ServerResponseType": {
@@ -1907,7 +1901,7 @@
                             "application/json": {
                                 "schema": {
                                     "items": {
-                                        "$ref": "#/components/schemas/ReleaseInfo"
+                                        "$ref": "#/components/schemas/Release"
                                     },
                                     "type": "array"
                                 }
@@ -2348,6 +2342,13 @@
                 "url": "https://github.com/okdp/okdp-server"
             },
             "name": "k8s"
+        },
+        {
+            "description": "KuboCD K8S Releases",
+            "externalDocs": {
+                "url": "https://github.com/okdp/okdp-server"
+            },
+            "name": "admin"
         }
     ]
 }

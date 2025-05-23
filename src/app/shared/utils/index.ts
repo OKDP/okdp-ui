@@ -1,2 +1,3 @@
 export * from './utils';
-export * from './component-release-utils';
+export * from './json.schema'
+export * from './release'

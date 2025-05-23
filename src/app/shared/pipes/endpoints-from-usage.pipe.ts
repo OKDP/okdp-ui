@@ -5,17 +5,11 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class EndpointsFromUsagePipe implements PipeTransform {
-  transform(usage: string): string[] {
-    if (!usage) return [];
-    const regex = /<a href="([^"]+)">/g;
-    const matches: string[] = [];
-    let match: RegExpExecArray | null;
-    while ((match = regex.exec(usage)) !== null) {
-      const url = match[1];
-      if (url) {
-        matches.push('https://' + url);
-      }
-    }
-    return matches;
+  transform(usage: { text?: string } | undefined): string[] {
+    if (!usage?.text) return [];
+
+    const regex = /(https?:\/\/[^\s]+)/g;
+    const matches = usage.text.match(regex);
+    return matches || [];
   }
 }
