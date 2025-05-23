@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, PACKAGE_ROOT_URL } from '@angular/core';
+import { FormBuilder, FormArray, FormGroup, Validators, ReactiveFormsModule, FormsModule, FormControl, ValidatorFn } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,24 +11,28 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatButtonModule } from '@angular/material/button';
 import { select, Store } from '@ngrx/store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../../../core/auth';
 import { errorMessage, UserInfo } from '../../../../core/models';
 import { RightSidebarService, RightSidebarToggle } from '../../../../shared/services';
 import {
   sortVersionsDesc,
   getLatestVersion,
-  convertToJsonDotNotation,
-  convertComponentReleaseToReleases,
-  parametersArrayToObject,
+  toJsonSchemaProperties,
+  JsonSchemaProperty,
+  deflateParameters,
 } from '../../../../shared/utils';
-import { ReleaseService } from '../../services/release.service';
+import { GitReleaseService } from '../../services/git-release.service';
+import { K8sReleaseService } from '../../services/k8s-release.service';
 import { AppState } from '../../../../core/store';
 import { getClusterId } from '../../../../core/common/clusters';
-import { Release, Package } from '../../../../api/_model';
+import { Release, ServerResponse } from '../../../../api/_model';
 import { CatalogItem } from '../../../catalogs/models/catalog-item.model';
 import { AppConfigService } from '../../../../core/config';
 import { LoadingComponent } from '../../../../shared/components/loading';
 import { NotificationService } from '../../../../core/common/notifications';
+import { CatalogService } from '../../../../core/common/catalogs';
+import { KUBERNETES_OBJECT_PATTERN } from '../../../../core/constants';
 
 @Component({
   selector: 'app-release-deploy',
@@ -51,7 +55,8 @@ import { NotificationService } from '../../../../core/common/notifications';
   styleUrls: ['./release-deploy.component.scss'],
 })
 export class ReleaseDeployComponent implements OnInit {
-  release: CatalogItem = {
+  catalogItem: CatalogItem = {
+    catalogId: "",
     name: 'Loading ...',
     icon: '',
     home: '',
@@ -64,31 +69,36 @@ export class ReleaseDeployComponent implements OnInit {
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  componentReleaseForm!: FormGroup;
+  releaseForm!: FormGroup;
+  parameterProperties: JsonSchemaProperty[]
 
-  packageVersions: { [version: string]: Package } = {};
-  availableVersions: string[] = [];
-  serviceFileName: string = '';
+  repoUrl: string = ""
+  availableTags: string[] = [];
 
-  schema = {
-    gitRepoFolder: 'deployments',
-    comment: 'Create new service instance',
-    componentRelease: {
-      component: {
-        name: '',
-        parameters: [{}],
-        version: '',
-      },
+  releasePayload = {
+    apiVersion: 'kubocd.kubotal.io/v1alpha1',
+    kind: 'Release',
+    metadata: {
       name: '',
       namespace: '',
     },
-    allowCreateNamespace: false,
-  };
+    spec: {
+      package: {
+        repository: '',
+        tag: ''
+      },
+      targetNamespace: '',
+      createNamespace: true,
+      parameters: {}
+    },
+  } as Release;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private componentService: ReleaseService,
+    private catalogService: CatalogService,
+    private gitReleaseService: GitReleaseService,
+    private k8sReleaseService: K8sReleaseService,
     private rightSidebarService: RightSidebarService,
     private appConfigService: AppConfigService,
     private notificationService: NotificationService,
@@ -102,22 +112,29 @@ export class ReleaseDeployComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.release.name = this.route.snapshot.paramMap.get('service') as string;
-    this.release.catalogName = this.route.snapshot.queryParamMap.get('catalog') as string;
-    this.release.icon = this.appConfigService.kadServicesInfo(this.release.name).icon as string;
-    this.release.home = this.appConfigService.kadServicesInfo(this.release.name).home as string;
+    this.catalogItem.name = this.route.snapshot.paramMap.get('service') as string;
+    this.catalogItem.catalogId = this.route.snapshot.queryParamMap.get('catalog') as string;
+    this.catalogItem.icon = this.appConfigService.kadServicesInfo(this.catalogItem.name).icon as string;
+    this.catalogItem.home = this.appConfigService.kadServicesInfo(this.catalogItem.name).home as string;
 
-    this.componentReleaseForm = this.fb.group({
-      comment: [this.schema.comment, Validators.required],
-      gitRepoFolder: [this.schema.gitRepoFolder, Validators.required],
-      componentRelease: this.fb.group({
-        name: [this.schema.componentRelease.name, Validators.required],
-        namespace: [this.schema.componentRelease.namespace, Validators.required],
-        component: this.fb.group({
-          name: [this.schema.componentRelease.component.name],
-          version: [this.schema.componentRelease.component.version],
-          parameters: this.fb.array([]),
+    this.releaseForm = this.fb.group({
+      metadata: this.fb.group({
+        name: [this.releasePayload.metadata.name || this.uniqName(this.catalogItem.name),   [
+          Validators.required,
+          Validators.pattern(KUBERNETES_OBJECT_PATTERN)
+        ]],
+        namespace: [this.releasePayload.metadata.namespace,   [
+          Validators.required,
+          Validators.pattern(KUBERNETES_OBJECT_PATTERN)
+        ]],
+      }),
+      spec: this.fb.group({
+        package: this.fb.group({
+          repository: [this.releasePayload.spec.package.repository, Validators.required],
+          tag: [this.releasePayload.spec.package.tag, Validators.required],
         }),
+        createNamespace: [this.releasePayload.spec.createNamespace],
+        parameters: this.fb.array([]),
       }),
     });
 
@@ -125,124 +142,128 @@ export class ReleaseDeployComponent implements OnInit {
       if (clusterId) {
         this.isLoaded = false;
         this.clusterId = clusterId;
-        this.fetchComponents(clusterId, this.release.name);
+        this.fetchPackage(this.catalogItem.catalogId, this.catalogItem.name);
       }
     });
 
-    this.name.valueChanges.subscribe(value => {
-      this.updateServiceFileNameDescription(value);
-    });
-
-    this.version.valueChanges.subscribe(selectedVersion => {
+    this.tag.valueChanges.subscribe(selectedVersion => {
       this.onVersionChange(selectedVersion);
     });
   }
 
-  fetchComponents(clusterId: string, name: string): void {
-    // this.componentService
-    //   .get(clusterId, name)
-    //   .pipe(takeUntilDestroyed(this.destroyRef))
-    //   .subscribe({
-    //     next: components => {
-    //       if (components.length > 0) {
-    //         components.forEach(c => {
-    //           this.packageVersions[c.spec.version] = c;
-    //         });
-
-    //         this.availableVersions = sortVersionsDesc(Object.keys(this.packageVersions));
-    //         let latestVersion = getLatestVersion(this.availableVersions) as string;
-    //         this.updateForm(this.packageVersions[latestVersion]);
-    //         this.isLoaded = true;
-    //         this.cdr.detectChanges();
-    //       }
-    //     },
-    //     error: error => {
-    //       this.notificationService.onError(name, `Unable to fetch service, ${errorMessage(error)}`);
-    //     },
-    //   });
+  fetchPackage(catalogId: string, name: string): void {
+    this.catalogService
+      .getPackage(catalogId, name)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: pkg => {
+            this.repoUrl = pkg.repoUrl
+            this.availableTags = sortVersionsDesc(pkg.versions)
+            let latestTag = getLatestVersion(this.availableTags) as string
+            this.updateForm(catalogId, name, latestTag)
+            this.isLoaded = true
+        },
+        error: error => {
+          this.notificationService.onError(name, `Unable to fetch service, ${errorMessage(error)}`)
+        },
+      });
   }
 
   onSubmit(): void {
     this.isSubmitting = true;
-    // const formValue = parametersArrayToObject(this.componentReleaseForm.value);
-    // const componentReleaseForm: ComponentReleaseRequest = convertComponentReleaseToReleases(formValue);
+    // Build release payload
+    this.releasePayload.metadata.name = this.name.value
+    this.releasePayload.metadata.namespace = this.namespace.value
+    this.releasePayload.spec.targetNamespace =  this.namespace.value
+    this.releasePayload.spec.createNamespace = true
+    this.releasePayload.spec.package.repository = this.repository.value
+    this.releasePayload.spec.package.tag = this.tag.value
+    let deflated =  deflateParameters(this.parameters.value)
+    this.releasePayload.spec.parameters = deflated
 
-    // this.componentService
-    //   .put(this.clusterId, formValue.componentRelease.name, componentReleaseForm)
-    //   .pipe(takeUntilDestroyed(this.destroyRef))
-    //   .subscribe({
-    //     next: (_: ComponentReleaseRequest[]) => {
-    //       this.notificationService.onSuccess(
-    //         formValue.componentRelease.name + ' ',
-    //         'was successfully submitted into Git via KAD.'
-    //       );
-    //       this.goBack();
-    //     },
-    //     error: error => {
-    //       this.notificationService.onError(formValue.componentRelease.name, `was failed, ${errorMessage(error)}`);
-    //       this.goBack();
-    //     },
-    //   });
+    this.gitReleaseService
+      .post(this.clusterId, "flux-system", "releases-system", this.releasePayload) //NS
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (_: ServerResponse) => {
+          this.notificationService.onSuccess(
+            this.releasePayload.metadata.name+'/'+this.releasePayload.metadata.namespace + ' ',
+            'was successfully submitted into Git.'
+          );
+          this.goBack();
+        },
+        error: error => {
+          this.notificationService.onError(this.releasePayload.metadata.name+'/'+this.releasePayload.metadata.namespace, `was failed, ${errorMessage(error)}`);
+          this.goBack();
+        },
+      });
   }
 
   goBack(): void {
     this.isSubmitting = false;
-    this.router.navigate([`/catalogs/${this.release.catalogName}`]);
+    this.router.navigate([`/catalogs/${this.catalogItem.catalogId}`]);
   }
 
   onVersionChange(version: string): void {
-    this.updateForm(this.packageVersions[version]);
-    // Trigger change detection to update the form
-    this.cdr.detectChanges();
+    this.updateForm(this.catalogItem.catalogId, this.catalogItem.name, version);
   }
 
   get isValid() {
-    const form = this.componentReleaseForm;
-    return form.get('comment')?.valid && form.get('gitRepoFolder')?.valid && form.get('componentRelease.name')?.valid;
+    this.logInvalidControls(this.releaseForm);
+    return this.releaseForm.valid;
   }
 
   toggleUserProfile(): void {
     this.rightSidebarService.toggle(RightSidebarToggle.USER_PROFILE);
   }
 
-  get componentRelease(): FormGroup {
-    return this.componentReleaseForm.get('componentRelease') as FormGroup;
+  get metadata(): FormGroup {
+    return this.releaseForm.get('metadata') as FormGroup;
   }
 
   get name(): FormGroup {
-    return this.componentRelease.get('name') as FormGroup;
+    return this.metadata.get('name') as FormGroup;
   }
 
-  get component(): FormGroup {
-    return this.componentRelease.get('component') as FormGroup;
+  get namespace(): FormGroup {
+    return this.metadata.get('namespace') as FormGroup;
   }
 
-  get version(): FormGroup {
-    return this.component.get('version') as FormGroup;
+  get spec(): FormGroup {
+    return this.releaseForm.get('spec') as FormGroup;
   }
 
-  toFormGroupParameter(name: string, value: string): FormGroup {
-    return this.fb.group({
-      name: name,
-      value: value,
+  get package(): FormGroup {
+    return this.spec.get('package') as FormGroup;
+  }
+
+  get repository(): FormGroup {
+    return this.package.get('repository') as FormGroup;
+  }
+
+  get tag(): FormGroup {
+    return this.package.get('tag') as FormGroup;
+  }
+
+  toFormGroupParameter(p: JsonSchemaProperty): FormGroup {
+    const validators: ValidatorFn[] = [];
+  
+    if (p.isRequired) {
+      validators.push(Validators.required);
+    }
+  
+    if (p.pattern) {
+      validators.push(Validators.pattern(new RegExp(p.pattern)));
+    }
+  
+    return new FormGroup({
+      name: new FormControl(p.name),
+      value: new FormControl(p.defaultValue ?? null, validators)
     });
   }
 
-  toggleParameter(index: number): void {
-    const parameters = this.getParameters();
-
-    if (index === parameters.length - 1) {
-      // Add new parameter
-      parameters.push(this.toFormGroupParameter('', ''), { emitEvent: false });
-    } else {
-      // Remove parameter at the specified index
-      parameters.removeAt(index, { emitEvent: false });
-    }
-  }
-
   getParameters(): FormArray {
-    const component = this.componentRelease.get('component') as FormGroup;
-    return component.get('parameters') as FormArray;
+    return this.spec.get('parameters') as FormArray;
   }
 
   get parameters() {
@@ -276,40 +297,78 @@ export class ReleaseDeployComponent implements OnInit {
     }
   }
 
-  private updateForm(component: Package) {
-    this.schema.componentRelease.component.name = component.name;
-    //this.schema.componentRelease.component.version = component.version;
-    //this.schema.allowCreateNamespace = component.spec.allowCreateNamespace;
-
-    this.componentReleaseForm.patchValue(
+  private async updateForm(catalogId: string, packageName: string, tag: string): Promise<void> {  
+    this.releaseForm.patchValue(
       {
-        componentRelease: {
-          component: {
-            name: this.schema.componentRelease.component.name,
-            version: this.schema.componentRelease.component.version,
+        spec: {
+          package: {
+            repository: this.repoUrl+'/'+packageName,
+            tag: tag
           },
         },
       },
       { emitEvent: false }
     );
+  
+    try {
+      const schema = await firstValueFrom(this.catalogService.getPackageSchema(catalogId, packageName, tag));
+      const parameters = (schema as any).parameters;
+      if (!parameters) {
+        console.warn('Schema does not contain parameters');
+        return;
+      }
+  
+      this.parameterProperties = toJsonSchemaProperties(parameters)
 
-    // Update parameters
-    // const entries = Object.entries(convertToJsonDotNotation(component.spec.parameters));
-    // if (entries.length > 0) {
-    //   this.getParameters().clear();
-    // }
-    // entries
-    //   .map(([name, value]) => this.toFormGroupParameter(name, value === null ? '' : value))
-    //   .forEach(control => {
-    //     this.getParameters().push(control, { emitEvent: false });
-    //   });
-  }
+      const formGroups = this.parameterProperties.map((p) =>
+        this.toFormGroupParameter(p)
+      );
 
-  updateServiceFileNameDescription(serviceName: string): void {
-    if (serviceName) {
-      this.serviceFileName = serviceName;
-    } else {
-      this.serviceFileName = '';
+      this.parameters.clear();
+      formGroups.forEach(fg => this.parameters.push(fg, { emitEvent: false }));
+  
+    } catch (error) {
+      const message = error instanceof Error ? errorMessage(error) : 'Unknown error';
+      this.notificationService.onError(
+        "catalog",
+        `Unable to fetch package ${packageName}:${tag} parameters from catalogId ${catalogId}, ${message}`
+      );
     }
+
+    this.cdr.detectChanges();
   }
+
+
+  private uniqName(name: string): string {
+    return name + "-"+Math.random().toString(36).substring(2, 8);
+  }
+
+
+  get isNameValid(): boolean {
+    const control = this.metadata.get('name');
+    return !(control?.invalid &&
+      (control.touched || control.dirty || !control.value));
+  }
+  
+  get isNamespaceValid(): boolean {
+    const control = this.metadata.get('namespace');
+    return !(control?.invalid &&
+      (control.touched || control.dirty || !control.value));
+  }
+
+  logInvalidControls(formGroup: FormGroup | FormArray, path: string = '') {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      const currentPath = path ? `${path}.${key}` : key;
+  
+      if (control instanceof FormGroup || control instanceof FormArray) {
+        this.logInvalidControls(control, currentPath);
+      } else if (control && control.invalid) {
+        console.warn(`Invalid control: ${currentPath}`, control.errors);
+      }
+    });
+  }
+
 }
+
+

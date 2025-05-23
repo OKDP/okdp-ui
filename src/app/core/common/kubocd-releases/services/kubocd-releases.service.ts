@@ -32,7 +32,7 @@ export class KuboCDReleases {
       .subscribe({
         next: allReleases => {
           const combined = allReleases.flat();
-          this.services.next(combined); // Now emit combined releases
+          this.services.next(combined);
           this.updateInstances(combined, false);
         },
         error: error =>
@@ -40,15 +40,26 @@ export class KuboCDReleases {
       });
   }
 
-  startPollServicesChange(clusterId: string, namespace: string): void {
+  startPollServicesChange(clusterId: string, namespaces: string[]): void {
     interval(KUBOCD_RELEASES_FETCH_POLLING_INTERVAL_MS)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        switchMap(() => this.list(clusterId, namespace)),
-        catchError(error => {
-          this.notificationService.onError('Services', `Failed to poll okdp services, ${errorMessage(error)}`);
-          return of([]);
-        }),
+        switchMap(() =>
+          forkJoin(
+            namespaces.map(ns =>
+              this.list(clusterId, ns).pipe(
+                catchError(error => {
+                  this.notificationService.onError(
+                    'KuboCD',
+                    `Failed to poll kubocd releases from namespace "${ns}", ${errorMessage(error)}`
+                  );
+                  return of([]);
+                })
+              )
+            )
+          )
+        ),
+        switchMap(results => of(results.flat())),
         distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))
       )
       .subscribe(releases => {

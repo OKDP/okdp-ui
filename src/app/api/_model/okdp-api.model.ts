@@ -67,6 +67,8 @@ export interface GitRepository {
 export interface Package {
   /** The name of the package */
   name: string;
+  /** The URL of OCR registry */
+  repoUrl: string;
   /** A list of versions for the package */
   versions: string[];
 }
@@ -335,7 +337,11 @@ export interface Release {
      */
     targetNamespace?: string;
   };
-  /** Release is the Schema for the releases API. */
+  /**
+   * ReleaseStatus defines the observed state of Release.
+   * As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
+   * (Except for 'context', as controlled by a debug flag)
+   */
   status?: ReleaseStatus;
 }
 
@@ -353,60 +359,57 @@ export interface ReleaseInfo {
   };
 }
 
-/** Release is the Schema for the releases API. */
+/**
+ * ReleaseStatus defines the observed state of Release.
+ * As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
+ * (Except for 'context', as controlled by a debug flag)
+ */
 export interface ReleaseStatus {
+  /** Context is the resulting context, if requested in debug options */
+  context?: any;
+  /** The result of the package template and release value */
+  dependencies?: string[];
+  /** HelmReleaseState describe the observed state of child HelmReleases by name */
+  helmReleaseStates?: Record<
+    string,
+    {
+      ready: string;
+      status?: string;
+    }
+  >;
+  missingDependency?: string;
+  /** Parameters is the resulting parameters set, if requested in debug options */
+  parameters?: any;
+  phase?: string;
   /**
-   * ReleaseStatus defines the observed state of Release.
-   * As we want Status to be explicit about provided information, we don't use 'omitempty' in its definition.
-   * (Except for 'context', as controlled by a debug flag)
+   * PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
+   * as printcolumn
    */
-  status?: {
-    /** Context is the resulting context, if requested in debug options */
-    context?: any;
-    /** The result of the package template and release value */
-    dependencies: string[];
-    /** HelmReleaseState describe the observed state of child HelmReleases by name */
-    helmReleaseStates?: Record<
-      string,
-      {
-        ready: string;
-        status?: string;
-      }
-    >;
-    missingDependency: string;
-    /** Parameters is the resulting parameters set, if requested in debug options */
-    parameters?: any;
-    phase: string;
-    /**
-     * PrintContextsContexts is a string to list our context. Not technically used, but intended to be displayed
-     * as printcolumn
-     */
-    printContexts?: string;
-    /**
-     * PrintDescription
-     * Copy of the release description, or, if empty the (templated) package one
-     */
-    printDescription?: string;
-    /** PrintProtected is a copy of Protected, with a Y/n flag. To be used in display */
-    printProtected: string;
-    /**
-     * Protected result of Release.spec.protected defaulted to package.spec.protected
-     * It is the value checked by the webhook
-     */
-    protected: boolean;
-    /**
-     * ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
-     * as printcolumn
-     */
-    readyReleases: string;
-    /** The result of the package template and release value */
-    roles: string[];
-    /**
-     * Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
-     * Key could 'html', 'text', some language id, etc...
-     */
-    usage?: Record<string, string>;
-  };
+  printContexts?: string;
+  /**
+   * PrintDescription
+   * Copy of the release description, or, if empty the (templated) package one
+   */
+  printDescription?: string;
+  /** PrintProtected is a copy of Protected, with a Y/n flag. To be used in display */
+  printProtected?: string;
+  /**
+   * Protected result of Release.spec.protected defaulted to package.spec.protected
+   * It is the value checked by the webhook
+   */
+  protected?: boolean;
+  /**
+   * ReadyReleases is a string to display X/Y helmRelease ready. Not technically used, but intended to be displayed
+   * as printcolumn
+   */
+  readyReleases?: string;
+  /** The result of the package template and release value */
+  roles?: string[];
+  /**
+   * Usage is the rendering of the Package.spec.usage[key]. Aimed to provide user information.
+   * Key could 'html', 'text', some language id, etc...
+   */
+  usage?: Record<string, string>;
 }
 
 export interface ServerResponse {

@@ -200,12 +200,24 @@ select.form-control:hover {
 }
 
 input.form-control::placeholder, select.form-control::placeholder {
-  color: var(--text-primary-color);
+  //color: var(--text-primary-color);
+  color: #888888;
+  font-style: italic;
+  font-weight: 400;
   opacity: 1;
 }
 
 .form-control.lh-1 {
   line-height: 1 !important;
+}
+
+.form-field-required-underline {
+  border: 1px solid #ff6b6b !important;
+  border-radius: 0px;
+  background-color: var(--bg-primary-color);
+  outline: none;
+  box-shadow: none;
+  overflow: hidden;
 }
 
 .form-field-underline {
@@ -242,8 +254,7 @@ button.close-icon{
 
 .form-check-input {
   background-color: var(--bg-primary-color) !important;
-  border-color: var(--bg-secondary-color) !important;
-  box-shadow: none !important;
+  border-color: var(--text-primary-color) !important;
   border-radius: 5px !important;
 }
 
@@ -751,3 +762,73 @@ button:active .icon-outlined {
   line-height: 1 !important;
 }
 
+// KuboCD Status
+.bg-ready {
+  background-color: var(--bs-success) !important;
+  color: #fff !important;
+}
+
+.bg-wait_oci {
+  background-color: var(--bs-info) !important;
+  color: #fff !important;
+}
+
+.bg-wait_deps {
+  background-color: var(--bs-warning) !important;
+  color: #000 !important;
+}
+
+.bg-wait_repo {
+  background-color: var(--bs-secondary) !important;
+  color: #fff !important;
+}
+
+.bg-wait_hrel {
+  background-color: var(--bs-primary) !important;
+  color: #fff !important;
+}
+
+.bg-error {
+  background-color: var(--bs-danger) !important;
+  color: #fff !important;
+}
+
+.bg-unknown {
+  background-color: gray !important;
+  color: #fff !important;
+}
+
+.text-ready {
+  @extend .text-success;
+  color: var(--bs-success) !important;
+}
+
+.text-wait_oci {
+  @extend .text-info;
+  color: var(--bs-info) !important;
+}
+
+.text-wait_deps {
+  @extend .text-warning;
+  color: var(--bs-warning) !important;
+}
+
+.text-wait_repo {
+  @extend .text-secondary;
+  color: var(--bs-secondary) !important;
+}
+
+.text-wait_hrel {
+  @extend .text-primary;
+  color: var(--bs-primary) !important;
+}
+
+.text-error {
+  @extend .text-danger;
+  color: var(--bs-danger) !important;
+}
+
+.text-unknown {
+  @extend .text-primary;
+  color: gray !important;
+}

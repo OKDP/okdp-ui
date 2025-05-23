@@ -1,5 +1,5 @@
 export interface CatalogItem {
-  catalogId?: string;
+  catalogId: string;
   catalogName?: string;
   name: string;
   icon: string;

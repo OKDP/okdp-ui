@@ -13,10 +13,15 @@
           <ul class="nav w-100 d-flex flex-row justify-content-start align-items-center gap-1">
             <li class="nav-item d-flex flex-row gap-1">
               <span class="card-title" [innerHTML]="highlightMatch(instance.release.metadata.name)"></span>
-              <i class="material-symbols-outlined text-success border-0 fw-bold">check_circle</i>
+              <i class="material-symbols-outlined border-0 fw-bold"
+                 [ngClass]="'text-' + (instance.statusPhase.toLowerCase())"
+              >{{ instance.statusIcon }}</i>
             </li>
             <li class="nav-item ms-auto">
-              <span class="badge rounded-pill bg-success">Running</span>
+              <span class="badge rounded-pill"
+                    [ngClass]="'bg-' + (instance.statusPhase.toLowerCase())">
+                    {{ instance.statusPhase | titleCase }}
+            </span>
             </li>
           </ul>
         </div>

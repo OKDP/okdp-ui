@@ -16,4 +16,9 @@ export class ClusterService {
   get(clusterId: string): Observable<Cluster> {
     return this.http.get<Cluster>(`/clusters/${clusterId}`);
   }
+
+  listNamespaces(clusterId: string): Observable<string[]> {
+    return this.http.get<string[]>(`/clusters/${clusterId}/namespaces`);
+  }
 }
+

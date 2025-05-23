@@ -102,8 +102,8 @@ export class CatalogListPackagesComponent implements OnInit {
     this.catalogService.catalogs$.subscribe({
       next: (catalogs: Catalog[]) => {
         this.catalogs = catalogs
-          .filter(c => this.filterKadCatalogs.includes(c.name) || this.filterKadCatalogs.includes('all'))
-          .sort((e1, e2) => e1.name.toLowerCase().localeCompare(e2.name.toLowerCase()));
+          .filter(c => this.filterKadCatalogs.includes(c.id) || this.filterKadCatalogs.includes('all'))
+          .sort((e1, e2) => e1.id.toLowerCase().localeCompare(e2.id.toLowerCase()));
         this.catalogIds = this.catalogs.map(c => c.id);
         this.catalogItems = this.catalogs.flatMap(c => this.toCatalogItems(c));
         this.searchChanged(this.search);
@@ -122,7 +122,7 @@ export class CatalogListPackagesComponent implements OnInit {
 
   onDeployService(item: CatalogItem): void {
     this.router.navigate([`/services/${item.name}/deploy`], {
-      queryParams: { catalog: item.catalogName },
+      queryParams: { catalog: item.catalogId },
     });
   }
 
