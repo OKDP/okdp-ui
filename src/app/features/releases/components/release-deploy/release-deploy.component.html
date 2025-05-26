@@ -26,10 +26,10 @@
                   <input
                     id="name"
                     class="form-control form-field-underline border-bottom-primary px-0"
-                    [ngClass]="{'form-field-required-underline': !isNameValid}"
                     formControlName="name"
                     aria-label="Enter name"
-                    required />
+                    required
+                    [ngClass]="{'form-field-required-underline': !isNameValid}" />
                   <small class="form-text text-muted">Enter a name for your KuboCD release.</small>
                 </div>
               </div>
@@ -57,9 +57,9 @@
                   <input
                     id="namespace"
                     class="form-control form-field-underline border-bottom-primary px-0"
-                    [ngClass]="{'form-field-required-underline': !isNamespaceValid}"
                     formControlName="namespace"
-                    aria-label="Enter namespace" />
+                    aria-label="Enter namespace"
+                    [ngClass]="{'form-field-required-underline': !isNamespaceValid}" />
                   <small class="form-text text-muted"
                     >Enter the Kubernetes namespace for your KuboCD release deployment.</small
                   >
@@ -96,16 +96,17 @@
                                 class="form-control form-field-underline border-bottom-primary px-0"
                                 formControlName="name"
                                 aria-label="Enter parameterName"
-                                id="parameterName-{{ i }}"
-                                [readonly]="true"
                                 style="flex-grow: 1;"
-                              />
+                                id="parameterName-{{ i }}"
+                                [readonly]="true" />
                             </div>
                           </div>
 
                           <!-- Parameter Value -->
                           <div class="col" [formGroupName]="i">
-                            <div class="form-group" [ngSwitch]="parameterProperties[i].enum?.length ? 'enum' : parameterProperties[i].type">
+                            <div
+                              class="form-group"
+                              [ngSwitch]="parameterProperties[i].enum?.length ? 'enum' : parameterProperties[i].type">
                               <!-- Enum Type (Select Input) -->
                               <ng-container *ngSwitchCase="'enum'">
                                 <select
@@ -153,6 +154,8 @@
                                 <input
                                   type="text"
                                   class="form-control form-field-underline border-bottom-primary px-0 w-100"
+                                  formControlName="value"
+                                  aria-label="Enter text value"
                                   [ngClass]="{
                                     'form-field-required-underline':
                                       parameterProperties[i].isRequired &&
@@ -163,10 +166,8 @@
                                         !parameters.at(i).get('value')?.value
                                       )
                                   }"
-                                  formControlName="value"
-                                  aria-label="Enter text value"
-                                  id="parameterValue-{{ i }}" 
-                                  [attr.pattern]="parameterProperties[i].pattern || null" 
+                                  id="parameterValue-{{ i }}"
+                                  [attr.pattern]="parameterProperties[i].pattern || null"
                                   [attr.placeholder]="parameterProperties[i].pattern ? parameterProperties[i].pattern : null" />
                               </ng-container>
                               <!-- Fallback for Unknown Types -->
@@ -179,7 +180,7 @@
                                   id="parameterValue-{{ i }}" />
                               </ng-container>
                             </div>
-                          </div>                          
+                          </div>
                         </div>
                       </div>
                     </div>

@@ -51,7 +51,7 @@ import { KebabMenuComponent } from '../../../../shared/components/kebab-menu';
 export class CatalogListPackagesComponent implements OnInit {
   catalogIds: string[] = [];
   navTabDisplayClass = '';
-  
+
   catalogs: Catalog[] = [];
   isLoaded = false;
 
@@ -74,7 +74,7 @@ export class CatalogListPackagesComponent implements OnInit {
     private sidebarService: SidebarService,
     private titleBarService: TitleBarService,
     private route: ActivatedRoute,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -111,7 +111,7 @@ export class CatalogListPackagesComponent implements OnInit {
         this.toCurrentCatalogCatalog();
       },
       error: error => {
-        this.notificationService.onError("catalog", `Unable to fetch catalog, ${errorMessage(error)}`);
+        this.notificationService.onError('catalog', `Unable to fetch catalog, ${errorMessage(error)}`);
       },
     });
   }

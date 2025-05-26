@@ -14,9 +14,7 @@ export class CatalogService {
   constructor(private readonly http: HttpClient) {}
 
   list(): Observable<Catalog[]> {
-    return this.http
-      .get<Catalog[]>(`/catalogs`)
-      .pipe(tap(catalogs => this.catalogs.next(catalogs)));
+    return this.http.get<Catalog[]>(`/catalogs`).pipe(tap(catalogs => this.catalogs.next(catalogs)));
   }
 
   listById(catalogId: string): Observable<Catalog> {
@@ -30,5 +28,4 @@ export class CatalogService {
   getPackageSchema(catalogId: string, name: string, version: string): Observable<OpenApiV3Schema> {
     return this.http.get<OpenApiV3Schema>(`/catalogs/${catalogId}/packages/${name}/versions/${version}/schema`);
   }
-
 }

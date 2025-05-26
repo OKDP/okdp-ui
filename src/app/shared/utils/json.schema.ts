@@ -7,8 +7,8 @@ export interface JsonSchemaProperty {
   defaultValue: any;
   isRequired: boolean;
   enum?: string[];
-  pattern?: string;          // For strings
-  minimum?: number;          // For numbers/integers
+  pattern?: string; // For strings
+  minimum?: number; // For numbers/integers
   maximum?: number;
   multipleOf?: number;
 }

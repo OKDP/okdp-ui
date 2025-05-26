@@ -21,4 +21,3 @@ export class ClusterService {
     return this.http.get<string[]>(`/clusters/${clusterId}/namespaces`);
   }
 }
-
