@@ -26,6 +26,10 @@ docker-compose up --build
 ```
 
 ## Helm
+
+helm package ./helm/okdp-ui
+helm push okdp-ui-0.2.0-snapshot.tgz oci://quay.io/okdp/charts
+
 ```
 docker build -t quay.io/okdp/okdp-ui:0.1.0-snapshot .
 docker push quay.io/okdp/okdp-ui:0.1.0-snapshot

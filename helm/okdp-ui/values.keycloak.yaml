@@ -4,16 +4,16 @@ ui:
     provider: oauth2
     oauth2:
       issuer: http://keycloak:7080/realms/master
-      redirectUri: http://okdp-ui.ingress.kind.local/index.html
-      silentRefreshRedirectUri: http://okdp-ui.ingress.kind.local/silent-refresh.html
+      redirectUri: http://okdp-ui.okdp.sandbox/index.html
+      silentRefreshRedirectUri: http://okdp-ui.okdp.sandbox/silent-refresh.html
       clientId: public-oidc-client
       responseType: code
       scope: openid profile email offline_access roles
       showDebugInformation: true
       requireHttps: false
   okdpApi:
-    apiUrl: http://keycloak:8090/api/v1
-    swaggerUrl: http://localhost:8092
+    apiUrl: https://okdp-server.okdp.sandbox/api/v1
+    swaggerUrl: https://okdp-server.okdp.sandbox/swagger
   catalogs:
     services:
     - all
@@ -25,7 +25,7 @@ ingress:
   className: "nginx"
   annotations: {}
   hosts:
-    - host: okdp-ui.ingress.kind.local
+    - host: okdp-ui.okdp.sandbox
       paths:
         - path: /
           pathType: Prefix
