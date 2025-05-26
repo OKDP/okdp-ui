@@ -81,7 +81,7 @@ export class SidebarComponent implements OnInit {
           });
         },
         error: error => {
-          this.notificationService.onError("cluster", `Unable to fetch catalog, ${errorMessage(error)}`);
+          this.notificationService.onError('cluster', `Unable to fetch catalog, ${errorMessage(error)}`);
         },
       });
   }

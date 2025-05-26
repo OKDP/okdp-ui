@@ -92,8 +92,11 @@ export class KuboCDReleases {
     const deletedInstancesList: Release[] = [];
 
     newInstances.forEach(newInstance => {
-      const existingMenuIndex = oldInstances.findIndex(oldInstance => oldInstance.metadata.name === newInstance.metadata.name 
-        && oldInstance.metadata.namespace === newInstance.metadata.namespace);
+      const existingMenuIndex = oldInstances.findIndex(
+        oldInstance =>
+          oldInstance.metadata.name === newInstance.metadata.name &&
+          oldInstance.metadata.namespace === newInstance.metadata.namespace
+      );
       if (existingMenuIndex === -1) {
         newInstancesList.push(newInstance);
         updatedInstancesList.push(newInstance);
@@ -103,8 +106,13 @@ export class KuboCDReleases {
     });
 
     oldInstances.forEach(oldInstance => {
-      if (!newInstances.some(newInstance => newInstance.metadata.name === oldInstance.metadata.name 
-        && newInstance.metadata.namespace === oldInstance.metadata.namespace)) {
+      if (
+        !newInstances.some(
+          newInstance =>
+            newInstance.metadata.name === oldInstance.metadata.name &&
+            newInstance.metadata.namespace === oldInstance.metadata.namespace
+        )
+      ) {
         deletedInstancesList.push(oldInstance);
       }
     });

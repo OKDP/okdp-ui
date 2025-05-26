@@ -1,6 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, PACKAGE_ROOT_URL } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup, Validators, ReactiveFormsModule, FormsModule, FormControl, ValidatorFn } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormArray,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  FormsModule,
+  FormControl,
+  ValidatorFn,
+} from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -56,7 +65,7 @@ import { KUBERNETES_OBJECT_PATTERN } from '../../../../core/constants';
 })
 export class ReleaseDeployComponent implements OnInit {
   catalogItem: CatalogItem = {
-    catalogId: "",
+    catalogId: '',
     name: 'Loading ...',
     icon: '',
     home: '',
@@ -70,9 +79,9 @@ export class ReleaseDeployComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
   releaseForm!: FormGroup;
-  parameterProperties: JsonSchemaProperty[]
+  parameterProperties: JsonSchemaProperty[];
 
-  repoUrl: string = ""
+  repoUrl: string = '';
   availableTags: string[] = [];
 
   releasePayload = {
@@ -85,11 +94,11 @@ export class ReleaseDeployComponent implements OnInit {
     spec: {
       package: {
         repository: '',
-        tag: ''
+        tag: '',
       },
       targetNamespace: '',
       createNamespace: true,
-      parameters: {}
+      parameters: {},
     },
   } as Release;
 
@@ -119,14 +128,14 @@ export class ReleaseDeployComponent implements OnInit {
 
     this.releaseForm = this.fb.group({
       metadata: this.fb.group({
-        name: [this.releasePayload.metadata.name || this.uniqName(this.catalogItem.name),   [
-          Validators.required,
-          Validators.pattern(KUBERNETES_OBJECT_PATTERN)
-        ]],
-        namespace: [this.releasePayload.metadata.namespace,   [
-          Validators.required,
-          Validators.pattern(KUBERNETES_OBJECT_PATTERN)
-        ]],
+        name: [
+          this.releasePayload.metadata.name || this.uniqName(this.catalogItem.name),
+          [Validators.required, Validators.pattern(KUBERNETES_OBJECT_PATTERN)],
+        ],
+        namespace: [
+          this.releasePayload.metadata.namespace,
+          [Validators.required, Validators.pattern(KUBERNETES_OBJECT_PATTERN)],
+        ],
       }),
       spec: this.fb.group({
         package: this.fb.group({
@@ -157,14 +166,14 @@ export class ReleaseDeployComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: pkg => {
-            this.repoUrl = pkg.repoUrl
-            this.availableTags = sortVersionsDesc(pkg.versions)
-            let latestTag = getLatestVersion(this.availableTags) as string
-            this.updateForm(catalogId, name, latestTag)
-            this.isLoaded = true
+          this.repoUrl = pkg.repoUrl;
+          this.availableTags = sortVersionsDesc(pkg.versions);
+          let latestTag = getLatestVersion(this.availableTags) as string;
+          this.updateForm(catalogId, name, latestTag);
+          this.isLoaded = true;
         },
         error: error => {
-          this.notificationService.onError(name, `Unable to fetch service, ${errorMessage(error)}`)
+          this.notificationService.onError(name, `Unable to fetch service, ${errorMessage(error)}`);
         },
       });
   }
@@ -172,28 +181,31 @@ export class ReleaseDeployComponent implements OnInit {
   onSubmit(): void {
     this.isSubmitting = true;
     // Build release payload
-    this.releasePayload.metadata.name = this.name.value
-    this.releasePayload.metadata.namespace = this.namespace.value
-    this.releasePayload.spec.targetNamespace =  this.namespace.value
-    this.releasePayload.spec.createNamespace = true
-    this.releasePayload.spec.package.repository = this.repository.value
-    this.releasePayload.spec.package.tag = this.tag.value
-    let deflated =  deflateParameters(this.parameters.value)
-    this.releasePayload.spec.parameters = deflated
+    this.releasePayload.metadata.name = this.name.value;
+    this.releasePayload.metadata.namespace = this.namespace.value;
+    this.releasePayload.spec.targetNamespace = this.namespace.value;
+    this.releasePayload.spec.createNamespace = true;
+    this.releasePayload.spec.package.repository = this.repository.value;
+    this.releasePayload.spec.package.tag = this.tag.value;
+    let deflated = deflateParameters(this.parameters.value);
+    this.releasePayload.spec.parameters = deflated;
 
     this.gitReleaseService
-      .post(this.clusterId, "flux-system", "releases-system", this.releasePayload) //NS
+      .post(this.clusterId, 'flux-system', 'releases-system', this.releasePayload) //NS
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (_: ServerResponse) => {
           this.notificationService.onSuccess(
-            this.releasePayload.metadata.name+'/'+this.releasePayload.metadata.namespace + ' ',
+            this.releasePayload.metadata.name + '/' + this.releasePayload.metadata.namespace + ' ',
             'was successfully submitted into Git.'
           );
           this.goBack();
         },
         error: error => {
-          this.notificationService.onError(this.releasePayload.metadata.name+'/'+this.releasePayload.metadata.namespace, `was failed, ${errorMessage(error)}`);
+          this.notificationService.onError(
+            this.releasePayload.metadata.name + '/' + this.releasePayload.metadata.namespace,
+            `was failed, ${errorMessage(error)}`
+          );
           this.goBack();
         },
       });
@@ -247,18 +259,18 @@ export class ReleaseDeployComponent implements OnInit {
 
   toFormGroupParameter(p: JsonSchemaProperty): FormGroup {
     const validators: ValidatorFn[] = [];
-  
+
     if (p.isRequired) {
       validators.push(Validators.required);
     }
-  
+
     if (p.pattern) {
       validators.push(Validators.pattern(new RegExp(p.pattern)));
     }
-  
+
     return new FormGroup({
       name: new FormControl(p.name),
-      value: new FormControl(p.defaultValue ?? null, validators)
+      value: new FormControl(p.defaultValue ?? null, validators),
     });
   }
 
@@ -297,19 +309,19 @@ export class ReleaseDeployComponent implements OnInit {
     }
   }
 
-  private async updateForm(catalogId: string, packageName: string, tag: string): Promise<void> {  
+  private async updateForm(catalogId: string, packageName: string, tag: string): Promise<void> {
     this.releaseForm.patchValue(
       {
         spec: {
           package: {
-            repository: this.repoUrl+'/'+packageName,
-            tag: tag
+            repository: this.repoUrl + '/' + packageName,
+            tag: tag,
           },
         },
       },
       { emitEvent: false }
     );
-  
+
     try {
       const schema = await firstValueFrom(this.catalogService.getPackageSchema(catalogId, packageName, tag));
       const parameters = (schema as any).parameters;
@@ -317,20 +329,17 @@ export class ReleaseDeployComponent implements OnInit {
         console.warn('Schema does not contain parameters');
         return;
       }
-  
-      this.parameterProperties = toJsonSchemaProperties(parameters)
 
-      const formGroups = this.parameterProperties.map((p) =>
-        this.toFormGroupParameter(p)
-      );
+      this.parameterProperties = toJsonSchemaProperties(parameters);
+
+      const formGroups = this.parameterProperties.map(p => this.toFormGroupParameter(p));
 
       this.parameters.clear();
       formGroups.forEach(fg => this.parameters.push(fg, { emitEvent: false }));
-  
     } catch (error) {
       const message = error instanceof Error ? errorMessage(error) : 'Unknown error';
       this.notificationService.onError(
-        "catalog",
+        'catalog',
         `Unable to fetch package ${packageName}:${tag} parameters from catalogId ${catalogId}, ${message}`
       );
     }
@@ -338,29 +347,25 @@ export class ReleaseDeployComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-
   private uniqName(name: string): string {
-    return name + "-"+Math.random().toString(36).substring(2, 8);
+    return name + '-' + Math.random().toString(36).substring(2, 8);
   }
-
 
   get isNameValid(): boolean {
     const control = this.metadata.get('name');
-    return !(control?.invalid &&
-      (control.touched || control.dirty || !control.value));
+    return !(control?.invalid && (control.touched || control.dirty || !control.value));
   }
-  
+
   get isNamespaceValid(): boolean {
     const control = this.metadata.get('namespace');
-    return !(control?.invalid &&
-      (control.touched || control.dirty || !control.value));
+    return !(control?.invalid && (control.touched || control.dirty || !control.value));
   }
 
   logInvalidControls(formGroup: FormGroup | FormArray, path: string = '') {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);
       const currentPath = path ? `${path}.${key}` : key;
-  
+
       if (control instanceof FormGroup || control instanceof FormArray) {
         this.logInvalidControls(control, currentPath);
       } else if (control && control.invalid) {
@@ -368,7 +373,4 @@ export class ReleaseDeployComponent implements OnInit {
       }
     });
   }
-
 }
-
-

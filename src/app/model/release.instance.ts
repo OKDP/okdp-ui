@@ -1,15 +1,14 @@
 import { Release } from '../api/_model';
 
-const ReleasePhaseReady = "READY";
-const ReleasePhaseError = "ERROR";
-const ReleasePhaseWaitOci = "WAIT_OCI";
-const ReleasePhaseWaitHelmRepo = "WAIT_REPO";
-const ReleasePhaseWaitHelmReleases = "WAIT_HREL";
-const ReleasePhaseWaitDependencies = "WAIT_DEPS";
-const ReleasePhaseSuspended = "SUSPENDED";
+const ReleasePhaseReady = 'READY';
+const ReleasePhaseError = 'ERROR';
+const ReleasePhaseWaitOci = 'WAIT_OCI';
+const ReleasePhaseWaitHelmRepo = 'WAIT_REPO';
+const ReleasePhaseWaitHelmReleases = 'WAIT_HREL';
+const ReleasePhaseWaitDependencies = 'WAIT_DEPS';
+const ReleasePhaseSuspended = 'SUSPENDED';
 
 export class ReleaseInstance {
-
   constructor(
     public release: Release,
     public icon: string,
@@ -31,7 +30,7 @@ export class ReleaseInstance {
       case ReleasePhaseWaitHelmRepo:
       case ReleasePhaseWaitHelmReleases:
       case ReleasePhaseWaitDependencies:
-        return 'hourglass_top'; 
+        return 'hourglass_top';
       case ReleasePhaseSuspended:
         return 'pause_circle_filled';
       default:
@@ -39,7 +38,3 @@ export class ReleaseInstance {
     }
   }
 }
-
-
-type ObjectMeta = { name: string, namespace: string };
-
