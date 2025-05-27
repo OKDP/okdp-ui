@@ -16,6 +16,10 @@
     "apiUrl": "http://keycloak:8090/api/v1",
     "swaggerUrl": "http://localhost:8092"
   },
+  "submission": {
+    "_comment": "Set to 'git' to push KuboCD releases to Git, or 'kubernetes' to apply directly to the cluster.",
+    "mode": "git"
+  },
   "catalogs": {
     "services": ["all"],
     "kad": ["all"]

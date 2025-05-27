@@ -46,6 +46,15 @@ export class AppConfigService {
   catalogs(): DisplayCatalog {
     return this.getConfig().catalogs;
   }
+
+  getSubmissionMode(): string {
+    const mode = this.getConfig().submission.mode;
+    const validModes = ['git', 'kubernetes'] as const;
+    if (!validModes.includes(mode as any)) {
+      throw new Error(`Invalid submission mode: ${mode}. Valid modes are: ${validModes.join(', ')}`);
+    }
+    return mode;
+  }
 }
 
 export class CatalogInfo implements KadCatalogInfo {
