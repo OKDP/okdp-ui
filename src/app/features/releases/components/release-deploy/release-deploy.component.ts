@@ -15,6 +15,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatButtonModule } from '@angular/material/button';
@@ -50,6 +51,7 @@ import { KUBERNETES_OBJECT_PATTERN } from '../../../../core/constants';
     CommonModule,
     MatTooltipModule,
     MatIconModule,
+    MatSlideToggleModule,
     ReactiveFormsModule,
     FormsModule,
     MatChipsModule,
@@ -74,6 +76,7 @@ export class ReleaseDeployComponent implements OnInit {
 
   readonly userInfo: UserInfo;
   isLoaded = false;
+  submissionMode: string;
   isSubmitting: boolean = false;
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -89,15 +92,15 @@ export class ReleaseDeployComponent implements OnInit {
     kind: 'Release',
     metadata: {
       name: '',
-      namespace: '',
+      namespace: 'default',
     },
     spec: {
       package: {
         repository: '',
         tag: '',
       },
-      targetNamespace: '',
-      createNamespace: true,
+      targetNamespace: 'default',
+      createNamespace: false,
       parameters: {},
     },
   } as Release;
@@ -125,6 +128,8 @@ export class ReleaseDeployComponent implements OnInit {
     this.catalogItem.catalogId = this.route.snapshot.queryParamMap.get('catalog') as string;
     this.catalogItem.icon = this.appConfigService.kadServicesInfo(this.catalogItem.name).icon as string;
     this.catalogItem.home = this.appConfigService.kadServicesInfo(this.catalogItem.name).home as string;
+
+    this.submissionMode = this.appConfigService.getSubmissionMode();
 
     this.releaseForm = this.fb.group({
       metadata: this.fb.group({
@@ -182,30 +187,31 @@ export class ReleaseDeployComponent implements OnInit {
     this.isSubmitting = true;
     // Build release payload
     this.releasePayload.metadata.name = this.name.value;
-    this.releasePayload.metadata.namespace = this.namespace.value;
-    this.releasePayload.spec.targetNamespace = this.namespace.value;
-    this.releasePayload.spec.createNamespace = true;
     this.releasePayload.spec.package.repository = this.repository.value;
     this.releasePayload.spec.package.tag = this.tag.value;
     let deflated = deflateParameters(this.parameters.value);
     this.releasePayload.spec.parameters = deflated;
 
-    this.gitReleaseService
-      .post(this.clusterId, 'flux-system', 'releases-system', this.releasePayload) //NS
+    const namespace = this.releasePayload.metadata.namespace!;
+    const name = this.releasePayload.metadata.name;
+
+    const handlers = {
+      git: () => this.gitReleaseService.post(this.clusterId, 'flux-system', 'releases-system', this.releasePayload),
+      kubernetes: () => this.k8sReleaseService.post(this.clusterId, namespace, this.releasePayload, false),
+    };
+
+    handlers[this.submissionMode]()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (_: ServerResponse) => {
           this.notificationService.onSuccess(
-            this.releasePayload.metadata.name + '/' + this.releasePayload.metadata.namespace + ' ',
-            'was successfully submitted into Git.'
+            `${name}/${namespace}`,
+            `was successfully submitted into ${this.submissionMode === 'git' ? 'Git' : 'Kubernetes'}.`
           );
           this.goBack();
         },
         error: error => {
-          this.notificationService.onError(
-            this.releasePayload.metadata.name + '/' + this.releasePayload.metadata.namespace,
-            `was failed, ${errorMessage(error)}`
-          );
+          this.notificationService.onError(`${name}/${namespace}`, `was failed, ${errorMessage(error)}`);
           this.goBack();
         },
       });
@@ -235,10 +241,6 @@ export class ReleaseDeployComponent implements OnInit {
 
   get name(): FormGroup {
     return this.metadata.get('name') as FormGroup;
-  }
-
-  get namespace(): FormGroup {
-    return this.metadata.get('namespace') as FormGroup;
   }
 
   get spec(): FormGroup {
@@ -353,11 +355,6 @@ export class ReleaseDeployComponent implements OnInit {
 
   get isNameValid(): boolean {
     const control = this.metadata.get('name');
-    return !(control?.invalid && (control.touched || control.dirty || !control.value));
-  }
-
-  get isNamespaceValid(): boolean {
-    const control = this.metadata.get('namespace');
     return !(control?.invalid && (control.touched || control.dirty || !control.value));
   }
 

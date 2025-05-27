@@ -44,6 +44,9 @@ ui:
     apiUrl: http://okdp-api.local/api/v1
     # -- okdp-api swagger endpoint.
     swaggerUrl: http://okdp-api-swagger.local
+  submission:
+    # -- Set to 'git' to push KuboCD releases to Git, or 'kubernetes' to apply directly to the cluster.
+    mode: git
   # KAD catalogs.
   catalogs:
     # -- kad catalog services to dispaly in the sidebar menu ui.

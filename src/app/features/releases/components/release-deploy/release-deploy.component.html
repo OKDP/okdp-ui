@@ -50,21 +50,6 @@
                   </div>
                 </div>
               </div>
-              <!-- Namespace -->
-              <div formGroupName="metadata" class="col-auto">
-                <div class="form-group">
-                  <label for="namespace">Namespace</label>
-                  <input
-                    id="namespace"
-                    class="form-control form-field-underline border-bottom-primary px-0"
-                    formControlName="namespace"
-                    aria-label="Enter namespace"
-                    [ngClass]="{'form-field-required-underline': !isNamespaceValid}" />
-                  <small class="form-text text-muted"
-                    >Enter the Kubernetes namespace for your KuboCD release deployment.</small
-                  >
-                </div>
-              </div>
               <!-- Submit -->
               <div class="col d-flex justify-content-end">
                 <div class="d-flex gap-2">

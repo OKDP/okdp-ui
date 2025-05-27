@@ -3,6 +3,7 @@ import { AuthConfig } from 'angular-oauth2-oidc';
 export interface AppConfig {
   auth: Auth;
   okdpApi: OkdpApi;
+  submission: Submission;
   kadCatalogsInfo: Map<string, KadCatalogInfo>;
   kadServicesInfo: Map<string, KadServiceInfo>;
   catalogs: DisplayCatalog;
@@ -16,6 +17,10 @@ export interface Auth {
 export interface OkdpApi {
   apiUrl: string;
   swaggerUrl: string;
+}
+
+export interface Submission {
+  mode: string;
 }
 
 export interface KadServiceInfo {

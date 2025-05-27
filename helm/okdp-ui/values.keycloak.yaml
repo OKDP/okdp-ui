@@ -14,6 +14,9 @@ ui:
   okdpApi:
     apiUrl: https://okdp-server.okdp.sandbox/api/v1
     swaggerUrl: https://okdp-server.okdp.sandbox/swagger
+  submission:
+    # -- Set to 'git' to push KuboCD releases to Git, or 'kubernetes' to apply directly to the cluster.
+    mode: git
   catalogs:
     services:
     - all
