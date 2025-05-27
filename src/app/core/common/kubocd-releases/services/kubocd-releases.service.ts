@@ -1,18 +1,37 @@
 import { HttpClient } from '@angular/common/http';
 import { DestroyRef, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, distinctUntilChanged, interval, Observable, of, switchMap, forkJoin } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  distinctUntilChanged,
+  interval,
+  Observable,
+  of,
+  switchMap,
+  forkJoin,
+  skip,
+} from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Release } from '../../../../api/_model';
 import { NotificationService } from '../../notifications';
 import { KUBOCD_RELEASES_FETCH_POLLING_INTERVAL_MS } from '../../../constants';
 import { errorMessage } from '../../../models';
+import {
+  ReleasePhaseError,
+  ReleasePhaseReady,
+  ReleasePhaseSuspended,
+  ReleasePhaseWaitDependencies,
+  ReleasePhaseWaitHelmReleases,
+  ReleasePhaseWaitHelmRepo,
+  ReleasePhaseWaitOci,
+} from '../../../../model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class KuboCDReleases {
-  private services = new BehaviorSubject<Release[]>([]);
-  public services$ = this.services.asObservable();
+  private releases = new BehaviorSubject<Release[]>([]);
+  public releases$ = this.releases.asObservable();
 
   private instances: Release[] = [];
 
@@ -32,7 +51,7 @@ export class KuboCDReleases {
       .subscribe({
         next: allReleases => {
           const combined = allReleases.flat();
-          this.services.next(combined);
+          this.releases.next(combined);
           this.updateInstances(combined, false);
         },
         error: error =>
@@ -43,6 +62,7 @@ export class KuboCDReleases {
   startPollServicesChange(clusterId: string, namespaces: string[]): void {
     interval(KUBOCD_RELEASES_FETCH_POLLING_INTERVAL_MS)
       .pipe(
+        skip(1),
         takeUntilDestroyed(this.destroyRef),
         switchMap(() =>
           forkJoin(
@@ -72,11 +92,43 @@ export class KuboCDReleases {
 
     if (notify) {
       if (newInstances.length > 0) {
-        newInstances.forEach(s => this.notificationService.onSuccess(s.metadata.name!, 'was successfully deployed.'));
+        newInstances.forEach(s => {
+          const name = s.metadata.name;
+          const namespace = s.metadata.namespace;
+          const phase = s.status?.phase?.toUpperCase() ?? 'UNKNOWN';
+          switch (phase) {
+            case ReleasePhaseReady:
+              this.notificationService.onSuccess(`${name}/${namespace}`, 'was successfully deployed.');
+              break;
+            case ReleasePhaseError:
+              this.notificationService.onError(`${name}/${namespace}`, 'was failed to deploy.');
+              break;
+            case ReleasePhaseWaitOci:
+              this.notificationService.onInfo(`${name}/${namespace}`, 'is waiting for OCI.');
+              break;
+            case ReleasePhaseWaitHelmRepo:
+              this.notificationService.onInfo(`${name}/${namespace}`, 'is waiting for Helm repository.');
+              break;
+            case ReleasePhaseWaitHelmReleases:
+              this.notificationService.onInfo(`${name}/${namespace}`, 'is waiting for helm release deplyment.');
+              break;
+            case ReleasePhaseWaitDependencies:
+              this.notificationService.onInfo(`${name}/${namespace}`, 'is waiting for dependencies.');
+              break;
+            case ReleasePhaseSuspended:
+              this.notificationService.onWarning(`${name}/${namespace}`, 'is suspended.');
+              break;
+            case undefined:
+            default:
+              this.notificationService.onWarning(`${name}/${namespace}`, 'Unknown status phase.');
+          }
+        });
       }
 
       if (deletedInstances.length > 0) {
-        deletedInstances.forEach(s => this.notificationService.onWarning(s.metadata.name!, 'was removed !'));
+        deletedInstances.forEach(s =>
+          this.notificationService.onWarning(`${s.metadata.name}/${s.metadata.namespace}`, 'was removed !')
+        );
       }
     }
 
@@ -104,7 +156,6 @@ export class KuboCDReleases {
         updatedInstancesList[existingMenuIndex] = newInstance;
       }
     });
-
     oldInstances.forEach(oldInstance => {
       if (
         !newInstances.some(

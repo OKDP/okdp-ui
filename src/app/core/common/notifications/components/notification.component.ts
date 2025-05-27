@@ -1,10 +1,14 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { filter } from 'rxjs/operators';
+import { filter, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { select, Store } from '@ngrx/store';
 import { RightSidebarToggle, RightSidebarService } from '../../../../shared/services';
 import { Notification, NotificationType } from '../../../models';
 import { NotificationService } from '../services/notification.service';
+import { KuboCDReleases } from '../../kubocd-releases';
+import { ClusterService, getClusterId } from '../../clusters';
+import { AppState } from '../../../store';
 
 @Component({
   selector: 'app-notifications',
@@ -22,10 +26,24 @@ export class NotificationComponent implements OnInit {
   constructor(
     private notificationService: NotificationService,
     private rightSidebarService: RightSidebarService,
+    private kubocdReleases: KuboCDReleases,
+    private clusterService: ClusterService,
+    private store: Store<AppState>,
     private destroyRef: DestroyRef
   ) {}
 
   ngOnInit() {
+    this.store
+      .pipe(
+        select(getClusterId),
+        takeUntilDestroyed(this.destroyRef),
+        filter((clusterId): clusterId is string => Boolean(clusterId)),
+        tap(clusterId => {
+          this.kubocdReleases.startPollServicesChange(clusterId, ['default', 'kubocd', 'kubocd-system']); // NS
+        })
+      )
+      .subscribe();
+
     this.rightSidebarService.toggleSideBar$
       .pipe(
         filter(event => event.name === RightSidebarToggle.NOTIFICATION),

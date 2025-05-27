@@ -1,12 +1,12 @@
 import { Release } from '../api/_model';
 
-const ReleasePhaseReady = 'READY';
-const ReleasePhaseError = 'ERROR';
-const ReleasePhaseWaitOci = 'WAIT_OCI';
-const ReleasePhaseWaitHelmRepo = 'WAIT_REPO';
-const ReleasePhaseWaitHelmReleases = 'WAIT_HREL';
-const ReleasePhaseWaitDependencies = 'WAIT_DEPS';
-const ReleasePhaseSuspended = 'SUSPENDED';
+export const ReleasePhaseReady = 'READY';
+export const ReleasePhaseError = 'ERROR';
+export const ReleasePhaseWaitOci = 'WAIT_OCI';
+export const ReleasePhaseWaitHelmRepo = 'WAIT_REPO';
+export const ReleasePhaseWaitHelmReleases = 'WAIT_HREL';
+export const ReleasePhaseWaitDependencies = 'WAIT_DEPS';
+export const ReleasePhaseSuspended = 'SUSPENDED';
 
 export class ReleaseInstance {
   constructor(
