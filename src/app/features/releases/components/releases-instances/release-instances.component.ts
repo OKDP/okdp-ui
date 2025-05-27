@@ -62,21 +62,16 @@ export class ReleaseInstancesComponent implements OnInit {
       .pipe(
         select(getClusterId),
         takeUntilDestroyed(this.destroyRef),
-        filter(clusterId => !!clusterId),
-        switchMap(clusterId =>
-          this.clusterService.listNamespaces(clusterId!).pipe(
-            tap(namespaces => {
-              this.kubocdReleases.loadKuboCDReleases(clusterId!, namespaces);
-              this.kubocdReleases.startPollServicesChange(clusterId!, namespaces);
-              this.isLoaded = false;
-            }),
-            catchError(err => {
-              this.notificationService.onError('Namespaces', `Failed to load namespaces: ${err.message || err}`);
-              this.isLoaded = false;
-              return EMPTY;
-            })
-          )
-        )
+        filter((clusterId): clusterId is string => Boolean(clusterId)),
+        tap(clusterId => {
+          this.kubocdReleases.loadKuboCDReleases(clusterId, ['default', 'kubocd', 'kubocd-system']); // NS
+          this.isLoaded = false;
+        }),
+        catchError(err => {
+          this.notificationService.onError('Namespaces', `Failed to load namespaces: ${err.message || err}`);
+          this.isLoaded = false;
+          return EMPTY;
+        })
       )
       .subscribe();
 
@@ -93,10 +88,10 @@ export class ReleaseInstancesComponent implements OnInit {
         this.toInstances();
       });
 
-    this.kubocdReleases.services$.subscribe(services => {
-      this.releases = services;
+    this.kubocdReleases.releases$.subscribe(releases => {
+      this.releases = releases;
       this.toInstances();
-      this.isLoaded = services.length > 0;
+      this.isLoaded = releases.length > 0;
     });
 
     this.searchFilterService.globalSearchFilter$.subscribe({
