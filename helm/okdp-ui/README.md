@@ -1,6 +1,6 @@
 # okdp-ui
 
-![Version: 0.2.0-snapshot](https://img.shields.io/badge/Version-0.2.0--snapshot-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.0-snapshot](https://img.shields.io/badge/AppVersion-0.2.0--snapshot-informational?style=flat-square)
+![Version: 0.2.0-snapshot](https://img.shields.io/badge/Version-0.2.0--snapshot-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.0](https://img.shields.io/badge/AppVersion-0.2.0-informational?style=flat-square)
 
 OKDP UI Helm chart
 
@@ -54,7 +54,7 @@ OKDP UI Helm chart
 | serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | If not set and create is true, a name is generated using the fullname template |
 | tolerations | list | `[]` | Tolerations for pod scheduling. |
-| ui | object | `{"auth":{"oauth2":{"clientId":"","issuer":"http://oidc.local/realms/master","redirectUri":"http://chart-example.local/index.html","requireHttps":false,"responseType":"code","scope":"openid profile email offline_access roles","showDebugInformation":true,"silentRefreshRedirectUri":"http://chart-example.local/silent-refresh.html"},"provider":"oauth2"},"catalogs":{"kad":["all"],"services":["all"]},"okdpApi":{"apiUrl":"http://okdp-api.local/api/v1","swaggerUrl":"http://okdp-api-swagger.local"}}` | okdp-ui configuration. For more properties check: https://github.com/OKDP/okdp-ui/blob/main/public/config/app.config.json |
+| ui | object | `{"auth":{"oauth2":{"clientId":"","issuer":"http://oidc.local/realms/master","redirectUri":"http://chart-example.local/index.html","requireHttps":false,"responseType":"code","scope":"openid profile email offline_access roles","showDebugInformation":true,"silentRefreshRedirectUri":"http://chart-example.local/silent-refresh.html"},"provider":"oauth2"},"catalogs":{"kad":["all"],"services":["all"]},"okdpApi":{"apiUrl":"http://okdp-api.local/api/v1","swaggerUrl":"http://okdp-api-swagger.local"},"submission":{"mode":"git"}}` | okdp-ui configuration. For more properties check: https://github.com/OKDP/okdp-ui/blob/main/public/config/app.config.json |
 | ui.auth.oauth2 | object | `{"clientId":"","issuer":"http://oidc.local/realms/master","redirectUri":"http://chart-example.local/index.html","requireHttps":false,"responseType":"code","scope":"openid profile email offline_access roles","showDebugInformation":true,"silentRefreshRedirectUri":"http://chart-example.local/silent-refresh.html"}` | For the list of the available options, check: https://manfredsteyer.github.io/angular-oauth2-oidc/docs/classes/AuthConfig.html |
 | ui.auth.oauth2.clientId | string | `""` | Specify your OIDC client Id. The clientId should be public. |
 | ui.auth.oauth2.issuer | string | `"http://oidc.local/realms/master"` | Specify the oidc endpoint. |
@@ -67,6 +67,7 @@ OKDP UI Helm chart
 | ui.catalogs.services | list | `["all"]` | kad catalog services to dispaly in the sidebar menu ui. |
 | ui.okdpApi.apiUrl | string | `"http://okdp-api.local/api/v1"` | okdp-api rest endpoint. |
 | ui.okdpApi.swaggerUrl | string | `"http://okdp-api-swagger.local"` | okdp-api swagger endpoint. |
+| ui.submission.mode | string | `"git"` | Set to 'git' to push KuboCD releases to Git, or 'kubernetes' to apply directly to the cluster. |
 | volumeMounts | list | `[]` | Additional volumeMounts on the output Deployment definition. |
 | volumes | list | `[]` | Additional volumes on the output Deployment definition. |
 
