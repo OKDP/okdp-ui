@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "okdp-ui.fullname" . }}-nginx-config
+  labels:
+    {{- include "okdp-ui.labels" . | nindent 4 }}
+data:
+  default.conf: |
+    server {
+        listen 4200;
+        listen [::]:4200;
+        server_name localhost;
+        
+        root /usr/share/nginx/html;
+        index index.html;
+        
+        # Gestion des assets statiques
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+            try_files $uri =404;
+        }
+        
+        # Configuration pour SPA - toutes les routes pointent vers index.html
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+        
+        # Health check endpoint
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+    } 
