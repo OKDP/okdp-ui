@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.2.0](https://github.com/OKDP/okdp-ui/compare/v0.1.0...v0.2.0) (2025-06-29)
+
+
+### Features
+
+* **config:** add support for 'git' and 'kubernetes' submission modes ([7784f26](https://github.com/OKDP/okdp-ui/commit/7784f2687872cb9c149c5650d8bf669bf7c7d8b3))
+
+
+### Bug Fixes
+
+* resolve SPA routing 404 errors on page refresh by adding nginx try_files configuration ([7890034](https://github.com/OKDP/okdp-ui/commit/7890034a693d4b5532705bd6026c2141f24d7bb2))
+
+
+### Refactoring
+
+* KuboCD integration - deploy and list KuboCD releases ([173a6ac](https://github.com/OKDP/okdp-ui/commit/173a6aca77955ee35ecf27357a179147570a61b0))
+* kubocd integration - remove catalog from kad ([a2a244f](https://github.com/OKDP/okdp-ui/commit/a2a244fcb40ee97accf8b4cdf6c0790fa727949c))
+
 ## 0.1.0 (2025-04-03)
 
 
