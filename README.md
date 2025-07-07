@@ -38,3 +38,21 @@ helm upgrade --install okdp-ui \
      --create-namespace helm/okdp-ui \
      --values helm/okdp-ui/values.keycloak.yaml
 ```
+
+# Versioning
+
+1. [Update the file package.json](./package.json)
+
+Set new version and/or new helmVersion:
+
+```
+{
+  "name": "okdp-ui",
+  "version": "0.3.0",
+  "helmVersion": "0.3.0",
+```
+
+2. Run the following command:
+
+npm run setversion
+
