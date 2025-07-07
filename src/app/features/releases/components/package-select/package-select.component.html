@@ -1,0 +1,58 @@
+<div class="container-fluid mx-0 px-0 pt-4">
+  <ul *ngIf="!isLoaded" class="d-flex justify-content-center mt-5">
+    <li>
+      <span class="menu-icon ml-4">
+        <app-loading />
+      </span>
+    </li>
+  </ul>
+  <div *ngIf="isLoaded" class="row row-cols-1 row-cols-md-4 g-2">
+    <!-- Services catalog -->
+    <div *ngFor="let item of filtredCatalogItems" class="col">
+      <div class="card h-100 rounded-3 shadow-sm mx-auto mx-1">
+        <div class="card-header d-flex align-items-center p-2">
+          <ul class="nav w-100 d-flex flex-row justify-content-start align-items-center gap-1">
+            <li class="nav-item d-flex align-items-center">
+              <span class="card-title">{{ item.name }}</span>
+              <a class="nav-link px-1" target="_blank" href="{{ item.home }}">
+                <i class="material-symbols-outlined text-primary">info</i>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-body text-primary d-flex flex-column">
+          <div class="position-relative">
+            <img alt="Service" class="me-1 card-icon float-start" src="images/{{ item?.icon }}" />
+            <p class="card-text ms-0 mt-0">{{ item.description }}</p>
+          </div>
+        </div>
+
+        <div class="card-footer border-0">
+          <ul class="nav d-flex flex-row justify-content-end align-items-center gap-1">
+            <li class="nav-item">
+              <button type="button" class="nav-link nav-item-primary d-flex align-items-center px-2 py-1 w-auto">
+                <i class="material-symbols-outlined text-primary okdp-text-outlined border-0">favorite</i>
+              </button>
+            </li>
+            <li class="nav-item">
+              <app-kebab-menu
+                [options]="[
+                   {key: 'na', value: 'Show details', icon: 'visibility'},
+                   {key: 'na', value: 'Release notes', icon: 'note'}]" />
+            </li>
+            <li *ngIf="item.catalogName?.toLowerCase() !== 'system'" class="nav-item">
+              <button
+                type="button"
+                class="nav-link nav-item-primary d-flex align-items-center px-2 py-1 w-auto"
+                (click)="onSelectService(item)">
+                <i class="material-symbols-outlined text-primary okdp-text-outlined border-0">rocket_launch</i>
+                <span class="text-primary ps-1 okdp-text-outlined">Select</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

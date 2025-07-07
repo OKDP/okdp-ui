@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, Input, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormArray,
@@ -37,12 +37,14 @@ import { K8sReleaseService } from '../../services/k8s-release.service';
 import { AppState } from '../../../../core/store';
 import { getClusterId } from '../../../../core/common/clusters';
 import { Release, ServerResponse } from '../../../../api/_model';
-import { CatalogItem } from '../../../catalogs/models/catalog-item.model';
+import { CatalogItem } from '../../../../model/catalog.model';
 import { AppConfigService } from '../../../../core/config';
 import { LoadingComponent } from '../../../../shared/components/loading';
 import { NotificationService } from '../../../../core/common/notifications';
 import { CatalogService } from '../../../../core/common/catalogs';
 import { KUBERNETES_OBJECT_PATTERN } from '../../../../core/constants';
+import { getProjectName } from '../../../../core/common/projects';
+import { StepperService } from '../../../../shared/components/stepper';
 
 @Component({
   selector: 'app-release-deploy',
@@ -58,26 +60,31 @@ import { KUBERNETES_OBJECT_PATTERN } from '../../../../core/constants';
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
-    LoadingComponent,
     RouterModule,
+    LoadingComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './release-deploy.component.html',
   styleUrls: ['./release-deploy.component.scss'],
 })
 export class ReleaseDeployComponent implements OnInit {
+  @Input() onNext!: () => void;
+
   catalogItem: CatalogItem = {
     catalogId: '',
     name: 'Loading ...',
     icon: '',
     home: '',
   };
+
+  isLoaded = false;
+  isSubmitting: boolean = false;
+
   clusterId: string = '';
 
+  currentProjectName: string;
   readonly userInfo: UserInfo;
-  isLoaded = false;
   submissionMode: string;
-  isSubmitting: boolean = false;
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -114,6 +121,7 @@ export class ReleaseDeployComponent implements OnInit {
     private rightSidebarService: RightSidebarService,
     private appConfigService: AppConfigService,
     private notificationService: NotificationService,
+    private stepperService: StepperService,
     private store: Store<AppState>,
     private cdr: ChangeDetectorRef,
     private router: Router,
@@ -150,6 +158,12 @@ export class ReleaseDeployComponent implements OnInit {
         createNamespace: [this.releasePayload.spec.createNamespace],
         parameters: this.fb.array([]),
       }),
+    });
+
+    this.store.pipe(select(getProjectName), takeUntilDestroyed(this.destroyRef)).subscribe(projectName => {
+      if (projectName) {
+        this.currentProjectName = projectName;
+      }
     });
 
     this.store.pipe(select(getClusterId)).subscribe(clusterId => {
@@ -192,8 +206,9 @@ export class ReleaseDeployComponent implements OnInit {
     let deflated = deflateParameters(this.parameters.value);
     this.releasePayload.spec.parameters = deflated;
 
-    const namespace = this.releasePayload.metadata.namespace!;
+    const namespace = this.currentProjectName;
     const name = this.releasePayload.metadata.name;
+    this.releasePayload.spec.targetNamespace = namespace;
 
     const handlers = {
       git: () => this.gitReleaseService.post(this.clusterId, 'flux-system', 'releases-system', this.releasePayload),
@@ -228,6 +243,7 @@ export class ReleaseDeployComponent implements OnInit {
 
   get isValid() {
     this.logInvalidControls(this.releaseForm);
+    this.stepperService.setStep(this.releaseForm.valid ? 2 : 1);
     return this.releaseForm.valid;
   }
 
