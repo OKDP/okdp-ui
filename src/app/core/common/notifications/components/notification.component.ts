@@ -1,14 +1,15 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { filter, tap } from 'rxjs';
+import { combineLatest, filter, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { RightSidebarToggle, RightSidebarService } from '../../../../shared/services';
 import { Notification, NotificationType } from '../../../models';
 import { NotificationService } from '../services/notification.service';
 import { KuboCDReleases } from '../../kubocd-releases';
-import { ClusterService, getClusterId } from '../../clusters';
+import { getClusterId } from '../../clusters';
 import { AppState } from '../../../store';
+import { getProjectName } from '../../projects';
 
 @Component({
   selector: 'app-notifications',
@@ -27,22 +28,24 @@ export class NotificationComponent implements OnInit {
     private notificationService: NotificationService,
     private rightSidebarService: RightSidebarService,
     private kubocdReleases: KuboCDReleases,
-    private clusterService: ClusterService,
     private store: Store<AppState>,
     private destroyRef: DestroyRef
   ) {}
 
   ngOnInit() {
-    this.store
+    combineLatest([this.store.select(getClusterId), this.store.select(getProjectName)])
       .pipe(
-        select(getClusterId),
-        takeUntilDestroyed(this.destroyRef),
-        filter((clusterId): clusterId is string => Boolean(clusterId)),
-        tap(clusterId => {
-          this.kubocdReleases.startPollServicesChange(clusterId, ['default', 'kubocd', 'kubocd-system']); // NS
-        })
+        filter(([clusterId, projectName]) => !!clusterId && !!projectName),
+        tap(() => {
+          this.kubocdReleases.clear();
+          this.notificationService.clear();
+        }),
+        switchMap(([clusterId, projectName]) => this.kubocdReleases.startPollServicesChange(clusterId, [projectName])),
+        takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe();
+      .subscribe(releases => {
+        this.kubocdReleases.updateInstances(releases, true);
+      });
 
     this.rightSidebarService.toggleSideBar$
       .pipe(
@@ -57,7 +60,11 @@ export class NotificationComponent implements OnInit {
   }
 
   onClose(service: string) {
-    this.notificationService.removeMessage(service);
+    this.notificationService.remove(service);
+  }
+
+  onClear() {
+    this.notificationService.clear();
   }
 
   getClass(type: NotificationType): { msg: string; icon: string } {
