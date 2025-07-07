@@ -45,8 +45,13 @@ export class NotificationService {
     }
   }
 
-  removeMessage(service: string): void {
+  remove(service: string): void {
     this.notifications.delete(service);
     this.messagesSubject.next([...this.notifications.values()]);
+  }
+
+  clear(): void {
+    this.notifications.clear();
+    this.messagesSubject.next([]);
   }
 }
