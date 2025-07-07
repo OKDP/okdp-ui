@@ -1,0 +1,24 @@
+<app-content-toolbar [viewMode]="viewMode">
+  <div actions class="d-flex justify-content-center align-items-center me-4">
+    <button
+      type="button"
+      class="btn text-okdp-primary min-w min-w-sm min-w-md min-w-lg d-flex align-items-center"
+      (click)="add()">
+      <i class="material-symbols-outlined text-primary okdp-text-outlined border-0 icon-2x">add</i>
+      <span class="text-primary ps-3 pe-2 okdp-text-outlined text-center w-100">New Service</span>
+    </button>
+  </div>
+
+  <div actions class="d-flex justify-content-center align-items-center me-4">
+    <button
+      type="button"
+      class="btn text-danger min-w min-w-sm min-w-md min-w-lg d-flex align-items-center"
+      [disabled]="deletedItems.length === 0"
+      (click)="deleteAll()">
+      <i class="material-symbols-outlined text-primary okdp-text-outlined border-0 icon-2x">delete</i>
+      <span class="text-primary ps-3 pe-2 okdp-text-outlined text-center w-100">Delete All</span>
+    </button>
+  </div>
+</app-content-toolbar>
+
+<router-outlet />
