@@ -1,0 +1,35 @@
+<div class="content-toolbar">
+  <ul class="navbar-nav d-flex flex-row align-items-center w-100 gap-2">
+    <li class="nav-item flex-grow-1">
+      <app-search-filter
+        noItemsLabel="No search result."
+        [found]="filtredItems.length > 0"
+        (searchChanged)="onSearchChanged($event)" />
+    </li>
+
+    <li class="nav-item d-flex gap-2 mx-auto">
+      <ng-content select="[actions]" />
+    </li>
+
+    <li *ngIf="viewModes.includes('table')" class="nav-item">
+      <i
+        class="material-symbols-outlined text-okdp-primary cursor-pointer icon-2x"
+        role="button"
+        aria-label="Table view"
+        [class.opacity-50]="viewMode === 'table'"
+        (click)="switchView('table')">
+        lists
+      </i>
+    </li>
+    <li *ngIf="viewModes.includes('card')" class="nav-item px-3">
+      <i
+        class="material-symbols-outlined text-okdp-primary cursor-pointer icon-2x"
+        role="button"
+        aria-label="Card view"
+        [class.opacity-50]="viewMode === 'card'"
+        (click)="switchView('card')">
+        grid_view
+      </i>
+    </li>
+  </ul>
+</div>
