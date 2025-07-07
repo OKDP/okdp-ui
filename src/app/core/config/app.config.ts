@@ -38,5 +38,6 @@ export interface DisplayCatalog {
 export interface KadCatalogInfo {
   displayName?: string;
   menuIcon?: string;
+  description?: string;
   getDisplayName(name: string): string;
 }

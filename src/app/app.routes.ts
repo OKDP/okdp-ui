@@ -5,9 +5,18 @@ import { ErrorComponent } from './shared/error';
 import { LoginComponent } from './core/common/login';
 import { AuthGuard } from './core/guards';
 import { PageLayoutComponent } from './core/layout/page-layout';
-import { CATALOG_URI } from './core/constants';
-import { ReleaseInstancesComponent } from './features/releases';
-import { ReleaseDeployComponent } from './features/releases/components/release-deploy/release-deploy.component';
+import { ReleaseListCardComponent, ReleaseDeployComponent } from './features/releases';
+import {
+  ProjectCreateOrUpdateComponent,
+  ProjectListCardComponent,
+  ProjectListTableComponent,
+} from './features/projects';
+import { ReleaseListTableComponent } from './features/releases/components/releases-list-table/release-list-table.component';
+import { PackageSelectComponent } from './features/releases/components/package-select/package-select.component';
+import { StepperComponent } from './shared/components/stepper';
+import { ProjectListComponent } from './features/projects/shared';
+import { ReleaseListComponent } from './features/releases/shared';
+
 export const APP_ROUTES: Routes = [
   { path: 'login', component: LoginComponent },
   {
@@ -15,22 +24,48 @@ export const APP_ROUTES: Routes = [
     component: PageLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: CATALOG_URI, pathMatch: 'full' }, //tmp redirection
+      { path: '', redirectTo: 'projects', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
       {
-        path: CATALOG_URI,
+        path: 'projects',
+        component: ProjectListComponent,
         children: [
-          { path: '', component: CatalogListPackagesComponent },
-          { path: ':catalog', component: CatalogListPackagesComponent },
+          { path: '', component: ProjectListTableComponent },
+          { path: 'table', component: ProjectListTableComponent },
+          { path: 'card', component: ProjectListCardComponent },
         ],
-        // loadChildren: () =>
-        //   import('./features/catalogs').then((m) => m.ROUTES_CATALOG),
+      },
+      {
+        path: 'projects',
+        children: [
+          { path: 'add', component: ProjectCreateOrUpdateComponent },
+          { path: ':projectName/update', component: ProjectCreateOrUpdateComponent },
+        ],
+      },
+      {
+        path: 'services/:service',
+        component: ReleaseListComponent,
+        children: [
+          { path: '', redirectTo: 'instances', pathMatch: 'full' },
+          { path: 'instances', component: ReleaseListTableComponent },
+          { path: 'instances/table', component: ReleaseListTableComponent },
+          { path: 'instances/card', component: ReleaseListCardComponent },
+        ],
       },
       {
         path: 'services',
+        component: StepperComponent,
         children: [
-          { path: ':service/instances', component: ReleaseInstancesComponent },
-          { path: ':service/deploy', component: ReleaseDeployComponent },
+          { path: ':catalog/select', component: PackageSelectComponent, data: { step: 'Select Service' } },
+          { path: ':service/deploy', component: ReleaseDeployComponent, data: { step: 'Configure', info: 'Deploy' } },
+        ],
+      },
+      {
+        path: 'catalogs',
+        children: [
+          { path: '', component: CatalogListPackagesComponent },
+          { path: ':catalog', component: CatalogListPackagesComponent },
+          { path: ':catalog/card', component: CatalogListPackagesComponent },
         ],
         // loadChildren: () =>
         //   import('./features/catalogs').then((m) => m.ROUTES_CATALOG),
