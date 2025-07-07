@@ -1,5 +1,5 @@
 export const environment = {
-  version: '0.2.0',
+  version: '0.3.0',
   production: true,
   logging: {
     enableConsole: true,

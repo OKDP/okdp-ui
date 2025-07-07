@@ -1,6 +1,7 @@
 {
   "name": "okdp-ui",
-  "version": "0.2.0",
+  "version": "0.3.0",
+  "helmVersion": "0.3.0",
   "scripts": {
     "ng": "ng",
     "generate-okdp-api-models": "npx sta -r --no-client -p src/app/api/okdp-api-swagger.json -o src/app/api/_model -n okdp-api.model.ts",
@@ -8,10 +9,12 @@
     "format": "prettier --write \"src/**/*.{ts,html,css}\"",
     "postinstall": "npm run clean-models && npm run generate-okdp-api-models && npm run setversion",
     "getVersion": "node -p \"require('./package.json').version\"",
+    "getHelmVersion": "node -p \"require('./package.json').helmVersion\"",
     "setAppVersion": "v=$(npm run -s getVersion); find src/environments -name 'environment*.ts' -exec sed -i \"s/version: .*/version: '$v',/\" {} +",
     "setDockerVersion": "v=$(npm run -s getVersion); sed -i \"s/ARG OKDP_UI_VERSION=.*/ARG OKDP_UI_VERSION=$v/\" ./Dockerfile",
-    "setHelmVersion": "v=$(npm run -s getVersion); sed -i \"s/tag:.*/tag: $v/\" helm/okdp-ui/values.yaml; sed -i \"s/appVersion:.*/appVersion: \\\"$v\\\"/\" helm/okdp-ui/Chart.yaml",
-    "setversion": "npm run setAppVersion && npm run setDockerVersion && npm run setHelmVersion",
+    "setHelmAppVersion": "v=$(npm run -s getVersion); sed -i \"s/tag:.*/tag: $v/\" helm/okdp-ui/values.yaml; sed -i \"s/appVersion:.*/appVersion: \\\"$v\\\"/\" helm/okdp-ui/Chart.yaml",
+    "setHelmVersion": "v=$(npm run -s getHelmVersion); sed -i \"s/version:.*/version: \\\"$v\\\"/\" helm/okdp-ui/Chart.yaml",
+    "setversion": "npm run setAppVersion && npm run setDockerVersion && npm run setHelmAppVersion && npm run setHelmVersion",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

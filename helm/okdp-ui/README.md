@@ -28,7 +28,7 @@ OKDP UI Helm chart
 | fullnameOverride | string | `""` | Overrides the release name. |
 | image.pullPolicy | string | `"Always"` | Image pull policy. |
 | image.repository | string | `"quay.io/okdp/okdp-ui"` | Docker image registry. |
-| image.tag | string | `"0.2.0"` | Image tag. |
+| image.tag | string | `"0.3.0"` | Image tag. |
 | imagePullSecrets | list | `[]` | Secrets to be used for pulling images from private Docker registries. |
 | ingress.annotations | object | `{}` |  |
 | ingress.className | string | `""` | Specify the ingress class (Kubernetes >= 1.18). |
