@@ -38,7 +38,7 @@ export class ClusterComponent implements OnInit {
         error: error => {
           this.store.dispatch(
             loadClusterFailure({
-              error: `Failed to load kad instance: ${error.message}`,
+              error: `Failed to load cluster: ${error.message}`,
             })
           );
         },

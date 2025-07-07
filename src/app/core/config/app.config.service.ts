@@ -62,11 +62,13 @@ export class CatalogInfo implements KadCatalogInfo {
   name: string;
   displayName?: string;
   menuIcon?: string;
+  description?: string;
 
   constructor(name: string, kadCatalogsInfo: KadCatalogInfo) {
     this.name = name;
     this.displayName = kadCatalogsInfo.displayName;
     this.menuIcon = kadCatalogsInfo.menuIcon;
+    this.description = kadCatalogsInfo.description;
   }
 
   getDisplayName(): string {

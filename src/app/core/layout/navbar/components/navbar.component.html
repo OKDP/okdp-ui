@@ -62,21 +62,10 @@
     <ul class="navbar-nav d-flex flex-row w-100">
       <!-- kad instances -->
       <li class="nav-item">
-        <i class="material-symbols-outlined text-primary">deployed_code</i>
+        <i class="material-symbols-outlined text-primary icon-1_3x">deployed_code</i>
       </li>
       <li class="nav-item ps-2">
         <app-clusters />
-      </li>
-    </ul>
-  </div>
-
-  <div class="container-fluid">
-    <ul class="navbar-nav d-flex flex-row w-100 my-1 flex-grow-1">
-      <li class="nav-item flex-grow-1">
-        <app-search-filter
-          noItemsLabel="No search result."
-          [found]="filtredItems.length > 0"
-          (searchChanged)="onSearchChanged($event)" />
       </li>
     </ul>
   </div>

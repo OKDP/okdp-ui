@@ -3,6 +3,7 @@ export interface SidebarMenuItem {
   displayName: string;
   icon: string;
   badge?: SidebarMenuBadge;
+  description: string;
 }
 
 export interface SidebarMenuBadge {

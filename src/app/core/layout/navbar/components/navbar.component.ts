@@ -10,7 +10,6 @@ import { AboutComponent } from '../../../common/about/components/about.component
 import { ClusterComponent } from '../../../common/clusters/components/cluster.component';
 import { AppConfigService } from '../../../config';
 import { Notification, NotificationType } from '../../../models';
-import { SearchFilterComponent, SearchFilterService } from '../../../../shared/components/search-filter';
 
 @Component({
   selector: 'app-navbar',
@@ -21,7 +20,6 @@ import { SearchFilterComponent, SearchFilterService } from '../../../../shared/c
     UserProfileComponent,
     NotificationComponent,
     ClusterComponent,
-    SearchFilterComponent,
     AboutComponent,
     RouterOutlet,
     RouterLink,
@@ -34,14 +32,12 @@ import { SearchFilterComponent, SearchFilterService } from '../../../../shared/c
 export class NavbarComponent implements OnInit {
   swaggerUrl: string = '';
   notifications: Notification[] = [];
-  filtredItems: string[] = [];
 
   constructor(
     private rightSidebarService: RightSidebarService,
     private notificationService: NotificationService,
     private appConfigService: AppConfigService,
     private layoutService: LayoutService,
-    private searchFilterService: SearchFilterService,
     private destroyRef: DestroyRef
   ) {}
 
@@ -82,9 +78,5 @@ export class NavbarComponent implements OnInit {
 
   get isSidebarCollapsed() {
     return this.layoutService.isSidebarCollapsed();
-  }
-
-  onSearchChanged(search: string): void {
-    this.searchFilterService.searchChanged(search);
   }
 }

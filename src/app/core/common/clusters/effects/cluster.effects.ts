@@ -21,7 +21,7 @@ export class ClusterEffects {
           catchError(error =>
             of(
               loadClusterFailure({
-                error: `Failed to load Kad <instance: ${error.message}`,
+                error: `Failed to load cluster: ${error.message}`,
               })
             )
           )

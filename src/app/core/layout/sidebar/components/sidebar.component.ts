@@ -5,9 +5,8 @@ import { select, Store } from '@ngrx/store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { AppState } from '../../../store';
-import { getClusterId } from '../../../common/clusters';
 import { SidebarMenuItem } from '../model/sidebar-menu-item.model';
-import { TitleBarService } from '../../../../shared/components/title-bar';
+import { TitleBarService } from '../../../../shared/components/content-header-title';
 import { LoadingComponent } from '../../../../shared/components/loading';
 import { TitleCasePipe } from '../../../../shared/pipes';
 import { Catalog } from '../../../../api/_model';
@@ -17,6 +16,7 @@ import { SidebarService } from '../services/sidebar.service';
 import { AppConfigService } from '../../../config';
 import { CatalogService } from '../../../common/catalogs';
 import { LayoutService } from '../../../../shared/services';
+import { getProjectName } from '../../../common/projects';
 
 @Component({
   selector: 'app-sidebar',
@@ -29,6 +29,7 @@ import { LayoutService } from '../../../../shared/services';
 export class SidebarComponent implements OnInit {
   menus: SidebarMenuItem[];
   catalogs: SidebarMenuItem[];
+  currentProjectName: string = 'default';
   isLoaded = false;
 
   filterKadCatalogs: string[] = [];
@@ -46,17 +47,24 @@ export class SidebarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.titleBarService.setTitle('catalogs', 'Catalog', 'fa-solid fa-layer-group');
-    this.titleBarService.setTitle('home', 'Home', 'fa-solid fa-home');
+    this.titleBarService.setTitle('catalogs', 'Catalog', 'fa-solid fa-layer-group', 'Explore and manage your services');
+    this.titleBarService.setTitle('home', 'Home', 'fa-solid fa-home', 'Welcome screen with key info and navigation');
+    this.titleBarService.setTitle(
+      'projects',
+      'Projects',
+      'fa-solid fa-project-diagram',
+      'Create and manage your projects'
+    );
 
     this.filterKadCatalogs = this.appConfigService.catalogs().kad;
     this.filterServicesCatalogs = this.appConfigService.catalogs().services;
+    this.isLoaded = false;
+    this.getCatalogs();
+    this.isLoaded = true;
 
-    this.store.pipe(select(getClusterId), takeUntilDestroyed(this.destroyRef)).subscribe(clusterId => {
-      if (clusterId) {
-        this.isLoaded = false;
-        this.getCatalogs();
-        this.isLoaded = true;
+    this.store.pipe(select(getProjectName), takeUntilDestroyed(this.destroyRef)).subscribe(projectName => {
+      if (projectName) {
+        this.currentProjectName = projectName;
       }
     });
   }
@@ -69,14 +77,14 @@ export class SidebarComponent implements OnInit {
         next: (catalogs: Catalog[]) => {
           this.catalogs = catalogs
             .filter(c => this.filterServicesCatalogs.includes(c.id) || this.filterServicesCatalogs.includes('all'))
-            .map(c => this.toMenuCatalog(c.id))
-            .sort((a, b) => a.name.localeCompare(b.name));
+            .map(c => this.toMenuCatalog(c.id));
 
           this.catalogs.forEach(c => {
             this.titleBarService.setTitle(
               c.name,
               this.appConfigService.kadCatalogsInfo(c.name).getDisplayName(),
-              c.icon
+              c.icon,
+              c.description
             );
           });
         },
@@ -91,6 +99,7 @@ export class SidebarComponent implements OnInit {
       name: catalogId,
       displayName: this.appConfigService.kadCatalogsInfo(catalogId).getDisplayName(),
       icon: this.appConfigService.kadCatalogsInfo(catalogId).menuIcon,
+      description: this.appConfigService.kadCatalogsInfo(catalogId).description,
     } as SidebarMenuItem;
   }
 

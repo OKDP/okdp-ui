@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TitleBarService } from '../../../shared/components/title-bar';
+import { TitleBarService } from '../../../shared/components/content-header-title';
 import { ErrorComponent } from '../../../shared/error';
 import { SidebarService } from '../../../core/layout/sidebar';
 

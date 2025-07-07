@@ -1,8 +1,23 @@
 <nav id="sidebar" class="sidebar" [ngClass]="{ toggled: isCollapsed }">
-  <div class="sidebar-layout">
-    <div class="sidebar-content">
+  <div class="sidebar-layout d-flex flex-column h-100">
+    <div class="sidebar-content flex-grow-1 pt-0">
       <!-- Principal services (Home, catalog, etc. )-->
       <div class="menu">
+        <ul>
+          <li class="menu-item active bg-okdp border rounded border-primary">
+            <a
+              class="d-flex align-items-center px-2"
+              routerLink="/projects"
+              ariaCurrentWhenActive="page"
+              (click)="onClick('projects')">
+              <span class="menu-icon"><i class="fa-solid fa-project-diagram"></i></span>
+              <span class="menu-title flex-grow-0">{{ currentProjectName }}</span>
+              <span class="menu-suffix ms-auto">
+                <i class="material-symbols-outlined text-okdp okdp-text-outlined border-1">favorite</i>
+              </span>
+            </a>
+          </li>
+        </ul>
         <ul class="d-flex justify-content-end position-relative">
           <li class="menu-item animation-none">
             <a class="px-2" (click)="onToggle()">
@@ -20,15 +35,8 @@
             </a>
           </li>
         </ul>
-        <ul *ngIf="filterKadCatalogs.length > 0">
-          <li class="menu-item" [ngClass]="{ active: activeMenu === 'catalogs' }">
-            <a class="px-2" routerLink="/catalogs" ariaCurrentWhenActive="page" (click)="onClick('catalogs')">
-              <span class="menu-icon"><i class="fa-solid fa-layer-group"></i></span>
-              <span class="menu-title">Catalog</span>
-            </a>
-          </li>
-        </ul>
       </div>
+
       <!-- OKDP services -->
       <div class="menu">
         <ul>
@@ -60,6 +68,22 @@
           </li>
         </ul>
       </div>
+    </div>
+    <!-- Catalog -->
+    <div class="menu mt-auto">
+      <ul>
+        <li class="menu-header">
+          <span>Explore</span>
+        </li>
+      </ul>
+      <ul *ngIf="filterKadCatalogs.length > 0">
+        <li class="menu-item" [ngClass]="{ active: activeMenu === 'catalogs' }">
+          <a class="px-2" routerLink="/catalogs" ariaCurrentWhenActive="page" (click)="onClick('catalogs')">
+            <span class="menu-icon"><i class="fa-solid fa-layer-group"></i></span>
+            <span class="menu-title">Catalog</span>
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>
