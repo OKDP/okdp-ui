@@ -65,6 +65,11 @@
                         "oneOf": [
                             {
                                 "required": [
+                                    "inCluster"
+                                ]
+                            },
+                            {
+                                "required": [
                                     "kubeconfig"
                                 ]
                             },
@@ -122,6 +127,9 @@
                                     "caCert"
                                 ],
                                 "type": "object"
+                            },
+                            "inCluster": {
+                                "type": "boolean"
                             },
                             "kubeconfig": {
                                 "properties": {
@@ -217,6 +225,79 @@
                     "name": "GitRepository"
                 }
             },
+            "Namespace": {
+                "properties": {
+                    "apiVersion": {
+                        "example": "v1",
+                        "type": "string"
+                    },
+                    "kind": {
+                        "enum": [
+                            "Namespace"
+                        ],
+                        "example": "Namespace",
+                        "type": "string"
+                    },
+                    "metadata": {
+                        "properties": {
+                            "annotations": {
+                                "additionalProperties": {
+                                    "type": "string"
+                                },
+                                "example": {
+                                    "owner": "team-a"
+                                },
+                                "type": "object"
+                            },
+                            "creationTimestamp": {
+                                "example": "2025-06-12T14:00:00Z",
+                                "format": "date-time",
+                                "readOnly": true,
+                                "type": "string"
+                            },
+                            "labels": {
+                                "additionalProperties": {
+                                    "type": "string"
+                                },
+                                "example": {
+                                    "environment": "dev"
+                                },
+                                "type": "object"
+                            },
+                            "name": {
+                                "example": "my-namespace",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ],
+                        "type": "object"
+                    },
+                    "status": {
+                        "properties": {
+                            "phase": {
+                                "enum": [
+                                    "Active",
+                                    "Terminating"
+                                ],
+                                "example": "Active",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "apiVersion",
+                    "kind",
+                    "metadata"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "Namespace"
+                }
+            },
             "Package": {
                 "properties": {
                     "name": {
@@ -244,6 +325,47 @@
                 "type": "object",
                 "xml": {
                     "name": "Package"
+                }
+            },
+            "Project": {
+                "properties": {
+                    "creationTimestamp": {
+                        "example": "2025-06-12T14:00:00Z",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "description": {
+                        "example": "my-project",
+                        "type": "string"
+                    },
+                    "displayName": {
+                        "example": "My Project 1",
+                        "type": "string"
+                    },
+                    "environment": {
+                        "example": "my-project1",
+                        "type": "string"
+                    },
+                    "name": {
+                        "example": "my-project1",
+                        "type": "string"
+                    },
+                    "status": {
+                        "enum": [
+                            "Active",
+                            "Terminating"
+                        ],
+                        "example": "Active",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "name"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "Project"
                 }
             },
             "Release": {
@@ -1315,7 +1437,7 @@
                             "application/json": {
                                 "schema": {
                                     "items": {
-                                        "type": "string"
+                                        "$ref": "#/components/schemas/Namespace"
                                     },
                                     "type": "array"
                                 }
@@ -1338,9 +1460,166 @@
                 "tags": [
                     "clusters"
                 ]
+            },
+            "post": {
+                "description": "Create k8s namespace\n",
+                "operationId": "CreateNamespace",
+                "parameters": [
+                    {
+                        "description": "Cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Namespace"
+                            }
+                        }
+                    },
+                    "description": "Namespace object to be created",
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ServerResponse"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "Namespace created successfully"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Create k8s namespace",
+                "tags": [
+                    "clusters"
+                ]
+            },
+            "put": {
+                "description": "Update k8s namespace\n",
+                "operationId": "UpdateNamespace",
+                "parameters": [
+                    {
+                        "description": "Cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Namespace"
+                            }
+                        }
+                    },
+                    "description": "Namespace object to be created",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Namespace updated successfully"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Update k8s namespace",
+                "tags": [
+                    "clusters"
+                ]
             }
         },
         "/clusters/{clusterId}/namespaces/{namespace}": {
+            "delete": {
+                "description": "Delete k8s namespace by name\n",
+                "operationId": "DeleteNamespace",
+                "parameters": [
+                    {
+                        "description": "Cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes namespace",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "k8s namespace deleted successfully"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Delete k8s namespace by name",
+                "tags": [
+                    "clusters"
+                ]
+            },
             "get": {
                 "description": "Get a kubernetes namespace by name\n",
                 "operationId": "GetNamespace",
@@ -1369,7 +1648,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "string"
+                                    "$ref": "#/components/schemas/Namespace"
                                 }
                             }
                         },
@@ -2251,6 +2530,267 @@
                 ]
             }
         },
+        "/clusters/{clusterId}/projects": {
+            "get": {
+                "description": "List all projects\n",
+                "operationId": "ListProjects",
+                "parameters": [
+                    {
+                        "description": "Cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/Project"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "List of the projects"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "List all projects",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "post": {
+                "description": "Create OKDP project\n",
+                "operationId": "CreateProject",
+                "parameters": [
+                    {
+                        "description": "Cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Project"
+                            }
+                        }
+                    },
+                    "description": "Project object to be created",
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ServerResponse"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "Project created successfully"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Create OKDP project",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "put": {
+                "description": "Update an existing OKDP project\n",
+                "operationId": "UpdateProject",
+                "parameters": [
+                    {
+                        "description": "Cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Project"
+                            }
+                        }
+                    },
+                    "description": "Project object to be created",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ServerResponse"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "Project updated successfully"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Update an existing OKDP project",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/clusters/{clusterId}/projects/{projectName}": {
+            "delete": {
+                "description": "Delete an existing OKDP project\n",
+                "operationId": "DeleteProject",
+                "parameters": [
+                    {
+                        "description": "Cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Project name",
+                        "in": "path",
+                        "name": "projectName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ServerResponse"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "Project deleted successfully"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Delete an existing OKDP project",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "get": {
+                "description": "Get a project by name\n",
+                "operationId": "GetProject",
+                "parameters": [
+                    {
+                        "description": "Cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Project name",
+                        "in": "path",
+                        "name": "projectName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Project"
+                                }
+                            }
+                        },
+                        "description": "Project information"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get a project by name",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
         "/users/myprofile": {
             "get": {
                 "description": "Get my user profile\n",
@@ -2330,11 +2870,11 @@
             "name": "clusters"
         },
         {
-            "description": "KuboCD Git Releases",
+            "description": "Projects",
             "externalDocs": {
                 "url": "https://github.com/okdp/okdp-server"
             },
-            "name": "repositories"
+            "name": "projects"
         },
         {
             "description": "KuboCD K8S Releases",
@@ -2344,11 +2884,11 @@
             "name": "k8s"
         },
         {
-            "description": "KuboCD K8S Releases",
+            "description": "KuboCD Git Releases",
             "externalDocs": {
                 "url": "https://github.com/okdp/okdp-server"
             },
-            "name": "admin"
+            "name": "repositories"
         }
     ]
 }

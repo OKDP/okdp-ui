@@ -39,6 +39,7 @@ export interface Cluster {
       clientCert: string;
       clientKey: string;
     };
+    inCluster?: boolean;
     kubeconfig?: {
       /** @format uri */
       apiServer: string;
@@ -64,6 +65,30 @@ export interface GitRepository {
   repoUrl: string;
 }
 
+export interface Namespace {
+  /** @example "v1" */
+  apiVersion: string;
+  /** @example "Namespace" */
+  kind: 'Namespace';
+  metadata: {
+    /** @example {"owner":"team-a"} */
+    annotations?: Record<string, string>;
+    /**
+     * @format date-time
+     * @example "2025-06-12T14:00:00Z"
+     */
+    creationTimestamp?: string;
+    /** @example {"environment":"dev"} */
+    labels?: Record<string, string>;
+    /** @example "my-namespace" */
+    name: string;
+  };
+  status?: {
+    /** @example "Active" */
+    phase?: 'Active' | 'Terminating';
+  };
+}
+
 export interface Package {
   /** The name of the package */
   name: string;
@@ -71,6 +96,24 @@ export interface Package {
   repoUrl: string;
   /** A list of versions for the package */
   versions: string[];
+}
+
+export interface Project {
+  /**
+   * @format date-time
+   * @example "2025-06-12T14:00:00Z"
+   */
+  creationTimestamp?: string;
+  /** @example "my-project" */
+  description?: string;
+  /** @example "My Project 1" */
+  displayName?: string;
+  /** @example "my-project1" */
+  environment?: string;
+  /** @example "my-project1" */
+  name: string;
+  /** @example "Active" */
+  status?: 'Active' | 'Terminating';
 }
 
 /** Release is the Schema for the releases API. */

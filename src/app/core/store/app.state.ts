@@ -3,6 +3,8 @@ import { OAuth2Effects, oauth2Reducer } from '../auth/oauth2';
 import { AuthState } from '../../model';
 import { ClusterState } from './cluster.state';
 import { clusterIdReducer, ClusterEffects } from '../common/clusters';
+import { ProjectState } from './project.state';
+import { ProjectEffects, projectNameReducer } from '../common/projects';
 
 // The framework 'angular-oauth2-oidc' already save the auth state in a state session
 // No need to save it again
@@ -12,16 +14,19 @@ import { clusterIdReducer, ClusterEffects } from '../common/clusters';
 export interface AppState {
   auth: AuthState;
   cluster: ClusterState;
+  project: ProjectState;
 }
 
 export interface AppStore {
   auth: ActionReducer<AuthState, Action>;
   cluster: ActionReducer<ClusterState, Action>;
+  project: ActionReducer<ProjectState, Action>;
 }
 
 export const APP_STORE: AppStore = {
   auth: oauth2Reducer,
   cluster: clusterIdReducer,
+  project: projectNameReducer,
 };
 
-export const APP_EFFECTS = [OAuth2Effects, ClusterEffects];
+export const APP_EFFECTS = [OAuth2Effects, ClusterEffects, ProjectEffects];

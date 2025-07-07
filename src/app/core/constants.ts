@@ -1,5 +1,5 @@
 //export const HOME_PAGE_URI = '/home';
-export const HOME_PAGE_URI = '/catalogs'; // Temporally point to catalogs
+export const HOME_PAGE_URI = '/projects';
 export const ERROR_PAGE_URI = '/error';
 export const CATALOG_URI = 'catalogs';
 export const KUBOCD_RELEASES_FETCH_POLLING_INTERVAL_MS = 30 * 1000;
