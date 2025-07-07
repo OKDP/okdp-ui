@@ -1,0 +1,30 @@
+<div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true" (click)="onCancel()">
+  <div class="modal-dialog" role="document" (click)="$event.stopPropagation()">
+    <div class="modal-content rounded-3 shadow-sm">
+      <div class="modal-header pt-0 d-flex align-items-center gap-2">
+        <i class="material-symbols-outlined text-danger fw-bold icon-1_3x">warning</i>
+        <p class="card-title mb-0 fw-bold">{{ title }}</p>
+      </div>
+      <div class="modal-body ms-4">
+        <p class="my-1 px-0">{{ message }}</p>
+        <ul *ngIf="items.length > 0" class="ps-3">
+          <li *ngFor="let item of items">{{ item }}</li>
+        </ul>
+      </div>
+      <div class="modal-footer justify-content-center gap-5 mb-4">
+        <button type="button" class="btn text-okdp-primary" (click)="onCancel()">
+          <i class="material-symbols-outlined text-primary okdp-text-outlined border-0">cancel</i>
+          <span class="text-primary ps-1 okdp-text-outlined">Cancel</span>
+        </button>
+        <button type="button" class="btn text-danger" (click)="onConfirm()">
+          <i
+            class="material-symbols-outlined text-primary okdp-text-outlined border-0"
+            >{{ btnConfirmLabel | lowercase }}</i
+          >
+          <span class="text-primary ps-1 okdp-text-outlined">{{ btnConfirmLabel }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show"></div>
