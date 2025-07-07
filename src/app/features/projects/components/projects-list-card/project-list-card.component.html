@@ -1,0 +1,104 @@
+<app-dialog
+  *ngIf="showDialog"
+  [title]="'Delete Projects'"
+  [items]="[selectedProject]"
+  [message]="'Are you sure you want to delete the following projects: '"
+  [btnConfirmLabel]="'Delete'"
+  (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelDelete()" />
+  
+<div class="d-flex flex-column flex-grow-1 h-100">
+  <ul *ngIf="!isLoaded" class="d-flex justify-content-center mt-5">
+    <li>
+      <span class="menu-icon ml-4">
+        <app-loading />
+      </span>
+    </li>
+  </ul>
+  <div *ngIf="isLoaded" class="row row-cols-1 row-cols-md-4 g-2">
+    <div *ngFor="let project of projects" class="col">
+      <div
+        class="card h-100 rounded-3 shadow-sm mx-auto mx-1"
+        [ngClass]="{ 'highlight-card': isCurrentProject(project) }">
+        <div class="card-header d-flex align-items-center p-2">
+          <ul class="nav w-100 d-flex flex-row justify-content-start align-items-center gap-1">
+            <li class="nav-item d-flex flex-row gap-1">
+              <span class="card-title">{{ project.name }}</span>
+              <i
+                class="material-symbols-outlined border-0 fw-bold"
+                [ngClass]="'text-' + project?.statusLabel"
+                >{{ project.statusIcon }}</i
+              >
+            </li>
+            <li class="nav-item ms-auto">
+              <span class="badge rounded-pill" [ngClass]="'bg-' + project?.statusLabel">
+                {{ project?.status | titlecase }}
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <div
+          class="card-body text-primary d-flex flex-column justify-content-center align-items-center position-relative">
+          <div class="w-100 d-flex justify-content-between position-absolute top-0 start-0 p-2">
+            <div class="d-flex flex-column">
+              <p class="mb-0 text-primary ps-1 okdp-text-outlined">
+                {{ project.displayName }}
+              </p>
+              <p *ngIf="project.environment" class="mb-0 text-primary ps-1 okdp-text-outlined">
+                {{ project.environment }}
+              </p>
+            </div>
+            <p class="mb-0 text-primary ps-1 okdp-text-outlined">
+              {{ project.creationTimestamp | date: 'yyyy-MM-dd HH:mm:ss' : '+0200' }}
+            </p>
+          </div>
+          <img alt="Project" class="card-icon-2x mt-3" src="images/okdp-notext.svg" />
+        </div>
+
+        <div class="card-footer border-0">
+          <ul class="nav d-flex flex-row justify-content-end align-items-center gap-2">
+            <li class="nav-item me-5">
+              <i
+                role="button"
+                class="material-symbols-outlined text-okdp-primary cursor-pointer"
+                matTooltip="Add to favorites"
+                (click)="onFavorite(project)">
+                favorite
+              </i>
+            </li>
+            <li class="nav-item">
+              <i
+                role="button"
+                class="material-symbols-outlined text-okdp-primary cursor-pointer"
+                matTooltip="Switch Project"
+                [class.invisible]="isCurrentProject(project)"
+                (click)="onSwitch(project)">
+                swap_horiz
+              </i>
+            </li>
+            <li class="nav-item">
+              <i
+                *ngIf="project.name !== 'default'"
+                role="button"
+                class="material-symbols-outlined text-okdp-primary cursor-pointer"
+                matTooltip="Delete"
+                (click)="onDelete(project)">
+                delete
+              </i>
+            </li>
+            <li class="nav-item me-3">
+              <i
+                role="button"
+                class="material-symbols-outlined text-okdp-primary cursor-pointer"
+                matTooltip="Edit"
+                (click)="onEdit(project)">
+                edit
+              </i>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
