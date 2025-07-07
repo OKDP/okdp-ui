@@ -18,7 +18,7 @@
   },
   "submission": {
     "_comment": "Set to 'git' to push KuboCD releases to Git, or 'kubernetes' to apply directly to the cluster.",
-    "mode": "git"
+    "mode": "kubernetes"
   },
   "catalogs": {
     "services": ["all"],
@@ -51,7 +51,20 @@
       "menuIcon": "fas fa-ellipsis-h"
     },
     "storage": {
-      "menuIcon": "fas fa-server"
+      "menuIcon": "fas fa-server",
+      "description": "Create and manage your storage"
+    },
+    "stack": {
+      "menuIcon": "fas fa-layer-group",
+      "description": "Create and manage your stack"
+    },
+    "infra": {
+      "menuIcon": "fas fa-network-wired",
+      "description": "Create and manage your infra"
+    },
+    "auth": {
+      "menuIcon": "fas fa-user-shield",
+      "description": "Create and manage your auth"
     },
     "system": {
       "menuIcon": "fas fa-cogs"
