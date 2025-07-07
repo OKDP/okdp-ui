@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { DestroyRef, Injectable } from '@angular/core';
 import {
-  BehaviorSubject,
   catchError,
   distinctUntilChanged,
   interval,
@@ -13,9 +12,7 @@ import {
   concat,
   EMPTY,
   timer,
-  tap,
 } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Release } from '../../../../api/_model';
 import { NotificationService } from '../../notifications';
 import { KUBOCD_RELEASES_FETCH_POLLING_INTERVAL_MS } from '../../../constants';
@@ -34,7 +31,6 @@ import {
   providedIn: 'root',
 })
 export class KuboCDReleases {
-
   private instances: Release[] = [];
 
   constructor(
