@@ -14,26 +14,23 @@ import { CatalogService } from '../../../../core/common/catalogs';
 import { Catalog } from '../../../../api/_model';
 import { CATALOG_URI } from '../../../../core/constants';
 import { toUri } from '../../../../shared/utils';
-import { CatalogItem } from '../../models/catalog-item.model';
+import { CatalogItem } from '../../../../model/catalog.model';
 import { AppConfigService } from '../../../../core/config';
 import { LoadingComponent } from '../../../../shared/components/loading';
-import { TitleBarService } from '../../../../shared/components/title-bar';
+import { TitleBarService } from '../../../../shared/components/content-header-title';
 import { SidebarService } from '../../../../core/layout/sidebar';
 import { NotificationService } from '../../../../core/common/notifications';
 import { errorMessage } from '../../../../core/models';
 import { KebabMenuComponent } from '../../../../shared/components/kebab-menu';
+import { ContentToolbarComponent } from '../../../../shared/components/content-toolbar';
 
 @Component({
   selector: 'app-catalog-list-packages',
   standalone: true,
   imports: [
     CommonModule,
-    LoadingComponent,
     RouterLink,
     RouterLinkActive,
-    SearchFilterComponent,
-    NavTabsComponent,
-    KebabMenuComponent,
     NgScrollbarModule,
     FormsModule,
     MatIconModule,
@@ -43,12 +40,18 @@ import { KebabMenuComponent } from '../../../../shared/components/kebab-menu';
     MatButtonModule,
     MatButtonModule,
     MatIconModule,
+    LoadingComponent,
+    NavTabsComponent,
+    KebabMenuComponent,
+    SearchFilterComponent,
+    ContentToolbarComponent,
   ],
   templateUrl: './catalog-list-packages.component.html',
   styleUrls: ['./catalog-list-packages.component.scss'],
   animations: [],
 })
 export class CatalogListPackagesComponent implements OnInit {
+  viewMode: 'table' | 'card' = 'card';
   catalogIds: string[] = [];
   navTabDisplayClass = '';
 
@@ -82,7 +85,7 @@ export class CatalogListPackagesComponent implements OnInit {
     this.sidebarService.setActiveMenu('catalogs');
     this.filterKadCatalogs = this.appConfigService.catalogs().kad;
 
-    this.getCatalogs();
+    this.loadCatalogs();
 
     this.route.paramMap.subscribe(params => {
       this.currentCatalogId = params.get('catalog') || '';
@@ -98,7 +101,7 @@ export class CatalogListPackagesComponent implements OnInit {
     });
   }
 
-  getCatalogs(): void {
+  loadCatalogs(): void {
     this.catalogService.catalogs$.subscribe({
       next: (catalogs: Catalog[]) => {
         this.catalogs = catalogs
