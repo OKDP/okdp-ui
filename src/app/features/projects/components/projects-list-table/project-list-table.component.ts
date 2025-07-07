@@ -6,8 +6,6 @@ import {
   OnInit,
   ChangeDetectorRef,
   AfterViewChecked,
-  Output,
-  EventEmitter,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -46,8 +44,8 @@ import { DialogComponent } from '../../../../shared/components/dialog';
 })
 export class ProjectListTableComponent
   extends AbstractProjectBaseComponent
-  implements OnInit, AfterViewInit, AfterViewChecked {
-
+  implements OnInit, AfterViewInit, AfterViewChecked
+{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 

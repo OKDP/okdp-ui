@@ -1,7 +1,7 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, combineLatest, EMPTY, filter, of, switchMap, tap } from 'rxjs';
+import { catchError, combineLatest, EMPTY, filter, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotificationService } from '../../../../../core/common/notifications';
 import { AppState } from '../../../../../core/store';
@@ -50,19 +50,14 @@ export abstract class AbstractReleaseBaseComponent {
   onInit(): void {
     this.isLoaded = false;
 
-    combineLatest([
-      this.store.pipe(select(getClusterId)),
-      this.store.pipe(select(getProjectName))
-    ])
+    combineLatest([this.store.pipe(select(getClusterId)), this.store.pipe(select(getProjectName))])
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         filter(([clusterId, projectName]) => Boolean(clusterId && projectName)),
         tap(() => {
           this.isLoaded = false;
         }),
-        switchMap(([clusterId, projectName]) =>
-          this.kubocdReleases.loadKuboCDReleases(clusterId, [projectName])
-        ),
+        switchMap(([clusterId, projectName]) => this.kubocdReleases.loadKuboCDReleases(clusterId, [projectName])),
         tap(releases => {
           this.releases = releases;
           if (releases.length > 0) {
@@ -77,7 +72,7 @@ export abstract class AbstractReleaseBaseComponent {
         })
       )
       .subscribe();
-     
+
     // combineLatest([this.store.pipe(select(getClusterId)), this.store.pipe(select(getProjectName))])
     //   .pipe(
     //     takeUntilDestroyed(this.destroyRef),
