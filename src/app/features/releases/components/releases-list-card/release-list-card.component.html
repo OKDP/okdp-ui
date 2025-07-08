@@ -1,3 +1,12 @@
+<app-dialog
+  *ngIf="showDialog"
+  [title]="'Delete Releases'"
+  [items]="[selectedRelease]"
+  [message]="'Are you sure you want to delete the following KuboCD releases: '"
+  [btnConfirmLabel]="'Delete'"
+  (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelDelete()" />
+  
 <div class="d-flex flex-column flex-grow-1 h-100">
   <ul *ngIf="!isLoaded" class="d-flex justify-content-center mt-5">
     <li>

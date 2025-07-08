@@ -7,6 +7,7 @@ import { KebabMenuComponent } from '../../../../shared/components/kebab-menu';
 import { ReleaseInstance } from '../../../../model';
 import { ContentToolbarComponent } from '../../../../shared/components/content-toolbar';
 import { AbstractReleaseBaseComponent } from '../../shared';
+import { DialogComponent } from '../../../../shared/components/dialog';
 
 @Component({
   selector: 'app-releases-list-card',
@@ -18,6 +19,7 @@ import { AbstractReleaseBaseComponent } from '../../shared';
     KebabMenuComponent,
     ContentToolbarComponent,
     TitleCasePipe,
+    DialogComponent,
   ],
   providers: [EndpointsFromUsagePipe],
   templateUrl: './release-list-card.component.html',
@@ -43,7 +45,7 @@ export class ReleaseListCardComponent extends AbstractReleaseBaseComponent imple
   override updateDataSource(instances: ReleaseInstance[]): void {}
 
   onDelete(instance: ReleaseInstance) {
-    super.delete(instance.metadata.name!);
+    super.onDeleteRelease(instance.metadata.name!);
   }
 
   onEdit(instance: ReleaseInstance) {

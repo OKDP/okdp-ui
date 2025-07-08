@@ -128,10 +128,6 @@ export abstract class AbstractProjectBaseComponent {
     return project.name === this.currentProjectName;
   }
 
-  protected goBack(): void {
-    this.router.navigate(['/projects']);
-  }
-
   protected onDeleteProject(projectName: string) {
     this.selectedProject = projectName;
     this.showDialog = true;
