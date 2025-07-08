@@ -13,6 +13,7 @@ import { KebabMenuComponent } from '../../../../shared/components/kebab-menu';
 import { ReleaseInstance } from '../../../../model';
 import { ContentToolbarComponent } from '../../../../shared/components/content-toolbar';
 import { AbstractReleaseBaseComponent } from '../../shared';
+import { DialogComponent } from '../../../../shared/components/dialog';
 
 @Component({
   selector: 'app-releases-list-card',
@@ -29,6 +30,7 @@ import { AbstractReleaseBaseComponent } from '../../shared';
     KebabMenuComponent,
     ContentToolbarComponent,
     TitleCasePipe,
+    DialogComponent,
   ],
   providers: [EndpointsFromUsagePipe],
   templateUrl: './release-list-table.component.html',
@@ -109,7 +111,7 @@ export class ReleaseListTableComponent
   }
 
   onDelete(row: any) {
-    super.delete(row.name);
+    super.onDeleteRelease(row.metadata.name);
   }
 
   onEdit(row: any) {

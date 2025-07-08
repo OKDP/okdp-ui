@@ -15,4 +15,8 @@ export class K8sReleaseService {
       data
     );
   }
+
+  delete(clusterId: string, namespace: string, releaseName: string): Observable<ServerResponse> {
+    return this.http.delete<ServerResponse>(`/clusters/${clusterId}/namespaces/${namespace}/releases/${releaseName}`);
+  }
 }
