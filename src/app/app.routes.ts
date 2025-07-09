@@ -72,6 +72,7 @@ export const APP_ROUTES: Routes = [
         path: 'catalogs',
         children: [
           { path: '', component: CatalogListPackagesComponent },
+          { path: 'card', component: CatalogListPackagesComponent },
           { path: ':catalog', component: CatalogListPackagesComponent },
           { path: ':catalog/card', component: CatalogListPackagesComponent },
         ],

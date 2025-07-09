@@ -70,15 +70,15 @@ export class ReleaseListTableComponent
     this.paginatorIntl.itemsPerPageLabel = 'Show:';
 
     this.dataSource.sortingDataAccessor = (item, property) => {
-    switch (property) {
-      case 'name':
-        return item.metadata.name;
-      case 'creationTimestamp':
-        return item.metadata.creationTimestamp;
-      case 'status':
-        return item.statusText;
-      default:
-        return (item as any)[property];
+      switch (property) {
+        case 'name':
+          return item.metadata.name;
+        case 'creationTimestamp':
+          return item.metadata.creationTimestamp;
+        case 'status':
+          return item.statusText;
+        default:
+          return (item as any)[property];
       }
     };
 

@@ -14,7 +14,6 @@ import { DialogComponent } from '../../../../../shared/components/dialog';
   styleUrls: ['./release-list.component.scss'],
 })
 export class ReleaseListComponent implements OnInit {
-  viewMode: 'table' | 'card' = 'table';
   filtredItems: string[] = [];
 
   private currentCatalogId: string = '';
