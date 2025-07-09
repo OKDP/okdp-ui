@@ -9,6 +9,10 @@ import { Release, ServerResponse } from '../../../api/_model';
 export class K8sReleaseService {
   constructor(private readonly http: HttpClient) {}
 
+  get(clusterId: string, namespace: string, releaseName: string): Observable<Release> {
+    return this.http.get<Release>(`/clusters/${clusterId}/namespaces/${namespace}/releases/${releaseName}`);
+  }
+
   post(clusterId: string, namespace: string, data: Release, dryRun: boolean = false): Observable<ServerResponse> {
     return this.http.post<ServerResponse>(
       `/clusters/${clusterId}/namespaces/${namespace}/releases${dryRun ? '?dryRun=true' : ''}`,
@@ -18,5 +22,9 @@ export class K8sReleaseService {
 
   delete(clusterId: string, namespace: string, releaseName: string): Observable<ServerResponse> {
     return this.http.delete<ServerResponse>(`/clusters/${clusterId}/namespaces/${namespace}/releases/${releaseName}`);
+  }
+
+  put(clusterId: string, namespace: string, data: Release): Observable<ServerResponse> {
+    return this.http.put<ServerResponse>(`/clusters/${clusterId}/namespaces/${namespace}/releases`, data);
   }
 }

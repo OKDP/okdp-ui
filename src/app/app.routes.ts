@@ -5,7 +5,7 @@ import { ErrorComponent } from './shared/error';
 import { LoginComponent } from './core/common/login';
 import { AuthGuard } from './core/guards';
 import { PageLayoutComponent } from './core/layout/page-layout';
-import { ReleaseListCardComponent, ReleaseDeployComponent } from './features/releases';
+import { ReleaseListCardComponent, ReleaseCreateUpdateComponent } from './features/releases';
 import {
   ProjectCreateOrUpdateComponent,
   ProjectListCardComponent,
@@ -53,11 +53,19 @@ export const APP_ROUTES: Routes = [
         ],
       },
       {
+        path: 'services/:service/instances/:serviceInstance/update',
+        component: ReleaseCreateUpdateComponent,
+      },
+      {
         path: 'services',
         component: StepperComponent,
         children: [
           { path: ':catalog/select', component: PackageSelectComponent, data: { step: 'Select Service' } },
-          { path: ':service/deploy', component: ReleaseDeployComponent, data: { step: 'Configure', info: 'Deploy' } },
+          {
+            path: ':service/create',
+            component: ReleaseCreateUpdateComponent,
+            data: { step: 'Configure', info: 'Deploy' },
+          },
         ],
       },
       {

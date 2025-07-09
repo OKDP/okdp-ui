@@ -29,6 +29,7 @@
                     formControlName="name"
                     aria-label="Enter name"
                     required
+                    [readonly]="!isCreate"
                     [ngClass]="{'form-field-required-underline': !isNameValid}" />
                   <small class="form-text text-muted">Enter a name for your KuboCD release.</small>
                 </div>
@@ -55,7 +56,7 @@
                 <div class="d-flex gap-2">
                   <button type="button" class="btn text-primary px-3 py-1" (click)="goBack()">Cancel</button>
                   <button type="submit" class="btn text-okdp-primary px-3 py-1" [disabled]="isSubmitting || !isValid">
-                    Deploy
+                    {{ isCreate ? 'Deploy' : 'Update' }}
                   </button>
                 </div>
               </div>
@@ -67,7 +68,7 @@
                 formGroupName="spec"
                 class="border-primary rounded-3 p-3 mt-3">
                 <legend class="float-none w-auto px-3">Parameters</legend>
-                <div formGroupName="parameters" class="row align-items-center justify-content-start gap-3 my-0">
+                <div formArrayName="parameters" class="row align-items-center justify-content-start gap-3 my-0">
                   <div class="col d-flex gap-3">
                     <div class="flex-fill">
                       <div class="form-group">

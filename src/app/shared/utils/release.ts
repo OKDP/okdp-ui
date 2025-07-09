@@ -1,3 +1,5 @@
+import { REGISTRY_REPO_URL_PATTERN } from '../../core/constants';
+
 export interface Parameter {
   name: string;
   value: any;
@@ -27,4 +29,20 @@ export function deflateParameters(params: Parameter[]): Record<string, any> {
   }
 
   return result;
+}
+
+/**
+ * Extracts the service name (the last path segment) from a registry URL.
+ *
+ * For example:
+ * - quay.io/kubocd/packages/cert-manager → "cert-manager"
+ * - quay.io/kubocd/packages/cert-manager:v1234 → "cert-manager"
+ * - https://quay.io/org/service:tag → "service"
+ *
+ * @param url - The registry URL string (with or without tag)
+ * @returns The service name, or null if no match is found
+ */
+export function extractService(url: string): string {
+  const match = url.match(REGISTRY_REPO_URL_PATTERN);
+  return match ? match[1] : '';
 }

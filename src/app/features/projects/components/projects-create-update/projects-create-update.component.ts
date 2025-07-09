@@ -20,7 +20,7 @@ import { getClusterId } from '../../../../core/common/clusters';
 import { errorMessage } from '../../../../core/models';
 
 @Component({
-  selector: 'app-project-update',
+  selector: 'app-project-create-update',
   standalone: true,
   imports: [
     CommonModule,
@@ -78,7 +78,7 @@ export class ProjectCreateOrUpdateComponent implements OnInit {
       if (clusterId) {
         this.clusterId = clusterId;
         if (this.projectName) {
-          this.loadProject(clusterId, this.projectName);
+          this.loadProjectForUpdate(clusterId, this.projectName);
         }
         this.isLoaded = true;
       }
@@ -139,7 +139,7 @@ export class ProjectCreateOrUpdateComponent implements OnInit {
     return !this.projectName?.trim();
   }
 
-  private loadProject(clusterId: string, projectName: string): void {
+  private loadProjectForUpdate(clusterId: string, projectName: string): void {
     this.projectService
       .get(clusterId, projectName)
       .pipe(takeUntilDestroyed(this.destroyRef))

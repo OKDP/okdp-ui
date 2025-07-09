@@ -8,6 +8,7 @@ import { ReleaseInstance } from '../../../../model';
 import { ContentToolbarComponent } from '../../../../shared/components/content-toolbar';
 import { AbstractReleaseBaseComponent } from '../../shared';
 import { DialogComponent } from '../../../../shared/components/dialog';
+import { extractService } from '../../../../shared/utils';
 
 @Component({
   selector: 'app-releases-list-card',
@@ -49,7 +50,7 @@ export class ReleaseListCardComponent extends AbstractReleaseBaseComponent imple
   }
 
   onEdit(instance: ReleaseInstance) {
-    super.edit(instance.metadata.name!);
+    super.edit(extractService(instance.spec.package.repository), instance.metadata.name!);
   }
 
   onFavorite(row: ReleaseInstance) {}
