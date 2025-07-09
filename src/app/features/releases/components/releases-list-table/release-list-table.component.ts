@@ -14,6 +14,7 @@ import { ReleaseInstance } from '../../../../model';
 import { ContentToolbarComponent } from '../../../../shared/components/content-toolbar';
 import { AbstractReleaseBaseComponent } from '../../shared';
 import { DialogComponent } from '../../../../shared/components/dialog';
+import { extractService } from '../../../../shared/utils';
 
 @Component({
   selector: 'app-releases-list-card',
@@ -68,6 +69,19 @@ export class ReleaseListTableComponent
 
     this.paginatorIntl.itemsPerPageLabel = 'Show:';
 
+    this.dataSource.sortingDataAccessor = (item, property) => {
+    switch (property) {
+      case 'name':
+        return item.metadata.name;
+      case 'creationTimestamp':
+        return item.metadata.creationTimestamp;
+      case 'status':
+        return item.statusText;
+      default:
+        return (item as any)[property];
+      }
+    };
+
     if (this.sort) {
       this.sort.active = 'name';
       this.sort.direction = 'asc';
@@ -115,7 +129,7 @@ export class ReleaseListTableComponent
   }
 
   onEdit(row: any) {
-    super.edit(row.name);
+    super.edit(extractService(row.spec.package.repository), row.metadata.name);
   }
 
   onFavorite(row: any) {}

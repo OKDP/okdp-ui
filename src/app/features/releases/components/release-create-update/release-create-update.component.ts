@@ -21,7 +21,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatButtonModule } from '@angular/material/button';
 import { select, Store } from '@ngrx/store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { firstValueFrom } from 'rxjs';
+import { combineLatest, filter, firstValueFrom, tap } from 'rxjs';
 import { AuthService } from '../../../../core/auth';
 import { errorMessage, UserInfo } from '../../../../core/models';
 import { RightSidebarService, RightSidebarToggle } from '../../../../shared/services';
@@ -31,6 +31,7 @@ import {
   toJsonSchemaProperties,
   JsonSchemaProperty,
   deflateParameters,
+  findValueDeep,
 } from '../../../../shared/utils';
 import { GitReleaseService } from '../../services/git-release.service';
 import { K8sReleaseService } from '../../services/k8s-release.service';
@@ -64,10 +65,10 @@ import { StepperService } from '../../../../shared/components/stepper';
     LoadingComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './release-deploy.component.html',
-  styleUrls: ['./release-deploy.component.scss'],
+  templateUrl: './release-create-update.component.html',
+  styleUrls: ['./release-create-update.component.scss'],
 })
-export class ReleaseDeployComponent implements OnInit {
+export class ReleaseCreateUpdateComponent implements OnInit {
   @Input() onNext!: () => void;
 
   catalogItem: CatalogItem = {
@@ -85,6 +86,7 @@ export class ReleaseDeployComponent implements OnInit {
   currentProjectName: string;
   readonly userInfo: UserInfo;
   submissionMode: string;
+  serviceInstance: string;
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -136,6 +138,7 @@ export class ReleaseDeployComponent implements OnInit {
     this.catalogItem.catalogId = this.route.snapshot.queryParamMap.get('catalog') as string;
     this.catalogItem.icon = this.appConfigService.kadServicesInfo(this.catalogItem.name).icon as string;
     this.catalogItem.home = this.appConfigService.kadServicesInfo(this.catalogItem.name).home as string;
+    this.serviceInstance = this.route.snapshot.paramMap.get('serviceInstance') as string;
 
     this.submissionMode = this.appConfigService.getSubmissionMode();
 
@@ -160,23 +163,26 @@ export class ReleaseDeployComponent implements OnInit {
       }),
     });
 
-    this.store.pipe(select(getProjectName), takeUntilDestroyed(this.destroyRef)).subscribe(projectName => {
-      if (projectName) {
-        this.currentProjectName = projectName;
-      }
-    });
-
-    this.store.pipe(select(getClusterId)).subscribe(clusterId => {
-      if (clusterId) {
-        this.isLoaded = false;
-        this.clusterId = clusterId;
-        this.fetchPackage(this.catalogItem.catalogId, this.catalogItem.name);
-      }
-    });
+    combineLatest([this.store.pipe(select(getProjectName)), this.store.pipe(select(getClusterId))])
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter(([projectName, clusterId]) => Boolean(projectName && clusterId)),
+        tap(([projectName, clusterId]) => {
+          this.currentProjectName = projectName;
+          this.clusterId = clusterId;
+          this.isLoaded = false;
+          this.fetchPackage(this.catalogItem.catalogId, this.catalogItem.name);
+        })
+      )
+      .subscribe();
 
     this.tag.valueChanges.subscribe(selectedVersion => {
       this.onVersionChange(selectedVersion);
     });
+  }
+
+  get isCreate(): boolean {
+    return !this.serviceInstance?.trim();
   }
 
   fetchPackage(catalogId: string, name: string): void {
@@ -211,11 +217,19 @@ export class ReleaseDeployComponent implements OnInit {
     this.releasePayload.spec.targetNamespace = namespace;
 
     const handlers = {
-      git: () => this.gitReleaseService.post(this.clusterId, 'flux-system', 'releases-system', this.releasePayload),
-      kubernetes: () => this.k8sReleaseService.post(this.clusterId, namespace, this.releasePayload, false),
+      git: {
+        create: () =>
+          this.gitReleaseService.post(this.clusterId, 'flux-system', 'releases-system', this.releasePayload),
+        update: () => this.gitReleaseService.put(this.clusterId, 'flux-system', 'releases-system', this.releasePayload),
+      },
+      kubernetes: {
+        create: () => this.k8sReleaseService.post(this.clusterId, namespace, this.releasePayload, false),
+        update: () => this.k8sReleaseService.put(this.clusterId, namespace, this.releasePayload),
+      },
     };
 
-    handlers[this.submissionMode]()
+    handlers[this.submissionMode]
+      [this.isCreate ? 'create' : 'update']()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (_: ServerResponse) => {
@@ -234,7 +248,7 @@ export class ReleaseDeployComponent implements OnInit {
 
   goBack(): void {
     this.isSubmitting = false;
-    this.router.navigate([`/catalogs/${this.catalogItem.catalogId}`]);
+    this.router.navigate([`/services/${this.catalogItem.catalogId}/instances`]);
   }
 
   onVersionChange(version: string): void {
@@ -349,7 +363,6 @@ export class ReleaseDeployComponent implements OnInit {
       }
 
       this.parameterProperties = toJsonSchemaProperties(parameters);
-
       const formGroups = this.parameterProperties.map(p => this.toFormGroupParameter(p));
 
       this.parameters.clear();
@@ -361,7 +374,9 @@ export class ReleaseDeployComponent implements OnInit {
         `Unable to fetch package ${packageName}:${tag} parameters from catalogId ${catalogId}, ${message}`
       );
     }
-
+    if (this.serviceInstance) {
+      this.loadReleaseForUpdate(this.clusterId, this.currentProjectName, this.serviceInstance);
+    }
     this.cdr.detectChanges();
   }
 
@@ -385,5 +400,61 @@ export class ReleaseDeployComponent implements OnInit {
         console.warn(`Invalid control: ${currentPath}`, control.errors);
       }
     });
+  }
+
+  private loadReleaseForUpdate(clusterId: string, projectName: string, releaseName: string) {
+    const handlers = {
+      git: () => this.gitReleaseService.get(clusterId, 'flux-system', 'releases-system', releaseName),
+      kubernetes: () => this.k8sReleaseService.get(clusterId, this.currentProjectName, releaseName),
+    };
+
+    handlers[this.submissionMode]()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (release: Release) => {
+          this.releasePayload = release;
+          this.populateForm();
+        },
+        error: error => {
+          this.notificationService.onError(
+            `${projectName}/${releaseName}`,
+            `Release was failed to load, ${errorMessage(error)}`
+          );
+        },
+      });
+  }
+
+  private populateForm(): void {
+    this.releaseForm.patchValue(
+      {
+        metadata: {
+          name: this.releasePayload.metadata.name,
+          namespace: this.releasePayload.metadata.namespace,
+        },
+        spec: {
+          package: {
+            repository: this.releasePayload.spec.package.repository,
+            tag: this.releasePayload.spec.package.tag,
+          },
+        },
+      },
+      { emitEvent: false }
+    );
+
+    const parameters = this.releasePayload.spec.parameters || {};
+    const updatedProperties = this.parameterProperties.map(prop => {
+      const value = findValueDeep(parameters, prop.name);
+      if (value !== undefined) {
+        return {
+          ...prop,
+          defaultValue: value,
+        };
+      }
+      return prop;
+    });
+    const formGroups = updatedProperties.map(p => this.toFormGroupParameter(p));
+    this.parameters.clear();
+    formGroups.forEach(fg => this.parameters.push(fg, { emitEvent: false }));
+    this.cdr.detectChanges();
   }
 }

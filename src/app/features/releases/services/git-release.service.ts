@@ -9,15 +9,34 @@ import { Release, ServerResponse } from '../../../api/_model';
 export class GitReleaseService {
   constructor(private readonly http: HttpClient) {}
 
-  post(clusterId: string, namespace: string, gitkustomization: string, data: Release): Observable<ServerResponse> {
+  get(clusterId: string, namespace: string, kustomizationName: string, releaseName: string): Observable<Release> {
+    return this.http.get<Release>(
+      `/clusters/${clusterId}/namespaces/${namespace}/gitkustomizations/${kustomizationName}/releases/${releaseName}`
+    );
+  }
+
+  post(clusterId: string, namespace: string, kustomizationName: string, data: Release): Observable<ServerResponse> {
     return this.http.post<ServerResponse>(
-      `/clusters/${clusterId}/namespaces/${namespace}/gitkustomizations/${gitkustomization}/releases`,
+      `/clusters/${clusterId}/namespaces/${namespace}/gitkustomizations/${kustomizationName}/releases`,
       data
     );
   }
 
-  delete(clusterId: string, namespace: string, gitkustomization: string, releaseName: string): Observable<ServerResponse> {
-    return this.http.delete<ServerResponse>(`/clusters/${clusterId}/namespaces/${namespace}/gitkustomizations/${gitkustomization}/releases/${releaseName}`);
+  delete(
+    clusterId: string,
+    namespace: string,
+    kustomizationName: string,
+    releaseName: string
+  ): Observable<ServerResponse> {
+    return this.http.delete<ServerResponse>(
+      `/clusters/${clusterId}/namespaces/${namespace}/gitkustomizations/${kustomizationName}/releases/${releaseName}`
+    );
   }
 
+  put(clusterId: string, namespace: string, kustomizationName: string, data: Release): Observable<ServerResponse> {
+    return this.http.put<ServerResponse>(
+      `/clusters/${clusterId}/namespaces/${namespace}/gitkustomizations/${kustomizationName}/releases`,
+      data
+    );
+  }
 }

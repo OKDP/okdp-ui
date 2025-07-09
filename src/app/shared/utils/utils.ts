@@ -363,3 +363,21 @@ export async function deepMerge(target: Record<string, any>, source: Record<stri
   }
   return Promise.resolve(target);
 }
+
+export function findValueDeep(obj: any, keyToFind: string, prefix = ''): any | undefined {
+  if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
+    for (const key of Object.keys(obj)) {
+      const fullKey = prefix ? `${prefix}.${key}` : key;
+
+      if (fullKey === keyToFind) {
+        return obj[key];
+      }
+
+      const value = findValueDeep(obj[key], keyToFind, fullKey);
+      if (value !== undefined) {
+        return value;
+      }
+    }
+  }
+  return undefined;
+}

@@ -94,7 +94,7 @@ export class PackageSelectComponent implements OnInit {
   }
 
   onSelectService(item: CatalogItem): void {
-    this.router.navigate([`/services/${item.name}/deploy`], {
+    this.router.navigate([`/services/${item.name}/create`], {
       queryParams: { catalog: item.catalogId },
     });
 

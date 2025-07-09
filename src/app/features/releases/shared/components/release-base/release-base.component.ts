@@ -5,7 +5,7 @@ import { catchError, combineLatest, EMPTY, filter, interval, map, of, switchMap,
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotificationService } from '../../../../../core/common/notifications';
 import { AppState } from '../../../../../core/store';
-import { Catalog, Release, ServerResponse } from '../../../../../api/_model';
+import { Catalog, Release } from '../../../../../api/_model';
 import { ReleaseInstance, STATUS_UNKNOWN, ToStatusView } from '../../../../../model';
 import { getClusterId } from '../../../../../core/common/clusters';
 import { getProjectName } from '../../../../../core/common/projects';
@@ -24,8 +24,8 @@ import { K8sReleaseService } from '../../../services/k8s-release.service';
 export abstract class AbstractReleaseBaseComponent {
   protected readonly kubocdReleases = inject(KuboCDReleases);
   protected readonly catalogService = inject(CatalogService);
-  protected readonly  gitReleaseService = inject(GitReleaseService);
-  protected readonly  k8sReleaseService = inject(K8sReleaseService);
+  protected readonly gitReleaseService = inject(GitReleaseService);
+  protected readonly k8sReleaseService = inject(K8sReleaseService);
   protected readonly searchFilterService = inject(SearchFilterService);
   protected readonly notificationService = inject(NotificationService);
   protected readonly titleBarService = inject(TitleBarService);
@@ -42,7 +42,7 @@ export abstract class AbstractReleaseBaseComponent {
   protected releases: Release[] = [];
   protected currentCatalog: Catalog = {} as Catalog;
   protected currentCatalogPackages: string[] = [];
-  
+
   currentProjectName: string;
   currentClusterId: string;
   submissionMode: string;
@@ -68,37 +68,37 @@ export abstract class AbstractReleaseBaseComponent {
       this.route.parent!.paramMap.pipe(
         map(params => params.get('service') || '-'),
         switchMap(catalogId => this.catalogService.listById(catalogId))
-      )
+      ),
     ])
-    .pipe(
-      takeUntilDestroyed(this.destroyRef),
-      filter(([clusterId, projectName, catalog]) => Boolean(clusterId && projectName && catalog)),
-      switchMap(([clusterId, projectName, catalog]) => {
-        this.currentClusterId = clusterId;
-        this.currentProjectName = projectName;
-        this.currentCatalog = catalog;
-        this.currentCatalogPackages = catalog.packages.map(pkg => `${catalog.repoUrl}/${pkg.name}`);
-        this.titleBarService.setCurrentMenu(catalog.id);
-        this.sidebarService.setActiveMenu(catalog.id);
-        this.isLoaded = false;
-    
-        return this.kubocdReleases.loadKuboCDReleases(clusterId, [projectName]);
-      }),
-      tap(releases => {
-        this.releases = releases;
-        this.instances = this.loadInstances();
-        this.updateDataSource(this.instances);
-        this.searchChanged(this.search);
-        this.isLoaded = true;
-      }),
-      catchError(err => {
-        this.notificationService.onError('Namespaces', `Failed to load namespaces: ${err.message || err}`);
-        this.isLoaded = true;
-        return EMPTY;
-      })
-    )
-    .subscribe();
-    
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter(([clusterId, projectName, catalog]) => Boolean(clusterId && projectName && catalog)),
+        switchMap(([clusterId, projectName, catalog]) => {
+          this.currentClusterId = clusterId;
+          this.currentProjectName = projectName;
+          this.currentCatalog = catalog;
+          this.currentCatalogPackages = catalog.packages.map(pkg => `${catalog.repoUrl}/${pkg.name}`);
+          this.titleBarService.setCurrentMenu(catalog.id);
+          this.sidebarService.setActiveMenu(catalog.id);
+          this.isLoaded = false;
+
+          return this.kubocdReleases.loadKuboCDReleases(clusterId, [projectName]);
+        }),
+        tap(releases => {
+          this.releases = releases;
+          this.instances = this.loadInstances();
+          this.updateDataSource(this.instances);
+          this.searchChanged(this.search);
+          this.isLoaded = true;
+        }),
+        catchError(err => {
+          this.notificationService.onError('Namespaces', `Failed to load namespaces: ${err.message || err}`);
+          this.isLoaded = true;
+          return EMPTY;
+        })
+      )
+      .subscribe();
+
     this.searchFilterService.globalSearchFilter$.subscribe({
       next: (search: string) => {
         this.searchChanged(search);
@@ -211,10 +211,9 @@ export abstract class AbstractReleaseBaseComponent {
       });
   }
 
-  edit(name: string) {}
-
-  add(): void {
-    this.router.navigate([`/services/${this.currentCatalog.id}/select`]);
+  protected edit(service: string, releaseName: string) {
+    this.router.navigate([`services/${service}/instances/${releaseName}/update`], {
+      queryParams: { catalog: this.currentCatalog.id },
+    });
   }
-
 }
