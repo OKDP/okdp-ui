@@ -13,7 +13,6 @@ import { DialogComponent } from '../../../../../shared/components/dialog';
   styleUrls: ['./project-list.component.scss'],
 })
 export class ProjectListComponent {
-  viewMode: 'table' | 'card' = 'table';
   deletedItems: any[] = [];
   filtredItems: string[] = [];
 

@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Component, DestroyRef, Input, OnInit } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { filter, Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SearchFilterComponent, SearchFilterService } from '../../search-filter';
 
 @Component({
@@ -10,27 +12,54 @@ import { SearchFilterComponent, SearchFilterService } from '../../search-filter'
   templateUrl: './content-toolbar.component.html',
   styleUrls: ['./content-toolbar.component.scss'],
 })
-export class ContentToolbarComponent {
-  @Input() viewMode: 'table' | 'card' = 'card';
+export class ContentToolbarComponent implements OnInit {
   @Input() viewModes: ('table' | 'card')[] = ['table', 'card'];
 
+  viewMode: 'table' | 'card' = 'table';
   filtredItems: string[] = [];
+
+  private readonly SESSION_KEY = 'content-toolbar-viewMode';
+
+  private routeSub!: Subscription;
 
   constructor(
     private searchFilterService: SearchFilterService,
-    private router: Router
+    private router: Router,
+    private destroyRef: DestroyRef
   ) {}
 
+  ngOnInit() {
+    this.loadViewMode();
+
+    this.router.events
+      .pipe(
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.loadViewMode();
+      });
+  }
+
   switchView(mode: 'table' | 'card') {
-    let path = this.router.url;
-
-    path = path.replace(/\/(table|card)$/, '');
-
     this.viewMode = mode;
-    this.router.navigate([`${path}/${mode}`]);
+    sessionStorage.setItem(this.SESSION_KEY, mode);
+
+    let path = this.router.url.replace(/\/(table|card)$/, '');
+    if (mode === 'card') {
+      path += '/card';
+    }
+
+    this.router.navigateByUrl(path);
   }
 
   onSearchChanged(search: string): void {
     this.searchFilterService.searchChanged(search);
+  }
+
+  private loadViewMode(): void {
+    const saved = sessionStorage.getItem(this.SESSION_KEY) as 'table' | 'card' | null;
+    this.viewMode = this.viewModes.includes(saved as any) ? (saved as any) : 'table';
+    this.switchView(this.viewMode);
   }
 }

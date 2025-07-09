@@ -51,7 +51,6 @@ import { ContentToolbarComponent } from '../../../../shared/components/content-t
   animations: [],
 })
 export class CatalogListPackagesComponent implements OnInit {
-  viewMode: 'table' | 'card' = 'card';
   catalogIds: string[] = [];
   navTabDisplayClass = '';
 
