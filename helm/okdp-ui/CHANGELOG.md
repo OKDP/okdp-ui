@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/OKDP/okdp-ui/compare/helm-okdp-ui/v0.2.0...helm-okdp-ui/v0.2.1) (2025-07-10)
+
+
+### Refactoring
+
+* add helm versioning ([85c2aaa](https://github.com/OKDP/okdp-ui/commit/85c2aaa8d7223aa65d0a64dc28a7fbcc4afae8a0))
+
 ## [0.2.0](https://github.com/OKDP/okdp-ui/compare/helm-okdp-ui/v0.1.0...helm-okdp-ui/v0.2.0) (2025-07-10)
 
 
