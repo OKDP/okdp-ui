@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.3.0](https://github.com/OKDP/okdp-ui/compare/v0.2.0...v0.3.0) (2025-07-10)
+
+
+### Features
+
+* add basic projects management ([abcf318](https://github.com/OKDP/okdp-ui/commit/abcf318cafcd2fc83bf7f0aeb83c0159ca8a6022))
+
+
+### Refactoring
+
+* add common content header for pages content ([58e8532](https://github.com/OKDP/okdp-ui/commit/58e853250ec6897f038697000330b6c256a7c5b8))
+* add confirmation dialog for sensitive operations ([e04e330](https://github.com/OKDP/okdp-ui/commit/e04e330a3f0ba86f531bf083e5b419a85605fd01))
+* add content-toolbar with search, action slot, and view mode toggles ([0071643](https://github.com/OKDP/okdp-ui/commit/00716433694980c27874a76e8b9061d00abfeebb))
+* add deployment steps for releases, updates and view mode ([e563bf4](https://github.com/OKDP/okdp-ui/commit/e563bf4b79efb723184715fa0bb0aa8a6417f896))
+* add helm versioning ([85c2aaa](https://github.com/OKDP/okdp-ui/commit/85c2aaa8d7223aa65d0a64dc28a7fbcc4afae8a0))
+* add reusable stepper component for deployment workflow steps ([15a7975](https://github.com/OKDP/okdp-ui/commit/15a7975079c42aa4664e03c3c60dfd489e28f1aa))
+* add toolbar actions (search, view mode) for catalogs ([aa70557](https://github.com/OKDP/okdp-ui/commit/aa7055732fffd7f998f47be75cbed71ed77c5bcb))
+* apply eslint ([f3b2728](https://github.com/OKDP/okdp-ui/commit/f3b2728778b287b0956722d2bd8907422d0a7584))
+* implement KuboCD releases deletion ([61a9715](https://github.com/OKDP/okdp-ui/commit/61a9715e0a597c37bd28b698cf97b7ea3e84247d))
+* implement KuboCD releases update ([a346e7f](https://github.com/OKDP/okdp-ui/commit/a346e7f0fb50a7dfa0cf3b83a4fcfe1fbeba8607))
+* persist viewmode across navigation ([c0e1b29](https://github.com/OKDP/okdp-ui/commit/c0e1b29693c32987647b9c892068c784116bebef))
+* refresh notification list when clusterId or projectName changes ([94fcf2e](https://github.com/OKDP/okdp-ui/commit/94fcf2ec3dab42bc06a13e8b393f851586f63aba))
+* reset the filter on page navigation change ([4997784](https://github.com/OKDP/okdp-ui/commit/4997784175f6f42a021902d44a8e5fb0072a6edb))
+* set releases deployment mode to kubernetes as default ([af27a05](https://github.com/OKDP/okdp-ui/commit/af27a05e2dbf6af8d50eb84d7f809c4194845244))
+* update global layout ([9eff5a2](https://github.com/OKDP/okdp-ui/commit/9eff5a21bbefd7efeb67d6036defe0ee34e7c3d5))
+* update the menu layout ([eeccef1](https://github.com/OKDP/okdp-ui/commit/eeccef138768dd939579c2f1c044fc2763c6a957))
+
 ## [0.2.0](https://github.com/OKDP/okdp-ui/compare/v0.1.0...v0.2.0) (2025-06-29)
 
 
