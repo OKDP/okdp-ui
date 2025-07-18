@@ -11,7 +11,7 @@ import { DialogComponent } from '../../../../shared/components/dialog';
 import { extractService } from '../../../../shared/utils';
 
 @Component({
-  selector: 'app-releases-list-card',
+  selector: 'app-release-list-card',
   standalone: true,
   imports: [
     CommonModule,
@@ -54,4 +54,8 @@ export class ReleaseListCardComponent extends AbstractReleaseBaseComponent imple
   }
 
   onFavorite(row: ReleaseInstance) {}
+
+  onShowDetails(instance: ReleaseInstance) {
+    super.showDetails(extractService(instance.spec.package.repository), instance.metadata.name!);
+  }
 }

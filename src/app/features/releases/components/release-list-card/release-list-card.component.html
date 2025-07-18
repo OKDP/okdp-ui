@@ -17,7 +17,7 @@
   </ul>
   <div *ngIf="isLoaded" class="row row-cols-1 row-cols-md-4 g-2">
     <div *ngFor="let instance of filtredInstances" class="col">
-      <div class="card h-100 rounded-3 shadow-sm mx-auto mx-1">
+      <div class="card h-100 rounded-3 shadow-sm mx-auto mx-1" (click)="onShowDetails(instance)">
         <div class="card-header d-flex align-items-center p-2">
           <ul class="nav w-100 d-flex flex-row justify-content-start align-items-center gap-1">
             <li class="nav-item d-flex flex-row gap-1">
@@ -68,6 +68,7 @@
                 role="button"
                 class="material-symbols-outlined text-okdp-primary cursor-pointer"
                 matTooltip="Show details"
+                (click)="onShowDetails(instance)"
                 >visibility</i
               >
             </li>
@@ -92,8 +93,7 @@
             <li class="nav-item mx-3">
               <app-kebab-menu
                 [options]="[
-                   {key: 'na', value: 'View logs', icon: 'article'},
-                   ]" />
+                   {key: 'na', value: 'View logs', icon: 'article'},]" />
             </li>
           </ul>
         </div>
