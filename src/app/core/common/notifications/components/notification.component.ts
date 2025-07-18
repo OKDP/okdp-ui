@@ -10,11 +10,12 @@ import { KuboCDReleases } from '../../kubocd-releases';
 import { getClusterId } from '../../clusters';
 import { AppState } from '../../../store';
 import { getProjectName } from '../../projects';
+import { SearchFilterComponent, SearchFilterService } from '../../../../shared/components/search-filter';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SearchFilterComponent],
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss'],
   animations: [],
@@ -23,11 +24,14 @@ export class NotificationComponent implements OnInit {
   isToggled = false;
 
   notifications: Notification[] = [];
+  filtredItems: Notification[] = [];
+  search = '';
 
   constructor(
     private notificationService: NotificationService,
     private rightSidebarService: RightSidebarService,
     private kubocdReleases: KuboCDReleases,
+    private searchFilterService: SearchFilterService,
     private store: Store<AppState>,
     private destroyRef: DestroyRef
   ) {}
@@ -56,6 +60,7 @@ export class NotificationComponent implements OnInit {
 
     this.notificationService.messages$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(notifications => {
       this.notifications = notifications;
+      this.filtredItems = notifications;
     });
   }
 
@@ -84,5 +89,25 @@ export class NotificationComponent implements OnInit {
 
   hideSidebar() {
     this.rightSidebarService.toggle(RightSidebarToggle.NOTIFICATION);
+  }
+
+  onSearchChanged(search: string): void {
+    this.search = (search ?? '').trim().toLowerCase();
+    if (!this.search) {
+      this.filtredItems = this.notifications;
+    } else {
+      const keywords = this.search
+        .toLowerCase()
+        .split(' ')
+        .filter(k => k);
+      this.filtredItems = this.notifications.filter(n =>
+        keywords.some(
+          keyword =>
+            n.message.toLowerCase().includes(keyword) ||
+            n.type.toLowerCase().includes(keyword) ||
+            n.service.toLowerCase().includes(keyword)
+        )
+      );
+    }
   }
 }
