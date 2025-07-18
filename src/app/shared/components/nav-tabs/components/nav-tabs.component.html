@@ -1,7 +1,7 @@
 <ul class="nav nav-tabs border-0 gap-3">
   <li *ngFor="let item of items" class="nav-item">
     <a
-      class="nav-link text-primary"
+      class="nav-link text-primary py-0"
       routerLinkActive="active"
       [routerLink]="[ basePath, item | trimWhiteSpace ]"
       [class]="display"

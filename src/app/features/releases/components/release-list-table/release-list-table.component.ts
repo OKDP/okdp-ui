@@ -17,7 +17,7 @@ import { DialogComponent } from '../../../../shared/components/dialog';
 import { extractService } from '../../../../shared/utils';
 
 @Component({
-  selector: 'app-releases-list-card',
+  selector: 'app-release-list-table',
   standalone: true,
   imports: [
     CommonModule,
@@ -130,6 +130,10 @@ export class ReleaseListTableComponent
 
   onEdit(row: any) {
     super.edit(extractService(row.spec.package.repository), row.metadata.name);
+  }
+
+  onShowDetails(row: any) {
+    super.showDetails(extractService(row.spec.package.repository), row.metadata.name);
   }
 
   onFavorite(row: any) {}

@@ -5,13 +5,13 @@ import { ErrorComponent } from './shared/error';
 import { LoginComponent } from './core/common/login';
 import { AuthGuard } from './core/guards';
 import { PageLayoutComponent } from './core/layout/page-layout';
-import { ReleaseListCardComponent, ReleaseCreateUpdateComponent } from './features/releases';
+import { ReleaseListCardComponent, ReleaseCreateUpdateComponent, ReleaseDetailsComponent } from './features/releases';
 import {
   ProjectCreateOrUpdateComponent,
   ProjectListCardComponent,
   ProjectListTableComponent,
 } from './features/projects';
-import { ReleaseListTableComponent } from './features/releases/components/releases-list-table/release-list-table.component';
+import { ReleaseListTableComponent } from './features/releases/components/release-list-table/release-list-table.component';
 import { PackageSelectComponent } from './features/releases/components/package-select/package-select.component';
 import { StepperComponent } from './shared/components/stepper';
 import { ProjectListComponent } from './features/projects/shared';
@@ -26,6 +26,7 @@ export const APP_ROUTES: Routes = [
     children: [
       { path: '', redirectTo: 'projects', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
+      // Projects
       {
         path: 'projects',
         component: ProjectListComponent,
@@ -42,6 +43,7 @@ export const APP_ROUTES: Routes = [
           { path: ':projectName/update', component: ProjectCreateOrUpdateComponent },
         ],
       },
+      // Services: Releases + catalogs
       {
         path: 'services/:service',
         component: ReleaseListComponent,
@@ -57,6 +59,10 @@ export const APP_ROUTES: Routes = [
         component: ReleaseCreateUpdateComponent,
       },
       {
+        path: 'services/:service/instances/:release/details',
+        component: ReleaseDetailsComponent,
+      },
+      {
         path: 'services',
         component: StepperComponent,
         children: [
@@ -68,6 +74,7 @@ export const APP_ROUTES: Routes = [
           },
         ],
       },
+      // Catalogs: Exploration
       {
         path: 'catalogs',
         children: [

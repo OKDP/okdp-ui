@@ -142,6 +142,10 @@ export abstract class AbstractReleaseBaseComponent {
     this.updateDataSource(this.filtredInstances);
   }
 
+  protected showDetails(service: string, releaseName: string) {
+    this.router.navigate([`services/${service}/instances/${releaseName}/details`]);
+  }
+
   protected onDeleteRelease(name: string) {
     this.selectedRelease = name;
     this.showDialog = true;

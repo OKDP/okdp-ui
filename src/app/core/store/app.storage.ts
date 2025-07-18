@@ -1,5 +1,5 @@
 // app.module.ts or store module
-import { StoreModule, MetaReducer } from '@ngrx/store';
+import { MetaReducer } from '@ngrx/store';
 import { localStorageSync } from 'ngrx-store-localstorage';
 
 export function localStorageSyncReducer(reducer: any): any {
