@@ -7,12 +7,24 @@
     class="offcanvas offcanvas-end notifications show {{
       isToggled ? 'slide-in' : 'slide-out'
     }}">
-    <div class="offcanvas-header pb-0">
-      <div class="d-flex gap-2">
-        <div class="d-flex align-items-center flex-shrink-0">
+    <div class="offcanvas-header pb-0 flex-column">
+      <div class="d-flex w-100 gap-2 align-items-center mb-0 pb-0">
+        <div class="flex-shrink-0">
           <i class="fas fa-bell fa-2x okdp-text-primary"></i>
         </div>
-        <div class="d-flex align-items-center text-primary flex-grow-1">Notifications</div>
+        <div class="text-primary flex-grow-1">Notifications</div>
+      </div>
+      <div class="d-flex w-100 my-2 pt-0 gap-2">
+        <div class="flex-grow-1">
+          <app-search-filter
+            noItemsLabel="No search result."
+            [found]="filtredItems.length > 0"
+            (searchChanged)="onSearchChanged($event)" />
+        </div>
+        <button type="button" class="nav-link nav-item-primary d-flex align-items-center px-2" (click)="onClear()">
+          <i class="material-symbols-outlined text-primary okdp-text-outlined border-0">clear_all</i>
+          <span class="text-primary ps-1 okdp-text-outlined">Clear all</span>
+        </button>
       </div>
       <button
         type="button"
@@ -22,11 +34,11 @@
         <i class="material-symbols-outlined">close</i>
       </button>
     </div>
-    <div class="offcanvas-body">
-      <hr />
-      <div class="container mx-0 px-0 pt-2">
+    <div class="offcanvas-body pt-0">
+      <hr class="mt-0" />
+      <div class="container mx-0 px-0">
         <div class="row row-cols-1 row-cols-md-1">
-          <div *ngFor="let notification of notifications" class="col">
+          <div *ngFor="let notification of filtredItems" class="col">
             <div class="card rounded-3 shadow-sm mx-auto mx-1 position-relative">
               <button
                 type="button"
@@ -55,7 +67,7 @@
             </div>
           </div>
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li *ngIf="notifications.length === 0" class="nav-item text-primary">No notifications to display !</li>
+            <li *ngIf="filtredItems.length === 0" class="nav-item text-primary">No notifications to display !</li>
           </ul>
         </div>
       </div>
