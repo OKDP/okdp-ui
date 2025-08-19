@@ -1,0 +1,9 @@
+.tab-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 1px;
+  background: var(--text-okdp);
+  border-radius: 1px 1px 0 0;
+  transition: left 0.3s cubic-bezier(.4,0,.2,1), width 0.3s cubic-bezier(.4,0,.2,1);
+  z-index: 10;
+}

@@ -13,14 +13,13 @@ import { NavTabsComponent } from '../../../../shared/components/nav-tabs';
 import { CatalogService } from '../../../../core/common/catalogs';
 import { Catalog } from '../../../../api/_model';
 import { CATALOG_URI } from '../../../../core/constants';
-import { toUri } from '../../../../shared/utils';
+import { errorMessage, toUri } from '../../../../shared/utils';
 import { CatalogItem } from '../../../../model/catalog.model';
 import { AppConfigService } from '../../../../core/config';
 import { LoadingComponent } from '../../../../shared/components/loading';
 import { TitleBarService } from '../../../../shared/components/content-header-title';
 import { SidebarService } from '../../../../core/layout/sidebar';
 import { NotificationService } from '../../../../core/common/notifications';
-import { errorMessage } from '../../../../core/models';
 import { KebabMenuComponent } from '../../../../shared/components/kebab-menu';
 import { ContentToolbarComponent } from '../../../../shared/components/content-toolbar';
 
@@ -95,7 +94,7 @@ export class CatalogListPackagesComponent implements OnInit {
         this.searchChanged(search);
       },
       error: error => {
-        this.notificationService.onError('search', `Search error, ${errorMessage(error)}`);
+        this.notificationService.onError('search', '', '', `Search error, ${errorMessage(error)}`);
       },
     });
   }
@@ -113,7 +112,7 @@ export class CatalogListPackagesComponent implements OnInit {
         this.toCurrentCatalogCatalog();
       },
       error: error => {
-        this.notificationService.onError('catalog', `Unable to fetch catalog, ${errorMessage(error)}`);
+        this.notificationService.onError('catalog', '', '', `Unable to fetch catalog, ${errorMessage(error)}`);
       },
     });
   }

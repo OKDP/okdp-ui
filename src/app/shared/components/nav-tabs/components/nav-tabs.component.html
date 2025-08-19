@@ -1,12 +1,15 @@
-<ul class="nav nav-tabs border-0 gap-3">
-  <li *ngFor="let item of items" class="nav-item">
-    <a
-      class="nav-link text-primary py-0"
-      routerLinkActive="active"
-      [routerLink]="[ basePath, item | trimWhiteSpace ]"
-      [class]="display"
-      (click)="onTabChange(item)">
-      {{ item | titlecase }}
-    </a>
-  </li>
-</ul>
+<div class="position-relative">
+  <ul #tabList class="nav nav-tabs border-0 gap-3">
+    <li *ngFor="let item of items; let idx = index" class="nav-item">
+      <a
+        #tab
+        class="nav-link text-primary"
+        role="button"
+        [class.active]="idx === selectedTabIndex"
+        (click)="activateTab(idx, item)">
+        {{ item | titlecase }}
+      </a>
+    </li>
+  </ul>
+  <div class="tab-indicator" [ngStyle]="{ width: indicatorWidth + 'px', left: indicatorLeft + 'px' }"></div>
+</div>

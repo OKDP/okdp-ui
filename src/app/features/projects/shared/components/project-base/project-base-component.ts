@@ -19,10 +19,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotificationService } from '../../../../../core/common/notifications';
 import { getProjectName, loadProjectFailure, ProjectService, selectProject } from '../../../../../core/common/projects';
 import { Project, ServerResponse } from '../../../../../api/_model';
-import { errorMessage } from '../../../../../core/models';
 import { AppState } from '../../../../../core/store';
 import { getClusterId } from '../../../../../core/common/clusters';
 import { SearchFilterService } from '../../../../../shared/components/search-filter';
+import { errorMessage } from '../../../../../shared/utils';
 
 @Injectable()
 export abstract class AbstractProjectBaseComponent {
@@ -73,7 +73,7 @@ export abstract class AbstractProjectBaseComponent {
           this.isLoaded = true;
         }),
         catchError(err => {
-          this.notificationService.onError('Projects', `Failed to load projects: ${err.message || err}`);
+          this.notificationService.onError('Projects', '', '', `Failed to load projects: ${err.message || err}`);
           this.isLoaded = false;
           return EMPTY;
         })
@@ -85,7 +85,7 @@ export abstract class AbstractProjectBaseComponent {
         this.searchChanged(search);
       },
       error: error => {
-        this.notificationService.onError('search', `Search error, ${errorMessage(error)}`);
+        this.notificationService.onError('search', '', '', `Search error, ${errorMessage(error)}`);
       },
     });
   }
@@ -158,10 +158,10 @@ export abstract class AbstractProjectBaseComponent {
             filter(project => !project),
             take(1),
             tap(() => {
-              this.notificationService.onSuccess('Projects', `Project "${projectName}" deleted.`);
+              this.notificationService.onSuccess('Projects', '', '', `Project "${projectName}" deleted.`);
             }),
             catchError(error => {
-              this.notificationService.onError('Projects', `Failed during project polling: ${error.message}`);
+              this.notificationService.onError('Projects', '', '', `Failed during project polling: ${error.message}`);
               return of(null);
             })
           )
@@ -174,10 +174,10 @@ export abstract class AbstractProjectBaseComponent {
   protected deleteProject(clusterId: string, projectName: string): Observable<ServerResponse> {
     return this.projectService.delete(clusterId, projectName).pipe(
       tap(() => {
-        this.notificationService.onSuccess(projectName, 'Project deleted successfully.');
+        this.notificationService.onSuccess(projectName, '', '', 'Project deleted successfully.');
       }),
       catchError(error => {
-        this.notificationService.onError(projectName, `Failed to delete project, ${errorMessage(error)}`);
+        this.notificationService.onError(projectName, '', '', `Failed to delete project, ${errorMessage(error)}`);
         return throwError(() => error);
       })
     );

@@ -17,7 +17,7 @@ import { LoadingComponent } from '../../../../shared/components/loading';
 import { Project, ServerResponse } from '../../../../api/_model';
 import { KUBERNETES_OBJECT_PATTERN } from '../../../../core/constants';
 import { getClusterId } from '../../../../core/common/clusters';
-import { errorMessage } from '../../../../core/models';
+import { errorMessage } from '../../../../shared/utils';
 
 @Component({
   selector: 'app-project-create-update',
@@ -105,6 +105,8 @@ export class ProjectCreateOrUpdateComponent implements OnInit {
         next: (_: ServerResponse) => {
           this.notificationService.onSuccess(
             `${this.projectPayload.name}/${this.projectPayload.displayName}`,
+            '',
+            '',
             `project ${action}d successfully.`
           );
           this.isSubmitting = false;
@@ -113,6 +115,8 @@ export class ProjectCreateOrUpdateComponent implements OnInit {
         error: error => {
           this.notificationService.onError(
             `${this.projectPayload.name}/${this.projectPayload.displayName}`,
+            '',
+            '',
             `project was failed to ${action}, ${errorMessage(error)}`
           );
           this.isSubmitting = false;
@@ -149,7 +153,12 @@ export class ProjectCreateOrUpdateComponent implements OnInit {
           this.populateForm();
         },
         error: error => {
-          this.notificationService.onError(`${projectName}`, `project was failed to load, ${errorMessage(error)}`);
+          this.notificationService.onError(
+            `${projectName}`,
+            '',
+            '',
+            `project was failed to load, ${errorMessage(error)}`
+          );
         },
       });
   }
