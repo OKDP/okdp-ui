@@ -1,0 +1,47 @@
+<div class="d-flex flex-column flex-grow-1 rounded">
+  <div class="d-flex flex-row w-100 justify-content-between">
+    <div class="d-flex align-items-center">
+      <ul class="nav gap-3 w-auto bg-transparent border-0 mb-2">
+        <li class="nav-item">
+          <span class="d-flex align-items-center">
+            <i class="material-symbols-outlined text-okdp">format_align_left</i>
+            <span class="text-primary ms-1">{{ pod }} | {{ container }}</span>
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div class="d-flex align-items-center position-relative z-2">
+      <ul class="nav gap-3 w-auto terminal-toolbar px-2 pb-2">
+        <li class="nav-item">
+          <i
+            role="button"
+            class="material-symbols-outlined text-okdp-primary cursor-pointer"
+            [ngClass]="paused ? 'btn-warning' : 'btn-success'"
+            matTooltip="{{ paused ? 'Resume' : 'Pause' }}"
+            (click)="togglePause()"
+            >{{ paused ? 'Resume' : 'Pause' }}</i
+          >
+        </li>
+        <li class="nav-item">
+          <i
+            role="button"
+            class="material-symbols-outlined text-okdp-primary cursor-pointer"
+            matTooltip="{{ autoScroll ? 'Enable auto scroll' : 'Disable auto scroll' }}"
+            (click)="toggleAutoScroll()"
+            >{{ autoScroll ? 'iframe' : 'iframe_off' }}</i
+          >
+        </li>
+        <li class="nav-item">
+          <i
+            role="button"
+            class="material-symbols-outlined text-okdp-primary cursor-pointer"
+            matTooltip="Download logs"
+            (click)="downloadLogs()"
+            >download</i
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div #terminalContainer class="d-flex flex-column flex-grow-1 terminal-container"></div>
+</div>
