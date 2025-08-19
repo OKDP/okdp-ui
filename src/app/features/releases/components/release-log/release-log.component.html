@@ -1,0 +1,20 @@
+<div *ngIf="!isLoaded" class="loading-overlay">
+  <app-loading />
+</div>
+
+<div *ngIf="isLoaded" class="container-fluid px-0 mb-4">
+  <div *ngIf="pods.length > 0; else noLogs" class="mt-3">
+    <ng-container *ngIf="getLogUrl() as logUrl">
+      <app-log-terminal [pod]="selectedPodName || ''" [container]="selectedContainerName || ''" [logUrl]="logUrl" />
+    </ng-container>
+  </div>
+
+  <ng-template #noLogs>
+    <div class="alert alert-info mt-3">
+      <span class="d-flex align-items-center">
+        <i class="material-symbols-outlined text-okdp">info</i>
+        <span class="ms-2">No logs to display.</span>
+      </span>
+    </div>
+  </ng-template>
+</div>
