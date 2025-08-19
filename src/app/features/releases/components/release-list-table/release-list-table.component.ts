@@ -14,7 +14,7 @@ import { ReleaseInstance } from '../../../../model';
 import { ContentToolbarComponent } from '../../../../shared/components/content-toolbar';
 import { AbstractReleaseBaseComponent } from '../../shared';
 import { DialogComponent } from '../../../../shared/components/dialog';
-import { extractService } from '../../../../shared/utils';
+import { extractPackage } from '../../../../shared/utils';
 
 @Component({
   selector: 'app-release-list-table',
@@ -57,10 +57,6 @@ export class ReleaseListTableComponent
     private cdr: ChangeDetectorRef
   ) {
     super();
-  }
-
-  ngOnInit(): void {
-    super.onInit();
   }
 
   ngAfterViewInit() {
@@ -129,11 +125,11 @@ export class ReleaseListTableComponent
   }
 
   onEdit(row: any) {
-    super.edit(extractService(row.spec.package.repository), row.metadata.name);
+    super.edit(extractPackage(row.spec.package.repository), row.metadata.name);
   }
 
   onShowDetails(row: any) {
-    super.showDetails(extractService(row.spec.package.repository), row.metadata.name);
+    super.showDetails(row.metadata.name);
   }
 
   onFavorite(row: any) {}

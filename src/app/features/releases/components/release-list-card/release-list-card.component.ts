@@ -8,7 +8,7 @@ import { ReleaseInstance } from '../../../../model';
 import { ContentToolbarComponent } from '../../../../shared/components/content-toolbar';
 import { AbstractReleaseBaseComponent } from '../../shared';
 import { DialogComponent } from '../../../../shared/components/dialog';
-import { extractService } from '../../../../shared/utils';
+import { extractPackage } from '../../../../shared/utils';
 
 @Component({
   selector: 'app-release-list-card',
@@ -32,10 +32,6 @@ export class ReleaseListCardComponent extends AbstractReleaseBaseComponent imple
     super();
   }
 
-  ngOnInit(): void {
-    super.onInit();
-  }
-
   highlightMatch(item: string | undefined): string | undefined {
     if (!this.search) return item;
     const query = this.search;
@@ -50,12 +46,12 @@ export class ReleaseListCardComponent extends AbstractReleaseBaseComponent imple
   }
 
   onEdit(instance: ReleaseInstance) {
-    super.edit(extractService(instance.spec.package.repository), instance.metadata.name!);
+    super.edit(extractPackage(instance.spec.package.repository), instance.metadata.name!);
   }
 
   onFavorite(row: ReleaseInstance) {}
 
   onShowDetails(instance: ReleaseInstance) {
-    super.showDetails(extractService(instance.spec.package.repository), instance.metadata.name!);
+    super.showDetails(instance.metadata.name!);
   }
 }

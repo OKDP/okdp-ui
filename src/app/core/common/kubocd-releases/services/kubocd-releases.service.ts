@@ -13,10 +13,10 @@ import {
   EMPTY,
   timer,
 } from 'rxjs';
-import { Release } from '../../../../api/_model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Catalog, Release } from '../../../../api/_model';
 import { NotificationService } from '../../notifications';
 import { KUBOCD_RELEASES_FETCH_POLLING_INTERVAL_MS } from '../../../constants';
-import { errorMessage } from '../../../models';
 import {
   RELEASE_PHASE_ERROR,
   RELEASE_PHASE_READY,
@@ -26,46 +26,55 @@ import {
   RELEASE_PHASE_WAIT_HELM_REPO,
   RELEASE_PHASE_WAIT_OCI,
 } from '../../../../model';
+import { errorMessage } from '../../../../shared/utils';
+import { CatalogService } from '../../catalogs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class KuboCDReleases {
   private instances: Release[] = [];
+  private catalogs: Catalog[] = [];
 
   constructor(
     private readonly http: HttpClient,
     private notificationService: NotificationService,
+    private catalogService: CatalogService,
     private destroyRef: DestroyRef
-  ) {}
+  ) {
+    this.catalogService.catalogs$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          this.notificationService.onError('catalog', '', '', `Unable to fetch catalog, ${errorMessage(error)}`);
+          return EMPTY;
+        })
+      )
+      .subscribe((catalogs: Catalog[]) => {
+        this.catalogs = catalogs;
+      });
+  }
 
   list(clusterId: string, namespace: string): Observable<Release[]> {
     return this.http.get<Release[]>(`/clusters/${clusterId}/namespaces/${namespace}/releases`);
+  }
+
+  getCatalog(release: Release): Catalog | undefined {
+    const repo = release?.spec?.package?.repository;
+    if (!repo) return undefined;
+    const norm = (s: string) => s.replace(/\/+$/g, '');
+    return this.catalogs.find(c => c.packages?.some(pkg => `${norm(c.repoUrl)}/${pkg.name}` === norm(repo)));
   }
 
   loadKuboCDReleases(clusterId: string, namespaces: string[]): Observable<Release[]> {
     return forkJoin(namespaces.map(ns => this.list(clusterId, ns))).pipe(
       map(allReleases => allReleases.flat()),
       catchError(error => {
-        this.notificationService.onError('KuboCD', `Failed to fetch kubocd releases, ${errorMessage(error)}`);
+        this.notificationService.onError('KuboCD', '', '', `Failed to fetch kubocd releases, ${errorMessage(error)}`);
         return of([]);
       })
     );
   }
-
-  // loadKuboCDReleases(clusterId: string, namespaces: string[]): void {
-  //   forkJoin(namespaces.map(ns => this.list(clusterId, ns)))
-  //     .pipe(takeUntilDestroyed(this.destroyRef))
-  //     .subscribe({
-  //       next: allReleases => {
-  //         const combined = allReleases.flat();
-  //         this.releases.next(combined);
-  //         //this.updateInstances(combined, false);
-  //       },
-  //       error: error =>
-  //         this.notificationService.onError('KuboCD', `Failed to fetch kubocd releases, ${errorMessage(error)}`),
-  //     });
-  // }
 
   startPollServicesChange(clusterId: string, namespaces: string[]): Observable<Release[]> {
     return concat(EMPTY, timer(0), interval(KUBOCD_RELEASES_FETCH_POLLING_INTERVAL_MS)).pipe(
@@ -76,6 +85,8 @@ export class KuboCDReleases {
               catchError(error => {
                 this.notificationService.onError(
                   'KuboCD',
+                  '',
+                  '',
                   `Failed to poll kubocd releases from namespace "${ns}", ${errorMessage(error)}`
                 );
                 return of([]);
@@ -98,38 +109,88 @@ export class KuboCDReleases {
           const name = s.metadata.name;
           const namespace = s.metadata.namespace;
           const phase = s.status?.phase?.toUpperCase() ?? 'UNKNOWN';
+          const creationTimestamp = s.metadata.creationTimestamp;
+          const catalogId = this.getCatalog(s)?.id || '';
           switch (phase) {
             case RELEASE_PHASE_READY:
-              this.notificationService.onSuccess(`${name}/${namespace}`, 'was successfully deployed.');
+              this.notificationService.onSuccess(
+                `${name}`,
+                `${namespace}`,
+                catalogId,
+                'was successfully deployed.',
+                creationTimestamp
+              );
               break;
             case RELEASE_PHASE_ERROR:
-              this.notificationService.onError(`${name}/${namespace}`, 'was failed to deploy.');
+              this.notificationService.onError(
+                `${name}`,
+                `${namespace}`,
+                catalogId,
+                'was failed to deploy.',
+                creationTimestamp
+              );
               break;
             case RELEASE_PHASE_WAIT_OCI:
-              this.notificationService.onInfo(`${name}/${namespace}`, 'is waiting for OCI.');
+              this.notificationService.onInfo(
+                `${name}`,
+                `${namespace}`,
+                catalogId,
+                'is waiting for OCI.',
+                creationTimestamp
+              );
               break;
             case RELEASE_PHASE_WAIT_HELM_REPO:
-              this.notificationService.onInfo(`${name}/${namespace}`, 'is waiting for Helm repository.');
+              this.notificationService.onInfo(
+                `${name}`,
+                `${namespace}`,
+                catalogId,
+                'is waiting for Helm repository.',
+                creationTimestamp
+              );
               break;
             case RELEASE_PHASE_WAIT_HELM_RELEASES:
-              this.notificationService.onInfo(`${name}/${namespace}`, 'is waiting for helm release deplyment.');
+              this.notificationService.onInfo(
+                `${name}`,
+                `${namespace}`,
+                catalogId,
+                'is waiting for helm release deplyment.',
+                creationTimestamp
+              );
               break;
             case RELEASE_PHASE_WAIT_DEPENDENCIES:
-              this.notificationService.onInfo(`${name}/${namespace}`, 'is waiting for dependencies.');
+              this.notificationService.onInfo(
+                `${name}`,
+                `${namespace}`,
+                catalogId,
+                'is waiting for dependencies.',
+                creationTimestamp
+              );
               break;
             case RELEASE_PHASE_SUSPENDED:
-              this.notificationService.onWarning(`${name}/${namespace}`, 'is suspended.');
+              this.notificationService.onWarning(
+                `${name}`,
+                `${namespace}`,
+                catalogId,
+                'is suspended.',
+                creationTimestamp
+              );
               break;
             case undefined:
             default:
-              this.notificationService.onWarning(`${name}/${namespace}`, 'Unknown status phase.');
+              this.notificationService.onWarning(
+                `${name}`,
+                `${namespace}`,
+                catalogId,
+                'Unknown status phase.',
+                creationTimestamp
+              );
           }
         });
       }
 
       if (deletedInstances.length > 0) {
         deletedInstances.forEach(s =>
-          this.notificationService.onWarning(`${s.metadata.name}/${s.metadata.namespace}`, 'was removed !')
+          this.notificationService.onWarning(`${s.metadata.name}`, `${s.metadata.namespace}`, '', 'was removed !')
         );
       }
     }
@@ -177,7 +238,7 @@ export class KuboCDReleases {
     };
   }
 
-  clear(): void {
+  clearAll(): void {
     this.instances = [];
   }
 }
