@@ -23,7 +23,7 @@ import { select, Store } from '@ngrx/store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { combineLatest, filter, firstValueFrom, tap } from 'rxjs';
 import { AuthService } from '../../../../core/auth';
-import { errorMessage, UserInfo } from '../../../../core/models';
+import { UserInfo } from '../../../../core/models';
 import { RightSidebarService, RightSidebarToggle } from '../../../../shared/services';
 import {
   sortVersionsDesc,
@@ -32,6 +32,7 @@ import {
   JsonSchemaProperty,
   deflateParameters,
   findValueDeep,
+  errorMessage,
 } from '../../../../shared/utils';
 import { GitReleaseService } from '../../services/git-release.service';
 import { K8sReleaseService } from '../../services/k8s-release.service';
@@ -86,7 +87,7 @@ export class ReleaseCreateUpdateComponent implements OnInit {
   currentProjectName: string;
   readonly userInfo: UserInfo;
   submissionMode: string;
-  serviceInstance: string;
+  release: string;
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -138,7 +139,7 @@ export class ReleaseCreateUpdateComponent implements OnInit {
     this.catalogItem.catalogId = this.route.snapshot.queryParamMap.get('catalog') as string;
     this.catalogItem.icon = this.appConfigService.kadServicesInfo(this.catalogItem.name).icon as string;
     this.catalogItem.home = this.appConfigService.kadServicesInfo(this.catalogItem.name).home as string;
-    this.serviceInstance = this.route.snapshot.paramMap.get('serviceInstance') as string;
+    this.release = this.route.snapshot.paramMap.get('release') as string;
 
     this.submissionMode = this.appConfigService.getSubmissionMode();
 
@@ -182,7 +183,7 @@ export class ReleaseCreateUpdateComponent implements OnInit {
   }
 
   get isCreate(): boolean {
-    return !this.serviceInstance?.trim();
+    return !this.release?.trim();
   }
 
   fetchPackage(catalogId: string, name: string): void {
@@ -198,7 +199,7 @@ export class ReleaseCreateUpdateComponent implements OnInit {
           this.isLoaded = true;
         },
         error: error => {
-          this.notificationService.onError(name, `Unable to fetch service, ${errorMessage(error)}`);
+          this.notificationService.onError(name, '', '', `Unable to fetch service, ${errorMessage(error)}`);
         },
       });
   }
@@ -213,7 +214,7 @@ export class ReleaseCreateUpdateComponent implements OnInit {
     this.releasePayload.spec.parameters = deflated;
 
     const namespace = this.currentProjectName;
-    const name = this.releasePayload.metadata.name;
+    const name = this.releasePayload.metadata.name!;
     this.releasePayload.spec.targetNamespace = namespace;
 
     const handlers = {
@@ -234,13 +235,15 @@ export class ReleaseCreateUpdateComponent implements OnInit {
       .subscribe({
         next: (_: ServerResponse) => {
           this.notificationService.onSuccess(
-            `${name}/${namespace}`,
+            name,
+            namespace,
+            '',
             `was successfully submitted into ${this.submissionMode === 'git' ? 'Git' : 'Kubernetes'}.`
           );
           this.goBack();
         },
         error: error => {
-          this.notificationService.onError(`${name}/${namespace}`, `was failed, ${errorMessage(error)}`);
+          this.notificationService.onError(name, namespace, '', `was failed, ${errorMessage(error)}`);
           this.goBack();
         },
       });
@@ -371,11 +374,13 @@ export class ReleaseCreateUpdateComponent implements OnInit {
       const message = error instanceof Error ? errorMessage(error) : 'Unknown error';
       this.notificationService.onError(
         'catalog',
+        '',
+        '',
         `Unable to fetch package ${packageName}:${tag} parameters from catalogId ${catalogId}, ${message}`
       );
     }
-    if (this.serviceInstance) {
-      this.loadReleaseForUpdate(this.clusterId, this.currentProjectName, this.serviceInstance);
+    if (this.release) {
+      this.loadReleaseForUpdate(this.clusterId, this.currentProjectName, this.release);
     }
     this.cdr.detectChanges();
   }
@@ -417,7 +422,9 @@ export class ReleaseCreateUpdateComponent implements OnInit {
         },
         error: error => {
           this.notificationService.onError(
-            `${projectName}/${releaseName}`,
+            releaseName,
+            projectName,
+            '',
             `Release was failed to load, ${errorMessage(error)}`
           );
         },

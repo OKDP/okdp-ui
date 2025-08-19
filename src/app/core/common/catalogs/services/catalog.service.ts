@@ -25,6 +25,10 @@ export class CatalogService {
     return this.http.get<Package>(`/catalogs/${catalogId}/packages/${name}`);
   }
 
+  getPackageVersion(catalogId: string, name: string, version: string): Observable<OpenApiV3Schema> {
+    return this.http.get<OpenApiV3Schema>(`/catalogs/${catalogId}/packages/${name}/versions/${version}`);
+  }
+
   getPackageSchema(catalogId: string, name: string, version: string): Observable<OpenApiV3Schema> {
     return this.http.get<OpenApiV3Schema>(`/catalogs/${catalogId}/packages/${name}/versions/${version}/schema`);
   }

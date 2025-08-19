@@ -13,9 +13,9 @@ import { Catalog } from '../../../../api/_model';
 import { AppConfigService } from '../../../../core/config';
 import { LoadingComponent } from '../../../../shared/components/loading';
 import { NotificationService } from '../../../../core/common/notifications';
-import { errorMessage } from '../../../../core/models';
 import { KebabMenuComponent } from '../../../../shared/components/kebab-menu';
 import { CatalogItem } from '../../../../model';
+import { errorMessage } from '../../../../shared/utils';
 
 @Component({
   selector: 'app-package-select',
@@ -88,7 +88,7 @@ export class PackageSelectComponent implements OnInit {
         this.toCurrentCatalogCatalog();
       },
       error: error => {
-        this.notificationService.onError('catalog', `Unable to fetch catalog, ${errorMessage(error)}`);
+        this.notificationService.onError('catalog', '', '', `Unable to fetch catalog, ${errorMessage(error)}`);
       },
     });
   }
