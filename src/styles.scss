@@ -165,7 +165,6 @@ hr {
         flex-direction: row;
         align-items: center;
         min-height: 48px;
-        padding: 0 1rem;
         overflow: hidden;
       }
 
@@ -186,6 +185,7 @@ hr {
         overflow-y: auto;
         overflow-x: hidden;
         padding-bottom: 10px;
+        box-sizing: border-box;
       }
     }
   }
@@ -374,8 +374,8 @@ button.close-icon{
 }
 
 .nav-tabs .nav-link.active {
-  border-bottom: 1px solid !important;
-  border-bottom-color: var(--text-okdp) !important;
+  // border-bottom: 1px solid !important;
+  // border-bottom-color: var(--text-okdp) !important;
   color: var(--text-okdp) !important;
 }
 
@@ -399,7 +399,7 @@ button.close-icon{
 .card {
   margin: auto;
   border: unset;
-  background-color: var(--card-bg-color) !important;
+  background-color: var(--card-bg-color);
 }
 
 .card:hover {
@@ -568,7 +568,7 @@ button.close-icon{
 }
 
 .text-primary {
-  font-size: var(--primary-font-size) !important;
+  font-size: var(--primary-font-size);
   font-weight: normal !important;
   line-height: 21px !important;
   color: var(--text-primary-color) !important;
@@ -633,6 +633,10 @@ button.close-icon{
 
 .text-muted {
   color: var(--text-secondary-color) !important;
+}
+
+.small {
+  font-size: 70% !important;
 }
 
 .okdp-bg-primary {
@@ -777,6 +781,72 @@ button:active .icon-outlined {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.border-row {
+  border-bottom: 1px solid var(--border-color-translucent);
+}
+
+
+// Tables
+td, th {
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--border-color-translucent);
+}
+
+// ==========================================
+// Bootsrap  ================================
+// ==========================================
+.accordion, .accordion-header {
+  background-color: var(--card-bg-color) !important;
+}
+
+.accordion-item {
+  border: 1px solid var(--border-color-translucent) !important;
+  border-radius: 1px solid var(--border-color-translucent) !important;
+  background-color: var(--card-bg-color) !important;
+}
+
+.accordion-button {
+  background-color: var(--card-bg-color) !important;
+  color: inherit !important;
+  box-shadow: none !important;
+}
+
+.accordion-button::after {
+  content: "▼";
+  font-size: var(--primary-font-size) !important;
+  font-weight: normal;
+  line-height: 21px;
+  color: var(--text-secondary-color) !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: transform 0.2s !important;
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+.accordion-button:focus,
+.accordion-button:hover {
+  background-color: transparent !important;
+  color: inherit !important;
+  box-shadow: none !important;
+}
+
+.accordion-button:not(.collapsed)::after {
+  transform: rotate(180deg);
+}
+
+.alert-info {
+  font-size: var(--primary-font-size) !important;
+  font-weight: normal;
+  line-height: 21px;
+  color: var(--text-secondary-color) !important;
+  background-color: var(--card-bg-color) !important;;
+  border: 1px solid var(--border-color-translucent) !important;
 }
 
 // ==========================================
@@ -1129,7 +1199,7 @@ mat-row:hover {
 }
 
 // KuboCD Status
-.bg-ready {
+.bg-ready, .bg-completed, .bg-healthy, .bg-running {
   background-color: var(--bs-success) !important;
   color: #fff !important;
 }
@@ -1149,7 +1219,7 @@ mat-row:hover {
   color: #000 !important;
 }
 
-.bg-terminating {
+.bg-terminating, .bg-terminated {
   background-color: var(--bs-warning) !important;
   color: #000 !important;
 }
@@ -1159,12 +1229,12 @@ mat-row:hover {
   color: #fff !important;
 }
 
-.bg-wait_hrel {
+.bg-wait_hrel, .bg-pending, .bg-waiting {
   background-color: var(--bs-primary) !important;
   color: #fff !important;
 }
 
-.bg-error {
+.bg-error, .bg-failed, .bg-notready {
   background-color: var(--bs-danger) !important;
   color: #fff !important;
 }
@@ -1174,7 +1244,7 @@ mat-row:hover {
   color: #fff !important;
 }
 
-.text-ready {
+.text-ready, .text-running, .text-healthy, .text-completed, .text-succeeded {
   @extend .text-success;
   color: var(--bs-success) !important;
 }
@@ -1194,7 +1264,7 @@ mat-row:hover {
   color: var(--bs-warning) !important;
 }
 
-.text-terminating {
+.text-terminating, .text-terminated {
   @extend .text-warning;
   color: var(--bs-warning) !important;
 }
@@ -1204,12 +1274,12 @@ mat-row:hover {
   color: var(--bs-secondary) !important;
 }
 
-.text-wait_hrel {
+.text-wait_hrel, .text-pending, .text-waiting {
   @extend .text-primary;
   color: var(--bs-primary) !important;
 }
 
-.text-error {
+.text-error, .text-notready, .text-failed {
   @extend .text-danger;
   color: var(--bs-danger) !important;
 }
