@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable } from '@angular/core';
+import { DestroyRef, Directive, inject, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, combineLatest, EMPTY, filter, interval, map, of, switchMap, take, takeWhile, tap } from 'rxjs';
@@ -15,13 +15,13 @@ import { SearchFilterService } from '../../../../../shared/components/search-fil
 import { TitleBarService } from '../../../../../shared/components/content-header-title';
 import { SidebarService } from '../../../../../core/layout/sidebar';
 import { EndpointsFromUsagePipe } from '../../../../../shared/pipes';
-import { errorMessage } from '../../../../../core/models';
 import { AppConfigService } from '../../../../../core/config';
 import { GitReleaseService } from '../../../services/git-release.service';
 import { K8sReleaseService } from '../../../services/k8s-release.service';
+import { errorMessage } from '../../../../../shared/utils';
 
-@Injectable()
-export abstract class AbstractReleaseBaseComponent {
+@Directive()
+export abstract class AbstractReleaseBaseComponent implements OnInit {
   protected readonly kubocdReleases = inject(KuboCDReleases);
   protected readonly catalogService = inject(CatalogService);
   protected readonly gitReleaseService = inject(GitReleaseService);
@@ -35,7 +35,7 @@ export abstract class AbstractReleaseBaseComponent {
   protected readonly store = inject<Store<AppState>>(Store<AppState>);
   protected readonly destroyRef = inject(DestroyRef);
   protected readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  protected readonly router = inject(Router);
 
   protected isLoaded = false;
 
@@ -58,15 +58,23 @@ export abstract class AbstractReleaseBaseComponent {
 
   abstract updateDataSource(instances: ReleaseInstance[]): void;
 
-  onInit(): void {
+  ngOnInit(): void {
     this.isLoaded = false;
     this.submissionMode = this.appConfigService.getSubmissionMode();
 
     combineLatest([
       this.store.pipe(select(getClusterId)),
       this.store.pipe(select(getProjectName)),
-      this.route.parent!.paramMap.pipe(
-        map(params => params.get('service') || '-'),
+      (this.route.parent
+        ? this.route.parent.paramMap.pipe(
+            map(params => params.get('service')),
+            switchMap(service =>
+              service ? of(service) : this.route.paramMap.pipe(map(params => params.get('service')))
+            )
+          )
+        : this.route.paramMap.pipe(map(params => params.get('service')))
+      ).pipe(
+        map(service => service || '-'),
         switchMap(catalogId => this.catalogService.listById(catalogId))
       ),
     ])
@@ -81,7 +89,6 @@ export abstract class AbstractReleaseBaseComponent {
           this.titleBarService.setCurrentMenu(catalog.id);
           this.sidebarService.setActiveMenu(catalog.id);
           this.isLoaded = false;
-
           return this.kubocdReleases.loadKuboCDReleases(clusterId, [projectName]);
         }),
         tap(releases => {
@@ -92,7 +99,7 @@ export abstract class AbstractReleaseBaseComponent {
           this.isLoaded = true;
         }),
         catchError(err => {
-          this.notificationService.onError('Namespaces', `Failed to load namespaces: ${err.message || err}`);
+          this.notificationService.onError('Namespaces', '', '', `Failed to load namespaces: ${err.message || err}`);
           this.isLoaded = true;
           return EMPTY;
         })
@@ -104,7 +111,7 @@ export abstract class AbstractReleaseBaseComponent {
         this.searchChanged(search);
       },
       error: error => {
-        this.notificationService.onError('search', `Search error, ${errorMessage(error)}`);
+        this.notificationService.onError('search', '', '', `Search error, ${errorMessage(error)}`);
       },
     });
   }
@@ -142,8 +149,8 @@ export abstract class AbstractReleaseBaseComponent {
     this.updateDataSource(this.filtredInstances);
   }
 
-  protected showDetails(service: string, releaseName: string) {
-    this.router.navigate([`services/${service}/instances/${releaseName}/details`]);
+  protected showDetails(releaseName: string) {
+    this.router.navigate([`services/${this.currentCatalog.id}/instances/${releaseName}/summary`]);
   }
 
   protected onDeleteRelease(name: string) {
@@ -190,13 +197,17 @@ export abstract class AbstractReleaseBaseComponent {
               this.updateDataSource(this.instances);
               this.searchChanged(this.search);
               this.notificationService.onSuccess(
-                `${name}/${this.currentProjectName}`,
+                name,
+                this.currentProjectName,
+                this.currentCatalog.id,
                 `was successfully deleted from ${this.submissionMode === 'git' ? 'Git' : 'Kubernetes'}.`
               );
             }),
             catchError(error => {
               this.notificationService.onError(
-                `${name}/${this.currentProjectName}`,
+                name,
+                this.currentProjectName,
+                this.currentCatalog.id,
                 `Polling failed: ${errorMessage(error)}`
               );
               return of(null);
@@ -208,7 +219,9 @@ export abstract class AbstractReleaseBaseComponent {
       .subscribe({
         error: error => {
           this.notificationService.onError(
-            `${name}/${this.currentProjectName}`,
+            name,
+            this.currentProjectName,
+            this.currentCatalog.id,
             `Delete failed: ${errorMessage(error)}`
           );
         },

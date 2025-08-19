@@ -1,0 +1,78 @@
+<app-dialog
+  *ngIf="showDialog"
+  [title]="'Delete Releases'"
+  [items]="[selectedRelease]"
+  [message]="'Are you sure you want to delete the following KuboCD releases: '"
+  [btnConfirmLabel]="'Delete'"
+  (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelDelete()" />
+
+<div *ngIf="!isLoaded" class="loading-overlay">
+  <app-loading />
+</div>
+<div *ngIf="isLoaded">
+  <div class="d-flex align-items-center px-0 gap-3">
+    <ul class="nav d-flex flex-row align-items-center gap-1 overflow-hidden">
+      <li class="nav-item">
+        <img class="table-cell-icon" src="images/{{ instance?.icon }}" />
+      </li>
+      <li class="nav-item overflow-hidden">
+        <div class="d-flex align-items-center gap-2 w-100 overflow-hidden">
+          <span class="text-okdp-color text-truncate">{{ instance?.metadata!.name! }}</span>
+        </div>
+      </li>
+      <li class="nav-item overflow-hidden">
+        <div class="d-flex align-items-center gap-2 w-100 overflow-hidden">
+          <i
+            class="material-symbols-outlined border-0 fw-bold"
+            [ngClass]="'text-' + instance?.statusLabel"
+            matTooltip="{{ instance?.statusText! | titleCase }}"
+            >{{ instance?.statusIcon }}</i
+          >
+        </div>
+      </li>
+    </ul>
+
+    <ul class="nav d-flex flex-row align-items-center gap-3">
+      <li class="nav-item">
+        <i
+          role="button"
+          class="material-symbols-outlined text-okdp-primary cursor-pointer"
+          matTooltip="Add to favorites"
+          (click)="onFavorite(instance)"
+          >favorite</i
+        >
+      </li>
+      <li *ngIf="instance?.endpoint !== ''" class="nav-item">
+        <a
+          class="nav-link rounded-pill nav-item-primary d-visible d-flex align-items-center text-truncate px-2 py-1 w-auto"
+          target="_blank"
+          href="{{ instance?.endpoint }}">
+          <i class="material-symbols-outlined text-okdp-primary border-0">open_in_new</i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <i
+          role="button"
+          class="material-symbols-outlined text-okdp-primary cursor-pointer"
+          matTooltip="Edit"
+          (click)="onEdit(instance)"
+          >edit</i
+        >
+      </li>
+      <li class="nav-item">
+        <i
+          role="button"
+          class="material-symbols-outlined text-okdp-primary cursor-pointer"
+          matTooltip="Delete"
+          (click)="onDelete(instance)"
+          >delete</i
+        >
+      </li>
+    </ul>
+  </div>
+  <div class="container-fluid mx-0 px-0 pt-2">
+    <app-nav-tabs [items]="tabs" />
+  </div>
+  <router-outlet />
+</div>
