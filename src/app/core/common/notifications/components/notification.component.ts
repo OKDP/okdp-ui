@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { combineLatest, filter, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 import { RightSidebarToggle, RightSidebarService } from '../../../../shared/services';
 import { Notification, NotificationType } from '../../../models';
 import { NotificationService } from '../services/notification.service';
@@ -10,12 +11,15 @@ import { KuboCDReleases } from '../../kubocd-releases';
 import { getClusterId } from '../../clusters';
 import { AppState } from '../../../store';
 import { getProjectName } from '../../projects';
-import { SearchFilterComponent, SearchFilterService } from '../../../../shared/components/search-filter';
+import { SearchFilterComponent } from '../../../../shared/components/search-filter';
+import { getClass } from '../../../../shared/utils/notification';
+import { TimeAgoPipe } from '../../../../shared/pipes';
+import { Catalog } from '../../../../api/_model';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, SearchFilterComponent],
+  imports: [CommonModule, SearchFilterComponent, TimeAgoPipe],
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss'],
   animations: [],
@@ -23,15 +27,18 @@ import { SearchFilterComponent, SearchFilterService } from '../../../../shared/c
 export class NotificationComponent implements OnInit {
   isToggled = false;
 
-  notifications: Notification[] = [];
+  allNotifications: Notification[] = [];
   filtredItems: Notification[] = [];
+
+  catalogs: Catalog[] = [];
+
   search = '';
 
   constructor(
     private notificationService: NotificationService,
     private rightSidebarService: RightSidebarService,
     private kubocdReleases: KuboCDReleases,
-    private searchFilterService: SearchFilterService,
+    private router: Router,
     private store: Store<AppState>,
     private destroyRef: DestroyRef
   ) {}
@@ -41,8 +48,8 @@ export class NotificationComponent implements OnInit {
       .pipe(
         filter(([clusterId, projectName]) => !!clusterId && !!projectName),
         tap(() => {
-          this.kubocdReleases.clear();
-          this.notificationService.clear();
+          this.kubocdReleases.clearAll();
+          this.notificationService.clearAll();
         }),
         switchMap(([clusterId, projectName]) => this.kubocdReleases.startPollServicesChange(clusterId, [projectName])),
         takeUntilDestroyed(this.destroyRef)
@@ -59,32 +66,17 @@ export class NotificationComponent implements OnInit {
       .subscribe(event => (this.isToggled = event.isToggle));
 
     this.notificationService.messages$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(notifications => {
-      this.notifications = notifications;
+      this.allNotifications = notifications;
       this.filtredItems = notifications;
     });
   }
 
-  onClose(service: string) {
-    this.notificationService.remove(service);
-  }
-
-  onClear() {
-    this.notificationService.clear();
+  onClose(service: string, project: string) {
+    this.notificationService.remove(service, project);
   }
 
   getClass(type: NotificationType): { msg: string; icon: string } {
-    switch (type) {
-      case NotificationType.Success:
-        return { msg: 'text-success', icon: 'check_circle' };
-      case NotificationType.Error:
-        return { msg: 'text-danger', icon: 'error' };
-      case NotificationType.Info:
-        return { msg: 'text-info', icon: 'info' };
-      case NotificationType.Warning:
-        return { msg: 'text-warning', icon: 'warning' };
-      default:
-        return { msg: 'text-warning', icon: 'warning' };
-    }
+    return getClass(type);
   }
 
   hideSidebar() {
@@ -94,13 +86,13 @@ export class NotificationComponent implements OnInit {
   onSearchChanged(search: string): void {
     this.search = (search ?? '').trim().toLowerCase();
     if (!this.search) {
-      this.filtredItems = this.notifications;
+      this.filtredItems = this.allNotifications;
     } else {
       const keywords = this.search
         .toLowerCase()
         .split(' ')
         .filter(k => k);
-      this.filtredItems = this.notifications.filter(n =>
+      this.filtredItems = this.allNotifications.filter(n =>
         keywords.some(
           keyword =>
             n.message.toLowerCase().includes(keyword) ||
@@ -109,5 +101,17 @@ export class NotificationComponent implements OnInit {
         )
       );
     }
+  }
+
+  onClick(notification: Notification): void {
+    this.router.navigate([`/services/${notification.catalogId}/instances/${notification.service}/summary`]);
+  }
+
+  get notifications() {
+    return [...this.filtredItems].sort((a, b) => b.creationTimestamp.localeCompare(a.creationTimestamp));
+  }
+
+  onClear() {
+    this.notificationService.clear(this.filtredItems);
   }
 }

@@ -11,12 +11,12 @@ import { LoadingComponent } from '../../../../shared/components/loading';
 import { TitleCasePipe } from '../../../../shared/pipes';
 import { Catalog } from '../../../../api/_model';
 import { NotificationService } from '../../../common/notifications';
-import { errorMessage } from '../../../models';
 import { SidebarService } from '../services/sidebar.service';
 import { AppConfigService } from '../../../config';
 import { CatalogService } from '../../../common/catalogs';
 import { LayoutService } from '../../../../shared/services';
 import { getProjectName } from '../../../common/projects';
+import { errorMessage } from '../../../../shared/utils';
 
 @Component({
   selector: 'app-sidebar',
@@ -89,7 +89,7 @@ export class SidebarComponent implements OnInit {
           });
         },
         error: error => {
-          this.notificationService.onError('cluster', `Unable to fetch catalog, ${errorMessage(error)}`);
+          this.notificationService.onError('cluster', '', '', `Unable to fetch catalog, ${errorMessage(error)}`);
         },
       });
   }

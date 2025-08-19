@@ -8,9 +8,8 @@ export enum NotificationType {
 export interface Notification {
   type: NotificationType;
   service: string;
+  project: string;
+  catalogId: string;
   message: string;
-}
-
-export function errorMessage(error: Error): string {
-  return error?.message || 'Unknown error occurred';
+  creationTimestamp: string;
 }

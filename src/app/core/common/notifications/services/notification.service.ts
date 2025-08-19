@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Notification, NotificationType } from '../../../models';
+import { nowIsoString } from '../../../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -12,32 +13,63 @@ export class NotificationService {
 
   constructor() {}
 
-  onSuccess(service: string, message: string): void {
-    this.addMessage(service, NotificationType.Success, message);
+  onSuccess(
+    service: string,
+    project: string,
+    catalogId: string,
+    message: string,
+    creationTimestamp: string = nowIsoString()
+  ): void {
+    this.addMessage(service, project, NotificationType.Success, catalogId, message, creationTimestamp);
   }
 
-  onError(service: string, message: string): void {
-    this.addMessage(service, NotificationType.Error, message);
+  onError(
+    service: string,
+    project: string,
+    catalogId: string,
+    message: string,
+    creationTimestamp: string = nowIsoString()
+  ): void {
+    this.addMessage(service, project, NotificationType.Error, catalogId, message, creationTimestamp);
   }
 
-  onInfo(service: string, message: string): void {
-    this.addMessage(service, NotificationType.Info, message);
+  onInfo(
+    service: string,
+    project: string,
+    catalogId: string,
+    message: string,
+    creationTimestamp: string = nowIsoString()
+  ): void {
+    this.addMessage(service, project, NotificationType.Info, catalogId, message, creationTimestamp);
   }
 
-  onWarning(service: string, message: string): void {
-    this.addMessage(service, NotificationType.Warning, message);
+  onWarning(
+    service: string,
+    project: string,
+    catalogId: string,
+    message: string,
+    creationTimestamp: string = nowIsoString()
+  ): void {
+    this.addMessage(service, project, NotificationType.Warning, catalogId, message, creationTimestamp);
   }
 
-  private addMessage(service: string, type: NotificationType, message: string): void {
-    const newMessage: Notification = { type, service, message };
-    this.notifications.set(service, newMessage);
+  private addMessage(
+    service: string,
+    project: string,
+    type: NotificationType,
+    catalogId: string,
+    message: string,
+    creationTimestamp: string
+  ): void {
+    const newMessage: Notification = { type, service, project, catalogId, message, creationTimestamp };
+    this.notifications.set(`${service}/${project}`, newMessage);
     this.messagesSubject.next([...this.notifications.values()]);
     //setTimeout(() => this.removeMessage(service), NOTIFICATION_MESSAGE_VISIBILITY_TIMEOUT);
   }
 
-  updateMessage(service: string, message: string): void {
-    if (this.notifications.has(service)) {
-      const existingMessage = this.notifications.get(service);
+  updateMessage(service: string, project: string, message: string): void {
+    if (this.notifications.has(`${service}/${project}`)) {
+      const existingMessage = this.notifications.get(`${service}/${project}`);
       if (existingMessage) {
         existingMessage.message = message;
         this.messagesSubject.next([...this.notifications.values()]);
@@ -45,13 +77,24 @@ export class NotificationService {
     }
   }
 
-  remove(service: string): void {
-    this.notifications.delete(service);
+  remove(service: string, project: string): void {
+    this.notifications.delete(`${service}/${project}`);
     this.messagesSubject.next([...this.notifications.values()]);
   }
 
-  clear(): void {
+  clearAll(): void {
     this.notifications.clear();
     this.messagesSubject.next([]);
+  }
+
+  clear(filtredNotifications: Notification[]): void {
+    if (!Array.isArray(filtredNotifications) || filtredNotifications.length === 0) return;
+
+    for (const n of filtredNotifications) {
+      if (!n) continue;
+      this.notifications.delete(`${n.service}/${n.project}`);
+    }
+
+    this.messagesSubject.next([...this.notifications.values()]);
   }
 }

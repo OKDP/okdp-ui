@@ -18,12 +18,12 @@
         <div class="flex-grow-1">
           <app-search-filter
             noItemsLabel="No search result."
-            [found]="filtredItems.length > 0"
+            [found]="notifications.length > 0"
             (searchChanged)="onSearchChanged($event)" />
         </div>
         <button type="button" class="nav-link nav-item-primary d-flex align-items-center px-2" (click)="onClear()">
           <i class="material-symbols-outlined text-primary okdp-text-outlined border-0">clear_all</i>
-          <span class="text-primary ps-1 okdp-text-outlined">Clear all</span>
+          <span class="text-primary ps-1 okdp-text-outlined">Clear</span>
         </button>
       </div>
       <button
@@ -38,36 +38,48 @@
       <hr class="mt-0" />
       <div class="container mx-0 px-0">
         <div class="row row-cols-1 row-cols-md-1">
-          <div *ngFor="let notification of filtredItems" class="col">
-            <div class="card rounded-3 shadow-sm mx-auto mx-1 position-relative">
-              <button
-                type="button"
-                class="close-icon position-absolute top-0 end-0 border-0 bg-transparent p-0 icon-05x"
-                aria-label="Close"
-                (click)="onClose(notification.service)">
-                <i class="material-symbols-outlined">close</i>
-              </button>
+          <div *ngFor="let notification of notifications" class="col">
+            <div
+              class="card rounded-3 shadow-sm mx-auto mx-1 position-relative pt-2 pe-1"
+              [ngClass]="{'cursor-pointer': notification.project && notification.catalogId}"
+              (click)="notification.project && notification.catalogId && onClick(notification)">
+              <div
+                class="position-absolute top-0 end-0 mx-1 d-flex align-items-center justify-content-center gap-2 text-nowrap lh-1">
+                <span class="text-primary text-muted small">{{ notification.creationTimestamp | timeAgo }}</span>
+                <button
+                  type="button"
+                  class="close-icon border-0 bg-transparent p-0 icon-05x"
+                  aria-label="Close"
+                  (click)="onClose(notification.service, notification.project); $event.stopPropagation()">
+                  <i class="material-symbols-outlined">close</i>
+                </button>
+              </div>
               <div class="card-body border-1">
-                <div class="d-flex gap-2">
-                  <div class="d-flex align-items-center flex-shrink-0">
-                    <i
-                      class="material-symbols-outlined me-2"
-                      [class]="getClass(notification.type).msg"
-                      >{{ getClass(notification.type).icon }}</i
-                    >
-                  </div>
-                  <div class="d-flex flex-column flex-grow-1">
-                    <p class="card-text">
-                      <span class="text-primary">{{ notification.service }}</span>
+                <ng-container *ngIf="getClass(notification.type) as cls">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="material-symbols-outlined me-2 mt-1" [class]="cls.msg">
+                      {{ cls.icon }}
+                    </i>
+
+                    <p class="card-text mb-0">
+                      <span
+                        tabindex="0"
+                        [ngClass]="{
+                          'text-primary text-decoration-underline cursor-pointer': notification.project && notification.catalogId
+                        }"
+                        [attr.role]="notification.project && notification.catalogId ? 'button' : null"
+                        (click)="notification.project && notification.catalogId && onClick(notification)">
+                        {{ notification.service }}
+                      </span>
                       {{ notification.message }}
                     </p>
                   </div>
-                </div>
+                </ng-container>
               </div>
             </div>
           </div>
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li *ngIf="filtredItems.length === 0" class="nav-item text-primary">No notifications to display !</li>
+            <li *ngIf="notifications.length === 0" class="nav-item text-primary">No notifications to display !</li>
           </ul>
         </div>
       </div>
