@@ -1,0 +1,313 @@
+<div *ngIf="!isLoaded" class="loading-overlay">
+  <app-loading />
+</div>
+<div *ngIf="isLoaded" class="container-fluid px-0 mb-4">
+  <div class="mt-3">
+    <table class="table table-sm align-middle">
+      <tbody>
+        <tr>
+          <th scope="row" class="text-primary">Release:</th>
+          <td class="text-primary d-flex align-items-center">
+            <span class="me-1">
+              <img class="table-cell-icon" src="images/{{ instance?.icon }}" />
+            </span>
+            <span class="me-1">
+              {{ instance?.metadata?.name }}
+            </span>
+            <span class="ms-3 d-flex align-items-center">
+              <i
+                class="material-symbols-outlined text-okdp-primary cursor-pointer"
+                matTooltip="{{ showReleaseYaml ? 'Close' : 'View Yaml' }}"
+                (click)="onReleaseViewYaml()"
+                >{{ showReleaseYaml ? 'keyboard_double_arrow_up' : 'code' }}</i
+              >
+            </span>
+            <span *ngIf="showReleaseYaml" class="ms-3 d-flex align-items-center">
+              <i
+                #copyTip="matTooltip"
+                class="material-symbols-outlined text-okdp-primary cursor-pointer"
+                [matTooltip]="copyTooltip"
+                (click)="onReleaseCopyToClipboard(copyTip)"
+                >content_copy</i
+              >
+            </span>
+            <span *ngIf="showReleaseYaml" class="ms-3 d-flex align-items-center">
+              <i
+                class="material-symbols-outlined text-okdp-primary cursor-pointer"
+                matTooltip="Download"
+                (click)="onReleaseDownload()"
+                >download</i
+              >
+            </span>
+          </td>
+        </tr>
+        <tr *ngIf="showReleaseYaml">
+          <td colspan="2">
+            <app-yaml-editor [jsonObj]="release" />
+          </td>
+        </tr>
+        <tr>
+          <th scope="row" class="text-primary">State:</th>
+          <td class="text-primary d-flex align-items-center">
+            <span class="d-flex align-items-center me-2">
+              <i class="material-symbols-outlined" [ngClass]="'text-' + (instance?.statusLabel || 'unknown')">
+                {{ instance?.statusIcon }}
+              </i>
+              <span class="ms-1">{{ instance?.statusText! | titleCase }}</span>
+            </span>
+            <span class="ms-3 d-flex align-items-center">
+              <i
+                class="material-symbols-outlined cursor-pointer"
+                matTooltip="View events"
+                [ngClass]="'text-' + (instance?.statusLabel || 'unknown')"
+                (click)="onViewEvents()"
+                >event_note</i
+              >
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row" class="text-primary">Package:</th>
+          <td class="text-primary d-flex align-items-center">
+            <span class="d-flex align-items-center me-2">
+              <i class="material-symbols-outlined text-okdp-primary">folder_zip</i>
+              <span class="ms-1">{{ instance?.spec?.package?.repository }}:{{ instance?.spec?.package?.tag }}</span>
+            </span>
+            <span class="ms-3 d-flex align-items-center">
+              <i
+                class="material-symbols-outlined text-okdp-primary cursor-pointer"
+                matTooltip="{{ showPackageYaml ? 'Close' : 'View Yaml' }}"
+                (click)="onPackageViewYaml()"
+                >{{ showPackageYaml ? 'keyboard_double_arrow_up' : 'code' }}</i
+              >
+            </span>
+            <span *ngIf="showPackageYaml" class="ms-3 d-flex align-items-center">
+              <i
+                #packageTip="matTooltip"
+                class="material-symbols-outlined text-okdp-primary cursor-pointer"
+                [matTooltip]="copyTooltip"
+                (click)="onPackageCopyToClipboard(packageTip)"
+                >content_copy</i
+              >
+            </span>
+            <span *ngIf="showPackageYaml" class="ms-3 d-flex align-items-center">
+              <i
+                class="material-symbols-outlined text-okdp-primary cursor-pointer"
+                matTooltip="Download"
+                (click)="onPackageDownload()"
+                >download</i
+              >
+            </span>
+          </td>
+        </tr>
+        <tr *ngIf="showPackageYaml">
+          <td colspan="2">
+            <ng-container *ngIf="package$ as pkg$">
+              <ng-container *ngIf="pkg$ | async as pkgJson; else pkgLoading">
+                <app-yaml-editor [jsonObj]="pkgJson" />
+              </ng-container>
+            </ng-container>
+            <ng-template #pkgLoading>
+              <div class="loading-overlay position-relative">
+                <app-loading />
+              </div>
+            </ng-template>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row" class="text-primary">Created At:</th>
+          <td class="text-primary">
+            <span class="me-1">
+              {{ instance?.metadata?.creationTimestamp }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Pods Information -->
+  <div *ngIf="!podsLoaded" class="loading-overlay position-relative">
+    <app-loading />
+  </div>
+  <div *ngIf="podsLoaded">
+    <div class="mt-4">
+      <span class="text-okdp">Pods Information ({{ pods.length }})</span>
+    </div>
+    <div *ngIf="pods.length > 0; else noPods" class="mt-3">
+      <div class="accordion" id="podsAccordion">
+        <div *ngFor="let pod of pods; let i = index" class="accordion-item">
+          <h2 class="accordion-header" [id]="'pod-heading-' + i">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              aria-expanded="false"
+              [attr.data-bs-target]="'#pod-collapse-' + i"
+              [attr.aria-controls]="'pod-collapse-' + i">
+              <span class="text-primary">{{ pod.name }}</span>
+              <span class="d-flex align-items-center text-primary ms-5">
+                <i class="material-symbols-outlined" [ngClass]="'text-' + pod.statusLabel">
+                  {{ pod.statusIcon }}
+                </i>
+                <span class="text-primary ms-1">{{  pod.statusText! | titleCase }}</span>
+              </span>
+            </button>
+          </h2>
+          <div
+            class="accordion-collapse collapse"
+            data-bs-parent="#podsAccordion"
+            [id]="'pod-collapse-' + i"
+            [attr.aria-labelledby]="'pod-heading-' + i">
+            <div class="accordion-body">
+              <!-- Pod fields -->
+              <div class="mt-3">
+                <table class="table table-sm align-middle">
+                  <tbody>
+                    <tr>
+                      <th scope="row" class="text-primary">Name:</th>
+                      <td class="text-primary">
+                        <span class="me-1">
+                          {{ pod.name }}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-primary">State:</th>
+                      <td class="text-primary d-flex align-items-center">
+                        <span class="d-flex align-items-center me-2">
+                          <i class="material-symbols-outlined" [ngClass]="'text-' + pod.statusLabel">
+                            {{ pod.statusIcon }}
+                          </i>
+                          <span class="ms-1">{{ pod.statusText! | titleCase }}</span>
+                        </span>
+                        <span class="ms-3 d-flex align-items-center">
+                          <i
+                            class="material-symbols-outlined cursor-pointer"
+                            matTooltip="View logs"
+                            [ngClass]="'text-' + pod.statusLabel"
+                            (click)="onViewPodLogs(pod)"
+                            >format_align_left</i
+                          >
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-primary">Health:</th>
+                      <td class="text-primary d-flex align-items-center">
+                        <span class="d-flex align-items-center me-2">
+                          <i class="material-symbols-outlined" [ngClass]="'text-' + pod.healthLabel">
+                            {{ pod.healthIcon }}
+                          </i>
+                          <span class="ms-1">{{ pod.health! | titleCase }}</span>
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-primary">Created At:</th>
+                      <td class="text-primary">
+                        <span class="me-1">
+                          {{ pod.createdAt }}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="mt-4">
+                <span class="text-okdp">Containers Information ({{ pod.containers.length }})</span>
+              </div>
+              <!-- Container Accordion -->
+              <div class="accordion mt-3" [id]="'containersAccordion-' + i">
+                <div *ngFor="let c of pod.containers; let j = index" class="accordion-item">
+                  <h2 class="accordion-header" [id]="'container-heading-' + i + '-' + j">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      aria-expanded="false"
+                      [attr.data-bs-target]="'#container-collapse-' + i + '-' + j"
+                      [attr.aria-controls]="'container-collapse-' + i + '-' + j">
+                      <span class="text-primary">{{ c.name }}</span>
+                      <span class="d-flex align-items-center text-primary ms-5">
+                        <i class="material-symbols-outlined" [ngClass]="'text-' + getStatus(c.state)[0]">
+                          {{ getStatus(c.state)[1] }}
+                        </i>
+                        <span class="text-primary ms-1">{{  c.state! | titleCase }}</span>
+                      </span>
+                    </button>
+                  </h2>
+                  <div
+                    class="accordion-collapse collapse"
+                    [id]="'container-collapse-' + i + '-' + j"
+                    [attr.aria-labelledby]="'container-heading-' + i + '-' + j"
+                    [attr.data-bs-parent]="'#containersAccordion-' + i">
+                    <div class="accordion-body">
+                      <div class="mt-3">
+                        <table class="table table-sm align-middle">
+                          <tbody>
+                            <tr>
+                              <th scope="row" class="text-primary">Name:</th>
+                              <td class="text-primary">
+                                <span class="me-1">
+                                  {{ c.name }}
+                                </span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <th scope="row" class="text-primary">State:</th>
+                              <td class="text-primary d-flex align-items-center">
+                                <span class="d-flex align-items-center me-2">
+                                  <i class="material-symbols-outlined" [ngClass]="'text-' + getStatus(c.state)[0]">
+                                    {{ getStatus(c.state)[1] }}
+                                  </i>
+                                  <span class="ms-1">{{  c.state! | titleCase }}</span>
+                                </span>
+                                <span class="ms-3 d-flex align-items-center">
+                                  <i
+                                    class="material-symbols-outlined cursor-pointer"
+                                    matTooltip="View logs"
+                                    [ngClass]="'text-' + getStatus(c.state)[0]"
+                                    (click)="onViewContainerLogs(pod, c)"
+                                    >format_align_left</i
+                                  >
+                                </span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <th scope="row" class="text-primary">Image:</th>
+                              <td class="text-primary">
+                                <span class="me-1">
+                                  {{ c.image }}
+                                </span>
+                              </td>
+                            </tr>
+                            <tr *ngIf="c.reason">
+                              <th scope="row" class="text-primary">Reason:</th>
+                              <td class="text-primary">
+                                <span class="me-1"> {{ c.reason }} (c.message) </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="pod.containers.length === 0" class="alert alert-info mt-3">No containers found.</div>
+              </div>
+              <!-- End Container Accordion -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noPods>
+      <div class="alert alert-info mt-3">
+        <span class="d-flex align-items-center">
+          <i class="material-symbols-outlined text-okdp"> info </i>
+          <span class="ms-2">No pods to display.</span>
+        </span>
+      </div>
+    </ng-template>
+  </div>
+</div>
