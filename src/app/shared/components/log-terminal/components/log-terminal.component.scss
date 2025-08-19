@@ -1,0 +1,27 @@
+.terminal-container {
+  border: 1px solid var(--border-color-translucent);
+}
+
+.terminal-toolbar {
+  border-top: 1px solid var(--border-color-translucent);
+  border-left: 1px solid var(--border-color-translucent);
+  border-bottom: none;
+  border-right: 1px solid var(--border-color-translucent);
+  border-top-left-radius: 5px;
+  margin-bottom: -5px;
+  background-color: var(--card-bg-color);
+}
+
+.xterm-rows {
+  color: var(--text-primary-color) !important;
+  background-color: var(--card-bg-color) !important;
+}
+.xterm .xterm-viewport {
+  background-color: var(--card-bg-color) !important;
+}
+.xterm .xterm-screen {
+  padding: 0 !important;
+}
+.xterm .xterm-cursor {
+  display: none !important;
+}
