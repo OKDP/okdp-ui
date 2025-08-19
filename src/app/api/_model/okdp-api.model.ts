@@ -98,6 +98,64 @@ export interface Package {
   versions: string[];
 }
 
+/** @example {"containers":[{"image":"stefanprodan/podinfo:latest","message":"Back-off 5m0s restarting failed container podinfo","name":"podinfo","reason":"CrashLoopBackOff","state":"Waiting"},{"image":"myorg/sidecar:latest","name":"sidecar","state":"Running"}],"createdAt":"2025-04-25T11:48:48Z","health":"Ready","name":"podinfo-768b456f7c-abc12","namespace":"default","state":"Running"} */
+export interface PodInfo {
+  /** List of containers in the Pod */
+  containers: {
+    /**
+     * Container image
+     * @example "idirze/auth"
+     */
+    image: string;
+    /**
+     * Message with additional details, if applicable
+     * @example "Back-off 5m0s restarting failed container podinfo"
+     */
+    message?: string;
+    /**
+     * Container name
+     * @example "container1"
+     */
+    name: string;
+    /**
+     * Reason for the current state, if applicable
+     * @example "CrashLoopBackOff"
+     */
+    reason?: string;
+    /**
+     * Container state
+     * @example "Running"
+     */
+    state: string;
+  }[];
+  /**
+   * Pod creation date
+   * @format date-time
+   * @example "2025-04-25T11:48:48Z"
+   */
+  createdAt: string;
+  /**
+   * Pod health status
+   * @example "Ready"
+   */
+  health: string;
+  /**
+   * Name of the Pod
+   * @example "podinfo-768b456f7c-abc12"
+   */
+  name: string;
+  /**
+   * Namespace in which the Pod is deployed
+   * @example "default"
+   */
+  namespace: string;
+  /**
+   * Pod state
+   * @example "Running"
+   */
+  state: string;
+}
+
 export interface Project {
   /**
    * @format date-time

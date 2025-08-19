@@ -327,6 +327,108 @@
                     "name": "Package"
                 }
             },
+            "PodInfo": {
+                "example": {
+                    "containers": [
+                        {
+                            "image": "stefanprodan/podinfo:latest",
+                            "message": "Back-off 5m0s restarting failed container podinfo",
+                            "name": "podinfo",
+                            "reason": "CrashLoopBackOff",
+                            "state": "Waiting"
+                        },
+                        {
+                            "image": "myorg/sidecar:latest",
+                            "name": "sidecar",
+                            "state": "Running"
+                        }
+                    ],
+                    "createdAt": "2025-04-25T11:48:48Z",
+                    "health": "Ready",
+                    "name": "podinfo-768b456f7c-abc12",
+                    "namespace": "default",
+                    "state": "Running"
+                },
+                "properties": {
+                    "containers": {
+                        "description": "List of containers in the Pod",
+                        "items": {
+                            "properties": {
+                                "image": {
+                                    "description": "Container image",
+                                    "example": "idirze/auth",
+                                    "type": "string"
+                                },
+                                "message": {
+                                    "description": "Message with additional details, if applicable",
+                                    "example": "Back-off 5m0s restarting failed container podinfo",
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "description": "Container name",
+                                    "example": "container1",
+                                    "type": "string"
+                                },
+                                "reason": {
+                                    "description": "Reason for the current state, if applicable",
+                                    "example": "CrashLoopBackOff",
+                                    "type": "string"
+                                },
+                                "state": {
+                                    "description": "Container state",
+                                    "example": "Running",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "image",
+                                "state"
+                            ],
+                            "type": "object"
+                        },
+                        "type": "array"
+                    },
+                    "createdAt": {
+                        "description": "Pod creation date",
+                        "example": "2025-04-25T11:48:48Z",
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "health": {
+                        "description": "Pod health status",
+                        "example": "Ready",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Name of the Pod",
+                        "example": "podinfo-768b456f7c-abc12",
+                        "type": "string"
+                    },
+                    "namespace": {
+                        "description": "Namespace in which the Pod is deployed",
+                        "example": "default",
+                        "type": "string"
+                    },
+                    "state": {
+                        "description": "Pod state",
+                        "example": "Running",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "name",
+                    "namespace",
+                    "state",
+                    "createdAt",
+                    "health",
+                    "containers"
+                ],
+                "type": "object",
+                "xml": {
+                    "name": "PodInfo"
+                }
+            },
             "Project": {
                 "properties": {
                     "creationTimestamp": {
@@ -2150,6 +2252,110 @@
                 ]
             }
         },
+        "/clusters/{clusterId}/namespaces/{namespace}/pods/{pod}/containers/{container}/logs": {
+            "get": {
+                "description": "Streams Kubernetes pod logs using Server-Sent Events (SSE), \nallows downloading them as a plain text file, or \nreturns logs as JSON when requested via Accept=application/json header.\n",
+                "operationId": "GetLogs",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes namespace",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Pod name",
+                        "in": "path",
+                        "name": "pod",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Container name",
+                        "in": "path",
+                        "name": "container",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "If true, downloads logs as a plain text file instead of streaming.",
+                        "in": "query",
+                        "name": "download",
+                        "schema": {
+                            "default": false,
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "description": "Number of log lines to show from the end of the logs.",
+                        "in": "query",
+                        "name": "tailLines",
+                        "schema": {
+                            "default": 100,
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "List of log lines returned when SSE is not supported (e.g., Swagger UI).",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "type": "array"
+                                }
+                            },
+                            "text/event-stream": {
+                                "schema": {
+                                    "description": "SSE stream of log lines (each event contains a JSON log entry).",
+                                    "type": "string"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "description": "Complete logs as a downloadable text file.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "description": "Pod logs returned in different formats"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get the logs",
+                "tags": [
+                    "pods"
+                ]
+            }
+        },
         "/clusters/{clusterId}/namespaces/{namespace}/releases": {
             "get": {
                 "description": "Get the list of the deployed releases\n",
@@ -2466,6 +2672,133 @@
                 "summary": "Get the deployed release by name",
                 "tags": [
                     "k8s"
+                ]
+            }
+        },
+        "/clusters/{clusterId}/namespaces/{namespace}/releases/{releaseName}/events": {
+            "get": {
+                "description": "Returns Kubernetes events associated with a KuboCD release as a JSON array.\nThis endpoint mimics the behavior of `kubectl describe release \u003creleaseName\u003e` and is suitable for browser/Swagger usage.\n",
+                "operationId": "GetEventsRelease",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes namespace",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "KuboCD release name",
+                        "in": "path",
+                        "name": "releaseName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "JSON array of Kubernetes event objects for the specified release.\n",
+                                    "items": {
+                                        "additionalProperties": true,
+                                        "type": "object"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        },
+                        "description": "Returns Kubernetes events for the specified release as a JSON array.\n"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get Kubernetes events for a release",
+                "tags": [
+                    "k8s"
+                ]
+            }
+        },
+        "/clusters/{clusterId}/namespaces/{namespace}/releases/{releaseName}/pods": {
+            "get": {
+                "description": "Returns all pods in a given namespace and release, including their container names.\n",
+                "operationId": "GetPods",
+                "parameters": [
+                    {
+                        "description": "Kubernetes cluster ID",
+                        "in": "path",
+                        "name": "clusterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Kubernetes namespace",
+                        "in": "path",
+                        "name": "namespace",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "KuboCD release name",
+                        "in": "path",
+                        "name": "releaseName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PodInfo"
+                                }
+                            }
+                        },
+                        "description": "A list of pods and their containers"
+                    },
+                    "default": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerResponse"
+                                }
+                            }
+                        },
+                        "description": "Server error"
+                    }
+                },
+                "summary": "Get the list of pods and their containers attached to a release",
+                "tags": [
+                    "pods"
                 ]
             }
         },
@@ -2889,6 +3222,13 @@
                 "url": "https://github.com/okdp/okdp-server"
             },
             "name": "repositories"
+        },
+        {
+            "description": "Kubernetes pods",
+            "externalDocs": {
+                "url": "https://github.com/okdp/okdp-server"
+            },
+            "name": "pods"
         }
     ]
 }
