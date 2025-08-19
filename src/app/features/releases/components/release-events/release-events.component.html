@@ -1,0 +1,50 @@
+<div *ngIf="!isLoaded" class="loading-overlay">
+  <app-loading />
+</div>
+
+<div *ngIf="isLoaded" class="container-fluid px-0 mb-4">
+  <div *ngIf="events.length > 0; else noEvents" class="mb-2">
+    <div class="card border-0 bg-transparent card-title fw-bold">
+      <div class="card-header py-2 border-0">
+        <div class="row fw-bold text-secondary">
+          <div class="col-2">Occured At</div>
+          <div class="col-2">Reason</div>
+          <div class="col-6">Message</div>
+          <div class="col-2 ps-4">Count</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row g-2">
+    <div *ngFor="let event of events" class="col-12">
+      <div class="card rounded-3 shadow-sm mx-auto mx-1 position-relative">
+        <div class="card-body border-1">
+          <div class="row align-items-center">
+            <div class="col-2">
+              <span class="text-primary">
+                {{ event.lastTimestamp || event.firstTimestamp | date:'yyyy-MM-dd HH:mm:ss' }}
+              </span>
+            </div>
+            <div class="col-2">
+              <span class="text-primary">{{ event.reason }}</span>
+            </div>
+            <div class="col-6">
+              <span class="text-primary">{{ event.message }}</span>
+            </div>
+            <div class="col-2 ps-4">
+              <span class="text-primary">{{ event.count }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #noEvents>
+    <div class="alert alert-info mt-3">
+      <span class="d-flex align-items-center">
+        <i class="material-symbols-outlined text-okdp"> info </i>
+        <span class="ms-2">No events to display.</span>
+      </span>
+    </div>
+  </ng-template>
+</div>
