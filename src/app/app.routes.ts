@@ -5,7 +5,12 @@ import { ErrorComponent } from './shared/error';
 import { LoginComponent } from './core/common/login';
 import { AuthGuard } from './core/guards';
 import { PageLayoutComponent } from './core/layout/page-layout';
-import { ReleaseListCardComponent, ReleaseCreateUpdateComponent, ReleaseDetailsComponent } from './features/releases';
+import {
+  ReleaseListCardComponent,
+  ReleaseCreateUpdateComponent,
+  ReleaseLogComponent,
+  ReleaseNotificationsComponent,
+} from './features/releases';
 import {
   ProjectCreateOrUpdateComponent,
   ProjectListCardComponent,
@@ -15,7 +20,9 @@ import { ReleaseListTableComponent } from './features/releases/components/releas
 import { PackageSelectComponent } from './features/releases/components/package-select/package-select.component';
 import { StepperComponent } from './shared/components/stepper';
 import { ProjectListComponent } from './features/projects/shared';
-import { ReleaseListComponent } from './features/releases/shared';
+import { ReleaseDetailsComponent, ReleaseListComponent } from './features/releases/shared';
+import { ReleaseSummaryComponent } from './features/releases/components/release-summary/release-summary.component';
+import { ReleaseEventComponent } from './features/releases/components/release-events/release-events.component';
 
 export const APP_ROUTES: Routes = [
   { path: 'login', component: LoginComponent },
@@ -55,12 +62,18 @@ export const APP_ROUTES: Routes = [
         ],
       },
       {
-        path: 'services/:service/instances/:serviceInstance/update',
+        path: 'services/:service/instances/:release/update',
         component: ReleaseCreateUpdateComponent,
       },
       {
-        path: 'services/:service/instances/:release/details',
+        path: 'services/:service/instances/:release',
         component: ReleaseDetailsComponent,
+        children: [
+          { path: 'summary', component: ReleaseSummaryComponent },
+          { path: 'notifications', component: ReleaseNotificationsComponent },
+          { path: 'logs', component: ReleaseLogComponent },
+          { path: 'events', component: ReleaseEventComponent },
+        ],
       },
       {
         path: 'services',
