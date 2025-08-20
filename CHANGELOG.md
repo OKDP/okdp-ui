@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.4.0](https://github.com/OKDP/okdp-ui/compare/v0.3.0...v0.4.0) (2025-08-20)
+
+
+### Features
+
+* ability to filter, clear and navigate the notifications ([0955196](https://github.com/OKDP/okdp-ui/commit/0955196fe8a9beed6f08cc13c80b2084b610a3b1))
+* ability to filter, clear and navigate the notifications ([7795d5e](https://github.com/OKDP/okdp-ui/commit/7795d5ebf1e548dd66bc15cd833f6b3445c2c8f5))
+* add release details main screen ([e375fac](https://github.com/OKDP/okdp-ui/commit/e375facbc405128b1bef6eee95cc7e8d439902f0))
+* add release summary page ([91c127f](https://github.com/OKDP/okdp-ui/commit/91c127f2a3ce6c24d45997a4bffc28cf3c0b9bd9))
+* add search filter and clear button for notifications ([1a4ce5f](https://github.com/OKDP/okdp-ui/commit/1a4ce5f21945fca9f9a4e2b40e79e87bfd556a5e))
+* Add tab to show k8S events on KuboCD release ([d6e6bc6](https://github.com/OKDP/okdp-ui/commit/d6e6bc69d8388c2218af4b08fc5759e2a80b6d22))
+* add tab to show k8s pod logs ([c9c7349](https://github.com/OKDP/okdp-ui/commit/c9c734929b0ba0403159059fea9100748d7d913f))
+* add tab to show notifications ([886162b](https://github.com/OKDP/okdp-ui/commit/886162b53cf92ae96ac4b61d8c3866dd20bc44ff))
+
+
+### Bug Fixes
+
+* **store:** persist cluster and project state in browser localStorage ([99d1754](https://github.com/OKDP/okdp-ui/commit/99d17540838e4f897f8292efea2756268717fa26))
+
+
+### Refactoring
+
+* releases refactoring ([485110d](https://github.com/OKDP/okdp-ui/commit/485110d8f3e33b05cd7020d5c8910860d525fde0))
+* update global css style and routes ([ee10b77](https://github.com/OKDP/okdp-ui/commit/ee10b77556c6fcb0e73695527c927e5deee381c2))
+
 ## [0.3.0](https://github.com/OKDP/okdp-ui/compare/v0.2.0...v0.3.0) (2025-07-10)
 
 
