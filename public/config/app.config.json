@@ -69,6 +69,9 @@
     "system": {
       "menuIcon": "fas fa-cogs"
     },
+    "interactive query": {
+      "menuIcon": "fa-solid fa-database"
+    },
     "default": {
       "menuIcon": "fa-solid fa-cubes"
     }
@@ -139,6 +142,12 @@
       "menuIcon": "fas fa-certificate",
       "description": "cert-manager adds certificates and certificate issuers as resource types in Kubernetes clusters, and simplifies the process of obtaining, renewing and using those certificates.",
       "home": "https://cert-manager.io/"
+    },
+    "trino": {
+      "icon": "trino.png",
+      "menuIcon": "fa-solid fa-magnifying-glass-chart",
+      "description": "Fast distributed SQL query engine for big data analytics that helps you explore your data universe.",
+      "home": "https://trino.io/"
     },
     "tools": {
       "icon": "okdp-notext.svg",
