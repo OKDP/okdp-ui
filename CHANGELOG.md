@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/OKDP/okdp-ui/compare/v0.4.0...v0.4.1) (2025-09-01)
+
+
+### Bug Fixes
+
+* add trino logo and description ([1d70354](https://github.com/OKDP/okdp-ui/commit/1d70354f8e98d42e2fe4f47a28bf09fe3b31b1d6))
+
 ## [0.4.0](https://github.com/OKDP/okdp-ui/compare/v0.3.0...v0.4.0) (2025-08-20)
 
 
