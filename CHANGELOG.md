@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.2](https://github.com/OKDP/okdp-ui/compare/v0.4.1...v0.4.2) (2025-12-17)
+
+
+### Bug Fixes
+
+* **nginx:** drop IPv6 nginx from config ([b0056f0](https://github.com/OKDP/okdp-ui/commit/b0056f094b7a6bb4691d91ac4eac7e280d368d2f))
+
+
+### Documentation
+
+* update README.md ([f39eead](https://github.com/OKDP/okdp-ui/commit/f39eeadb8e43b3ccc35516bf23b598a7688298c9))
+
 ## [0.4.1](https://github.com/OKDP/okdp-ui/compare/v0.4.0...v0.4.1) (2025-09-01)
 
 
