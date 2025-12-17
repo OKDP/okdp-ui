@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.1](https://github.com/OKDP/okdp-ui/compare/helm-okdp-ui/v0.3.0...helm-okdp-ui/v0.4.1) (2025-12-17)
+
+
+### Bug Fixes
+
+* **nginx:** drop IPv6 nginx from config ([b0056f0](https://github.com/OKDP/okdp-ui/commit/b0056f094b7a6bb4691d91ac4eac7e280d368d2f))
+
+
+### Continuous Integration
+
+* release 0.4.1 ([a4a1a49](https://github.com/OKDP/okdp-ui/commit/a4a1a495c28321b0ea66977f1c6499dea7f00bf3))
+
 ## [0.3.0](https://github.com/OKDP/okdp-ui/compare/helm-okdp-ui/v0.2.0...helm-okdp-ui/v0.3.0) (2025-07-10)
 
 
