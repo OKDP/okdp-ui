@@ -2,7 +2,7 @@ apiVersion: v2
 name: okdp-ui
 description: OKDP UI Helm chart
 type: application
-version: "0.4.1"
+version: "0.3.1"
 appVersion: "0.4.1"
 home: https://okdp.io
 maintainers:
